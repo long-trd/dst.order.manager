@@ -25,11 +25,11 @@ DB_PASSWORD=secret
 $ php artisan key:generate
 ```
 
-- Run `cms.setup` command
+- Run `cms:setup` command
     + CMS Migration
     + CMS Sample data
 ```
-$ php artisan cms.setup
+$ php artisan cms:setup
 ```
 
 - Login base
