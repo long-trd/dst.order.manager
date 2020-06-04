@@ -73,7 +73,16 @@ class CmsServiceProvider extends ServiceProvider
                     if (pathinfo($config, PATHINFO_EXTENSION) === 'php') {
                         $key  = basename($config, '.php');
                         $path = $configPath . '/' . $config;
-                        $this->app['config']->set($key, require $path);
+
+                        if (!$this->app->runningInConsole()) {
+                            if (!$this->app->configurationIsCached()) {
+                                $this->app['config']->set($key, require $path);
+                            }
+                        } else {
+                            if (\Request::server('argv')[1] === 'config:cache') {
+                                $this->app['config']->set($key, require $path);
+                            }
+                        }
                     }
                 }
             }
