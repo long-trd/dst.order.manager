@@ -11,7 +11,7 @@ class CmsSetupCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'cms:setup';
+    protected $signature = 'cms:setup {--auth-seed} {--all}';
 
     /**
      * The console command description.
@@ -37,14 +37,27 @@ class CmsSetupCommand extends Command
      */
     public function handle()
     {
-        // DATABASE MIGRATE
+        $options = $this->options();
+
+        // CMS CORE MIGRATIONS MIGRATE
         $this::call('migrate', [
-            '--path' => 'cms/Modules/Core/database/migrations'
+            '--path' => 'cms/Modules/Core/database/migrations',
+            '--force' => true,
         ]);
 
-        // RUN CMS SEEDER
-        $this::call('db:seed', [
-            '--class' => 'Cms\Modules\Core\Database\Seeds\SampleAuthSeeder'
-        ]);
+        if ($options['all']) {
+            // MODULE MIGRATIONS MIGRATE
+            $this::call('migrate', [
+                '--force' => true,
+            ]);
+        }
+
+        if ($options['auth-seed']) {
+            // SAMPLE AUTH SEEDER SEED
+            $this::call('db:seed', [
+                '--class' => 'Cms\Modules\Core\Database\Seeds\SampleAuthSeeder',
+                '--force' => true,
+            ]);
+        }
     }
 }
