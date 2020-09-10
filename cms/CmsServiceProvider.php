@@ -79,7 +79,8 @@ class CmsServiceProvider extends ServiceProvider
                                 $this->app['config']->set($key, require $path);
                             }
                         } else {
-                            if (\Request::server('argv')[1] === 'config:cache') {
+                            $argv = \Request::server('argv');
+                            if (count($argv) > 1 && $argv[1] === 'config:cache') {
                                 $this->app['config']->set($key, require $path);
                             }
                         }
