@@ -10,7 +10,7 @@ Route::group([
     Route::group([
         'middleware' => ['auth', 'role:admin', 'cms.verified']
     ], function () {
-        Route::get('/home', 'HomeController@index');
+        Route::get('/home', 'HomeController@index')->name('home');
     });
 
     Route::group([
@@ -35,5 +35,19 @@ Route::group([
         Route::get('email/verify', 'VerificationController@show')->name('verification.notice');
         Route::get('email/verify/{id}', 'VerificationController@verify')->name('verification.verify');
         Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
+    });
+
+    Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
+        Route::group(['middleware' => ['auth']], function () {
+            //ACCOUNT
+            Route::group(['prefix' => 'account'], function () {
+                Route::get('/', 'AccountController@index')->name('admin.account.index');
+            });
+
+            //ORDER
+            Route::group(['prefix' => 'order'], function () {
+                Route::get('/', 'OrderController@index')->name('admin.order.index');
+            });
+        });
     });
 });
