@@ -5,5 +5,8 @@ namespace Cms\Modules\Core\Repositories\Contracts;
 interface UserRepositoryContract
 {
     public function getModel();
+
     public function store($data);
+
+    public function getAll();
 }

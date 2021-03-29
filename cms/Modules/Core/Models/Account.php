@@ -13,6 +13,7 @@ class Account extends Model
 
     protected $fillable =
         [
+            'user_id',
             'email',
             'ip_address',
             'status',
@@ -31,6 +32,11 @@ class Account extends Model
         static::deleting(function($topic) {
             $topic->orders()->delete();
         });
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function orders()

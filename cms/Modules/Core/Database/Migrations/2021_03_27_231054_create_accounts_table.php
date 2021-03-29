@@ -15,12 +15,15 @@ class CreateAccountsTable extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned()->nullable();
             $table->string('email')->nullable();
             $table->ipAddress('ip_address')->nullable();
             $table->string('status')->nullable();
             $table->longText('paypal_notes')->nullable();
             $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')
+                ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -31,6 +34,11 @@ class CreateAccountsTable extends Migration
      */
     public function down()
     {
+        Schema::table('accounts', function (Blueprint $table) {
+            $table->dropForeign('accounts_user_id_foreign');
+
+        });
+
         Schema::dropIfExists('accounts');
     }
 }

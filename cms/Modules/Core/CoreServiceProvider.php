@@ -10,7 +10,9 @@ use Cms\Modules\Core\Repositories\OrderRepository;
 use Cms\Modules\Core\Repositories\UserRepository;
 use Cms\Modules\Core\Services\AccountService;
 use Cms\Modules\Core\Services\Contracts\AccountServiceContract;
+use Cms\Modules\Core\Services\Contracts\OrderServiceContract;
 use Cms\Modules\Core\Services\Contracts\UserServiceContract;
+use Cms\Modules\Core\Services\OrderService;
 use Cms\Modules\Core\Services\UserService;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
@@ -58,6 +60,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(UserServiceContract::class, UserService::class);
         $this->app->bind(AccountRepositoryContract::class, AccountRepository::class);
         $this->app->bind(AccountServiceContract::class, AccountService::class);
+        $this->app->bind(OrderServiceContract::class, OrderService::class);
         $this->app->bind(OrderRepositoryContract::class, OrderRepository::class);
     }
 }

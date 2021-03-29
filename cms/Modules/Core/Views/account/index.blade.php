@@ -30,6 +30,7 @@
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col" class="sort" data-sort="no">No</th>
+                                <th scope="col" class="sort" data-sort="shipper">Shipper</th>
                                 <th scope="col" class="sort" data-sort="ip-address">Ip Address</th>
                                 <th scope="col" class="sort" data-sort="status">Status</th>
                                 <th scope="col">Email</th>
@@ -49,6 +50,9 @@
                                             </div>
                                         </div>
                                     </th>
+                                    <td class="budget">
+                                        {{$account->user->name}}
+                                    </td>
                                     <td class="budget">
                                         {{$account->ip_address}}
                                     </td>

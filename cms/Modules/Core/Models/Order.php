@@ -33,6 +33,16 @@ class Order extends Model
 
     protected $hidden = [];
 
+    public function shipper()
+    {
+        return $this->belongsTo(User::class, 'shipping_user_id');
+    }
+
+    public function helper()
+    {
+        return $this->belongsTo(User::class, 'helping_user_id');
+    }
+
     public function account()
     {
         return $this->belongsTo(Account::class, 'account_id');

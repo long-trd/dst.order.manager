@@ -37,7 +37,17 @@
                             @endif
 
 
-                            <div class="pl-lg-4">
+                            <div class="pl-lg-4 pd-left-25">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-name">{{ __('Shipper') }}</label>
+                                    <select class="form-control w-90" data-toggle="select" title="Simple select" data-live-search="true" name="user_id">
+                                        @foreach($users as $user)
+                                            @if(!$user->hasRole('admin'))
+                                                <option value="{{$user->id}}" {{$user->id == $account->user_id ? 'checked' : ''}}>{{$user->name}}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-name">{{ __('Ip Address') }}</label>
                                     <input type="text" name="ip_address" id="input-name" class="form-control form-control-alternative w-90" value="{{$account->ip_address}}" required autofocus>

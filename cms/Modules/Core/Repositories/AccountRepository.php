@@ -24,7 +24,7 @@ class AccountRepository implements AccountRepositoryContract
     public function paginateAccount($paginate)
     {
         // TODO: Implement paginateAccount() method.
-        return $this->accountModel->paginate($paginate);
+        return $this->accountModel->with('user')->paginate($paginate);
     }
 
     public function findById($id)

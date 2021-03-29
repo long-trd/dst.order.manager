@@ -23,4 +23,10 @@ class UserRepository implements UserRepositoryContract
     {
         return $this->model->create($data);
     }
+
+    public function getAll()
+    {
+        // TODO: Implement getAll() method.
+        return $this->model->all();
+    }
 }

@@ -21,4 +21,9 @@ class UserService implements UserServiceContract
 
         return $this->user->store($data);
     }
+
+    public function getAll()
+    {
+        return $this->user->getAll();
+    }
 }

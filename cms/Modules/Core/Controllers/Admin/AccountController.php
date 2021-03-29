@@ -5,15 +5,18 @@ namespace Cms\Modules\Core\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Cms\Modules\Core\Services\Contracts\AccountServiceContract;
+use Cms\Modules\Core\Services\Contracts\UserServiceContract;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
     protected $accountService;
+    protected $userService;
 
-    public function __construct(AccountServiceContract $accountService)
+    public function __construct(AccountServiceContract $accountService, UserServiceContract $userService)
     {
         $this->accountService = $accountService;
+        $this->userService = $userService;
     }
 
     public function index()
@@ -27,12 +30,14 @@ class AccountController extends Controller
 
     public function create()
     {
-        return view('Core::account.create');
+        $users = $this->userService->getAll();
+
+        return view('Core::account.create', ['users' => $users]);
     }
 
     public function store(Request $request)
     {
-        $data = auth()->user()->hasRole('admin') ? $request->only(['ip_address', 'email', 'status', 'paypal_notes']) : $request->only(['ip_address', 'email', 'status']);
+        $data = auth()->user()->hasRole('admin') ? $request->only(['user_id', 'ip_address', 'email', 'status', 'paypal_notes']) : $request->only(['user_id', 'ip_address', 'email', 'status']);
 
         if ($this->accountService->create($data)) {
             return redirect()->route('admin.account.index');
@@ -43,9 +48,10 @@ class AccountController extends Controller
 
     public function edit($id)
     {
+        $users = $this->userService->getAll();
         $account = $this->accountService->findByID($id);
 
-        return view('Core::account.edit', ['account' => $account]);
+        return view('Core::account.edit', ['account' => $account, 'users' => $users]);
     }
 
     public function update($id, Request $request)
