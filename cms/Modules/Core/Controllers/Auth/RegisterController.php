@@ -4,7 +4,7 @@ namespace Cms\Modules\Core\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Cms\Modules\Core\Requests\UserCreateRequest;
-use Cms\Modules\Core\Services\Contacts\UserServiceContract;
+use Cms\Modules\Core\Services\Contracts\UserServiceContract;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Modules\Core\Services\Contacts;
+namespace Cms\Modules\Core\Services\Contracts;
 
 interface UserServiceContract
 {

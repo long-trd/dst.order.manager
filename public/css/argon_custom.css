@@ -5,3 +5,40 @@
 .nav-bar-height {
     height: 140px;
 }
+
+.list-account:hover,
+.list-account-dropdown:hover{
+    background-color: #BBBBBB;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.right-element {
+    position: absolute;
+    right: 5%;
+}
+
+.left-element {
+    position: absolute;
+    left: 5%;
+}
+
+.profile-icon {
+    margin-top: 30px;
+}
+
+.btn-search {
+    margin-top: 70px;
+}
+
+.pagination {
+    position: absolute;
+    top: 5px;
+    right: 0;
+}
+
+.w-90 {
+    width: 90%;
+}

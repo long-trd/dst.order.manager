@@ -5,6 +5,7 @@ namespace Cms\Modules\Core\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Cms\Modules\Core\Requests\LoginRequest;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {

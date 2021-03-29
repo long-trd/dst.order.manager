@@ -3,7 +3,7 @@
 namespace Cms\Modules\Core\Services;
 
 use Cms\Modules\Core\Repositories\Contracts\UserRepositoryContract;
-use Cms\Modules\Core\Services\Contacts\UserServiceContract;
+use Cms\Modules\Core\Services\Contracts\UserServiceContract;
 use Illuminate\Support\Facades\Hash;
 
 class UserService implements UserServiceContract
