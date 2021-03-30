@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 if (!function_exists('cxl_asset')) {
     function cxl_asset($path)
     {
@@ -12,3 +14,11 @@ if (!function_exists('cxl_asset')) {
         return $path;
     }
 }
+
+if (!function_exists('cxl_carbon')) {
+    function cxl_carbon()
+    {
+        return new Carbon();
+    }
+}
+

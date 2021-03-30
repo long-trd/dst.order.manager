@@ -46,3 +46,60 @@
 .pd-left-25 {
     padding-left: 25px;
 }
+
+.order-new:hover {
+    background-color: transparent;
+}
+
+.order-processing:hover {
+    background-color: #5e72e4;
+    color: #fff;
+}
+
+.order-needhelp:hover {
+    background-color: #fb6340;
+    color: #fff;
+}
+
+.order-cancel:hover {
+    background-color: #f5365c;
+    color: #fff;
+}
+
+.order-tracking:hover {
+    background-color: #11cdef;
+    color: #fff;
+}
+
+.order-shipped:hover {
+    background-color: #2dce89;
+    color: #fff;
+}
+
+.modal-dialog {
+    max-width: 700px;
+}
+
+.alert-missing-info {
+    width: 75%;
+    margin: 10px auto;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.alert-missing-info .close,
+.alert-notice .close {
+    right: 5px;
+    top: 45%;
+}
+
+.alert-notice {
+    width: 75%;
+    margin: 0 auto;
+    text-align: center;
+    word-break: break-word;
+}
+.budget {
+    max-width: 300px;
+    white-space: initial !important;
+}

@@ -13,7 +13,6 @@ class Account extends Model
 
     protected $fillable =
         [
-            'user_id',
             'email',
             'ip_address',
             'status',
@@ -42,5 +41,10 @@ class Account extends Model
     public function orders()
     {
         return $this->hasMany(Order::class, 'account_id', 'id');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_account', 'account_id');
     }
 }

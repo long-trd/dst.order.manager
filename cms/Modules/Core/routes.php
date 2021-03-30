@@ -51,7 +51,7 @@ Route::group([
 
             //ORDER
             Route::group(['prefix' => 'order'], function () {
-                Route::get('/{account}', 'OrderController@index')->name('admin.order.index');
+                Route::get('/', 'OrderController@index')->name('admin.order.index');
                 Route::get('create', 'OrderController@create')->name('admin.order.create');
                 Route::post('create', 'OrderController@store')->name('admin.order.store');
                 Route::get('edit/{id}', 'OrderController@edit')->name('admin.order.edit');

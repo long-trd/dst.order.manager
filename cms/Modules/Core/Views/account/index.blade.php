@@ -43,7 +43,7 @@
                             <tbody class="list">
                             @foreach($accounts as $account)
                                 <tr class="list-account" data-account="{{$account->id}}">
-                                    <th scope="row">
+                                    <th scope="row" class="budget">
                                         <div class="media align-items-center">
                                             <div class="media-body">
                                                 <span class="name mb-0 text-sm">{{$account->id}}</span>
@@ -51,12 +51,14 @@
                                         </div>
                                     </th>
                                     <td class="budget">
-                                        {{$account->user->name}}
+                                        @foreach($account->users as $user)
+                                            {{$user->name}} <br>
+                                        @endforeach
                                     </td>
                                     <td class="budget">
                                         {{$account->ip_address}}
                                     </td>
-                                    <td>
+                                    <td class="budget">
                                         <span class="badge badge-dot mr-4">
                                             <i class="
                                                 @if($account->status == 'live')
@@ -70,7 +72,7 @@
                                             <span class="status">{{$account->status}}</span>
                                         </span>
                                     </td>
-                                    <td>
+                                    <td class="budget">
                                         <div class="avatar-group">
                                             <span class="name mb-0 text-sm">{{$account->email}}</span>
                                         </div>
@@ -82,7 +84,7 @@
                                             </div>
                                         </td>
                                     @endif
-                                    <td class="text-right">
+                                    <td class="text-right budget">
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -26,27 +26,30 @@
                         <form method="post" action="{{ route('admin.account.create')}}" autocomplete="off">
                             @csrf
 
-                            @if (session('status'))
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @if (count($errors) > 0)
+                                <div class="alert alert-danger alert-dismissible fade show alert-missing-info" role="alert">
                                     {{ session('status') }}
+                                    <label class="form-control-label text-center text-white w-50">{{ __('Missing information !!!') }}</label>
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                             @endif
 
-
                             <div class="pl-lg-4 pd-left-25">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-name">{{ __('Shipper') }}</label>
-                                    <select class="form-control w-90" data-toggle="select" title="Simple select" data-live-search="true" name="user_id">
-                                        @foreach($users as $user)
+                                @if(auth()->user()->hasRole('admin'))
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-name">{{ __('Shipper') }}</label>
+                                        @foreach($users as $key => $user)
                                             @if(!$user->hasRole('admin'))
-                                                <option value="{{$user->id}}">{{$user->name}}</option>
+                                                <div class="custom-control custom-checkbox mb-3">
+                                                    <input class="custom-control-input" id="customCheck{{$key}}" type="checkbox" name="shipper[]" value="{{$user->id}}">
+                                                    <label class="custom-control-label" for="customCheck{{$key}}">{{$user->name}}</label>
+                                                </div>
                                             @endif
                                         @endforeach
-                                    </select>
-                                </div>
+                                    </div>
+                                @endif
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-name">{{ __('Ip Address') }}</label>
                                     <input type="text" name="ip_address" id="input-name" class="form-control form-control-alternative w-90" required autofocus>

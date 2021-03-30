@@ -36,7 +36,19 @@ class AccountService implements AccountServiceContract
     public function update($id, $data)
     {
         // TODO: Implement update() method.
-        return $this->accountRepository->update($id, $data);
+        $dataAccount = false;
+
+        foreach ($data as $key => $value) {
+            if ($key != 'shipper') $dataAccount[$key] = $value;
+        }
+
+        if ($dataAccount) {
+            $this->accountRepository->update($id, $data);
+            $accountUpdated = $this->accountRepository->findById($id);
+            $accountUpdated->users()->sync($data['shipper']);
+        }
+
+        return true;
     }
 
     public function delete($id)
@@ -48,6 +60,23 @@ class AccountService implements AccountServiceContract
     public function create($data)
     {
         // TODO: Implement create() method.
-        return $this->accountRepository->create($data);
+        $dataAccount = false;
+        $userAccount = false;
+
+        foreach ($data as $key => $value) {
+            if ($key != 'shipper') $dataAccount[$key] = $value;
+        }
+
+        if ($dataAccount) {
+            $accountCreated = $this->accountRepository->create($data);
+
+            foreach ($data['shipper'] as $userID) {
+                $userAccount['user_id'] = $userID;
+                $userAccount['account_id'] = $accountCreated->id;
+                $accountCreated->users()->attach($accountCreated->id, $userAccount);
+            }
+        }
+
+        return true;
     }
 }

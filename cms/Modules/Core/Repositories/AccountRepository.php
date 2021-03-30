@@ -24,13 +24,13 @@ class AccountRepository implements AccountRepositoryContract
     public function paginateAccount($paginate)
     {
         // TODO: Implement paginateAccount() method.
-        return $this->accountModel->with('user')->paginate($paginate);
+        return $this->accountModel->with('users')->paginate($paginate);
     }
 
     public function findById($id)
     {
         // TODO: Implement findById() method.
-        return $this->accountModel->findOrFail($id);
+        return $this->accountModel->with('users')->findOrFail($id);
     }
 
     public function update($id, $data)

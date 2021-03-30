@@ -4,6 +4,7 @@ namespace Cms\Modules\Core\Controllers\Admin;
 
 
 use App\Http\Controllers\Controller;
+use Cms\Modules\Core\Requests\CreateAccountRequest;
 use Cms\Modules\Core\Services\Contracts\AccountServiceContract;
 use Cms\Modules\Core\Services\Contracts\UserServiceContract;
 use Illuminate\Http\Request;
@@ -35,9 +36,9 @@ class AccountController extends Controller
         return view('Core::account.create', ['users' => $users]);
     }
 
-    public function store(Request $request)
+    public function store(CreateAccountRequest $request)
     {
-        $data = auth()->user()->hasRole('admin') ? $request->only(['user_id', 'ip_address', 'email', 'status', 'paypal_notes']) : $request->only(['user_id', 'ip_address', 'email', 'status']);
+        $data = auth()->user()->hasRole('admin') ? $request->only(['shipper', 'ip_address', 'email', 'status', 'paypal_notes']) : $request->only(['shipper', 'ip_address', 'email', 'status']);
 
         if ($this->accountService->create($data)) {
             return redirect()->route('admin.account.index');
@@ -54,9 +55,9 @@ class AccountController extends Controller
         return view('Core::account.edit', ['account' => $account, 'users' => $users]);
     }
 
-    public function update($id, Request $request)
+    public function update($id, CreateAccountRequest $request)
     {
-        $data = auth()->user()->hasRole('admin') ? $request->only(['ip_address', 'email', 'status', 'paypal_notes']) : $request->only(['ip_address', 'email', 'status']);
+        $data = auth()->user()->hasRole('admin') ? $request->only(['shipper','ip_address', 'email', 'status', 'paypal_notes']) : $request->only(['shipper', 'ip_address', 'email', 'status']);
 
         if ($this->accountService->update($id, $data)) {
             return redirect()->route('admin.account.edit', ['id' => $id]);

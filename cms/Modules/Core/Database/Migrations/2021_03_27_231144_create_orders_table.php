@@ -18,11 +18,11 @@ class CreateOrdersTable extends Migration
             $table->integer('account_id')->unsigned()->nullable();
             $table->integer('shipping_user_id')->unsigned()->nullable();
             $table->integer('helping_user_id')->unsigned()->nullable();
-            $table->string('name')->nullable();
-            $table->string('ebay_url')->nullable();
-            $table->string('product_url')->nullable();
-            $table->string('status')->nullable();
-            $table->string('shipping_information')->nullable();
+            $table->longText('name')->nullable();
+            $table->longText('ebay_url')->nullable();
+            $table->longText('product_url')->nullable();
+            $table->longText('status')->nullable();
+            $table->longText('shipping_information')->nullable();
             $table->integer('price')->nullable();
             $table->integer('quantity')->nullable();
             $table->timestamp('order_date')->nullable();

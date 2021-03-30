@@ -44,6 +44,11 @@
                         <i class="ni ni-circle-08 text-primary"></i> {{ __('Accounts') }}
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('admin.order.index')}}">
+                        <i class="ni ni-circle-08 text-primary"></i> {{ __('Orders') }}
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

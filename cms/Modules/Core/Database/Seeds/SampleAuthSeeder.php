@@ -47,7 +47,7 @@ class SampleAuthSeeder extends Seeder
             ],
             [
                 'name' => 'CMS Normal User',
-                'email' => 'user@caerux.cms',
+                'email' => 'user@tool.cms',
                 'password' => bcrypt('00000000'),
                 'email_verified_at' => Carbon::now()->timestamp
             ],
