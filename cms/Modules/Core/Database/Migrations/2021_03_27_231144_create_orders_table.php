@@ -18,6 +18,7 @@ class CreateOrdersTable extends Migration
             $table->integer('account_id')->unsigned()->nullable();
             $table->integer('shipping_user_id')->unsigned()->nullable();
             $table->integer('helping_user_id')->unsigned()->nullable();
+            $table->integer('listing_user_id')->unsigned()->nullable();
             $table->longText('name')->nullable();
             $table->longText('ebay_url')->nullable();
             $table->longText('product_url')->nullable();
@@ -35,6 +36,8 @@ class CreateOrdersTable extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('helping_user_id')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('listing_user_id')->references('id')->on('users')
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('account_id')->references('id')->on('accounts')
                 ->onUpdate('cascade')->onDelete('cascade');
         });
@@ -50,6 +53,7 @@ class CreateOrdersTable extends Migration
         Schema::table('orders', function (Blueprint $table) {
             $table->dropForeign('orders_shipping_user_id_foreign');
             $table->dropForeign('orders_helping_user_id_foreign');
+            $table->dropForeign('orders_listing_user_id_foreign');
             $table->dropForeign('orders_account_id_foreign');
         });
 

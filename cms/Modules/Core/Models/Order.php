@@ -13,8 +13,10 @@ class Order extends Model
 
     protected $fillable =
         [
+            'account_id',
             'shipping_user_id',
             'helping_user_id',
+            'listing_user_id',
             'name',
             'ebay_url',
             'product_url',
@@ -41,6 +43,11 @@ class Order extends Model
     public function helper()
     {
         return $this->belongsTo(User::class, 'helping_user_id');
+    }
+
+    public function lister()
+    {
+        return $this->belongsTo(User::class, 'listing_user_id');
     }
 
     public function account()

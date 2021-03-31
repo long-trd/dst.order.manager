@@ -24,9 +24,14 @@ class SampleAuthSeeder extends Seeder
                 'description' => 'Administrator'
             ],
             [
-                'name' => 'user',
-                'display_name' => 'Normal user',
-                'description' => 'Normal user'
+                'name' => 'shipper',
+                'display_name' => 'Shipper',
+                'description' => 'Shipper'
+            ],
+            [
+                'name' => 'manager',
+                'display_name' => 'Manager',
+                'description' => 'Manager'
             ],
         ];
 

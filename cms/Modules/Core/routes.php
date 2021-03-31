@@ -46,17 +46,27 @@ Route::group([
                 Route::post('create', 'AccountController@store')->name('admin.account.store');
                 Route::get('edit/{id}', 'AccountController@edit')->name('admin.account.edit');
                 Route::put('update/{id}', 'AccountController@update')->name('admin.account.update');
-                Route::delete('delete/{id}', 'AccountController@delete')->name('admin.account.delete');
+                Route::delete('delete/{id}', 'AccountController@delete')->name('admin.account.delete')->middleware(['role' => 'admin']);
             });
 
             //ORDER
             Route::group(['prefix' => 'order'], function () {
                 Route::get('/', 'OrderController@index')->name('admin.order.index');
-                Route::get('create', 'OrderController@create')->name('admin.order.create');
+                Route::get('create', 'OrderController@create')->name('admin.order.create')->middleware(['role:manager']);
                 Route::post('create', 'OrderController@store')->name('admin.order.store');
                 Route::get('edit/{id}', 'OrderController@edit')->name('admin.order.edit');
                 Route::put('update/{id}', 'OrderController@update')->name('admin.order.update');
-                Route::delete('delete/{id}', 'OrderController@delete')->name('admin.order.delete');
+                Route::delete('delete/{id}', 'OrderController@delete')->name('admin.order.delete')->middleware(['role' => 'admin']);
+            });
+
+            //USER
+            Route::group(['prefix' => 'user', 'middleware' => ['role:admin']], function () {
+                Route::get('/', 'UserController@index')->name('admin.user.index');
+                Route::get('create', 'UserController@create')->name('admin.user.create');
+                Route::post('create', 'UserController@store')->name('admin.user.store');
+                Route::get('edit/{id}', 'UserController@edit')->name('admin.user.edit');
+                Route::put('update/{id}', 'UserController@update')->name('admin.user.update');
+                Route::delete('delete/{id}', 'UserController@delete')->name('admin.user.delete');
             });
         });
     });

@@ -16,4 +16,6 @@ interface AccountRepositoryContract
     public function delete($id);
 
     public function create($data);
+
+    public function findByIpAddress($ip);
 }

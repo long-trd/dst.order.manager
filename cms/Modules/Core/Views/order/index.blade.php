@@ -51,7 +51,7 @@
                             </thead>
                             <tbody class="list">
                             @foreach($orders as $key => $order)
-                                <tr class="order-{{$order->status}}" data-account="{{$order->order_id}}">
+                                <tr class="order-{{$order->status}} right-click" data-order="{{$order->order_id}}">
                                     <th scope="row" class="budget">
                                         <div class="media align-items-center">
                                             <div class="media-body">
@@ -80,7 +80,7 @@
                                         </span>
                                     </td>
                                     <td class="budget">
-                                        {{$order->shipper->name}}
+                                        {{isset($order->shipper->name) ? $order->shipper->name : ''}}
                                     </td>
                                     <td class="budget">
                                         {{isset($order->helper->name) ? $order->helper->name : ''}}
@@ -128,8 +128,10 @@
                                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                                 <a class="dropdown-item list-account-dropdown"
                                                    href="{{route('admin.order.edit', ['id' => $order->order_id])}}">Edit</a>
-                                                <a class="dropdown-item list-account-dropdown delete-order"
-                                                   href="#" data-id="{{$order->order_id}}">Delete</a>
+                                                @if(auth()->user()->hasRole('admin'))
+                                                    <a class="dropdown-item list-account-dropdown delete-order"
+                                                       href="#" data-id="{{$order->order_id}}">Delete</a>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>
@@ -168,12 +170,14 @@
                                         <form role="form" action="{{route('admin.order.index')}}" method="GET">
                                             @csrf
                                             <div class="row">
-                                                <div class="col-md-6">
+                                                <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control" name="shipper" placeholder="Shipper name"
-                                                               value="{{isset($request['shipper']) ? $request['shipper'] : ''}}">
+                                                        <input type="text" class="form-control" name="random-search" placeholder="Search something..."
+                                                               value="{{isset($request['random-search']) ? $request['random-search'] : ''}}">
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <select class="form-control order-status" data-toggle="select" title="Simple select" data-live-search="true" name="status">
@@ -187,14 +191,6 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control" name="order_date" placeholder="Order date"
-                                                               value="{{isset($request['order_date']) ? $request['order_date'] : ''}}">
-                                                    </div>
-                                                </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <select class="form-control order-account" data-toggle="select" title="Simple select" data-live-search="true" name="account">
@@ -203,6 +199,38 @@
                                                                 <option value="{{$account->id}}" {{isset($request['account']) && $request['account'] == $account->id ? 'selected' : ''}}>{{$account->ip_address}}</option>
                                                             @endforeach
                                                         </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" name="shipper" placeholder="Shipper name"
+                                                               value="{{isset($request['shipper']) ? $request['shipper'] : ''}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" name="list" placeholder="List name"
+                                                               value="{{isset($request['list']) ? $request['list'] : ''}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="input-group input-group-alternative">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                        </div>
+                                                        <input class="form-control datepicker" placeholder="Start date" type="text" name="start_date" value="{{isset($request['start_date']) ? $request['start_date'] : ''}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="input-group input-group-alternative">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                        </div>
+                                                        <input class="form-control datepicker" placeholder="End date" type="text" name="end_date" value="{{isset($request['end_date']) ? $request['end_date'] : ''}}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -232,8 +260,12 @@
                 }
             });
 
+            $('.right-click').dblclick(function () {
+                window.location = `{{route('admin.order.edit', ['id' => ''])}}/${$(this).attr('data-order')}`;
+            });
+
             $('.delete-order').on('click', function (e) {
-                if (confirm('Do you want to delete this account ?')) {
+                if (confirm('Do you want to delete this order ?')) {
                     $.ajax({
                         type: 'DELETE',
                         url: '{{ route('admin.order.delete', ['id' => ''])}}' + '/' + $(this).attr('data-id'),

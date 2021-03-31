@@ -37,7 +37,8 @@
 
                             <div class="alert alert-warning alert-dismissible fade show alert-notice" role="alert">
                                 <label class="form-control-label text-center text-white w-50">{{ __('NOTICE') }}</label><br>
-                                <label class="form-control-label text-center text-white w-50">{{ __('If you set this order with tracking or shipped status, the tracking field can not be empty') }}</label>
+                                <label class="form-control-label text-center text-white w-50">{{ __('If you set this order with tracking or shipped status, the tracking field can not be empty.') }}</label>
+                                <label class="form-control-label text-center text-white w-50">{{ __('The account ip must be registered.') }}</label>
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -46,8 +47,12 @@
 
                             <div class="pl-lg-4 pd-left-25">
                                 <div class="form-group">
+                                    <label class="form-control-label" for="input-name">{{ __('Account IP') }}</label>
+                                    <input type="text" name="account_ip" class="form-control form-control-alternative w-90" required autofocus>
+                                </div>
+                                <div class="form-group">
                                     <label class="form-control-label" for="input-name">{{ __('Info') }}</label>
-                                    <input type="text" name="name" class="form-control form-control-alternative w-90" required autofocus>
+                                    <input type="text" name="name" class="form-control form-control-alternative w-90" required>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-email">{{ __('Ebay URL') }}</label>

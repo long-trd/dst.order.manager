@@ -46,9 +46,16 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('admin.order.index')}}">
-                        <i class="ni ni-circle-08 text-primary"></i> {{ __('Orders') }}
+                        <i class="ni ni-money-coins text-primary"></i> {{ __('Orders') }}
                     </a>
                 </li>
+                @if(auth()->user()->hasRole('admin'))
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('admin.user.index')}}">
+                            <i class="ni ni-single-02 text-primary"></i> {{ __('Users') }}
+                        </a>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>

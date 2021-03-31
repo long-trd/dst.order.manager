@@ -4,16 +4,19 @@ namespace Cms\Modules\Core\Services;
 
 
 use Carbon\Carbon;
+use Cms\Modules\Core\Repositories\Contracts\AccountRepositoryContract;
 use Cms\Modules\Core\Repositories\Contracts\OrderRepositoryContract;
 use Cms\Modules\Core\Services\Contracts\OrderServiceContract;
 
 class OrderService implements OrderServiceContract
 {
     protected $orderRepository;
+    protected $accountRepository;
 
-    public function __construct(OrderRepositoryContract $orderRepository)
+    public function __construct(OrderRepositoryContract $orderRepository, AccountRepositoryContract $accountRepository)
     {
         $this->orderRepository = $orderRepository;
+        $this->accountRepository = $accountRepository;
     }
 
     public function findAll($paginate)
@@ -37,8 +40,12 @@ class OrderService implements OrderServiceContract
     public function store($data)
     {
         // TODO: Implement store() method.
-        $data['shipping_user_id'] = auth()->user()->id;
+        if (!auth()->user()->hasRole('admin')) $data['shipping_user_id'] = auth()->user()->id;
+
         $data['order_date'] = Carbon::parse($data['order_date'])->format('Y-m-d');
+        $data['listing_user_id'] = auth()->user()->id;
+        $data['account_id'] = $this->accountRepository->findByIpAddress($data['account_ip'])->id;
+        unset($data['account_ip']);
 
         return $this->orderRepository->store($data);
     }
@@ -52,8 +59,9 @@ class OrderService implements OrderServiceContract
     public function update($id, $data)
     {
         // TODO: Implement update() method.
+        if (!auth()->user()->hasRole('admin')) $data['shipping_user_id'] = auth()->user()->id;
+
         $order = $this->findByID($id);
-        $data['shipping_user_id'] = auth()->user()->id;
         $data['order_date'] = Carbon::parse($data['order_date'])->format('Y-m-d');
 
         if ($order->status == 'needhelp') {

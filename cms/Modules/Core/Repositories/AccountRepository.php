@@ -50,4 +50,10 @@ class AccountRepository implements AccountRepositoryContract
         // TODO: Implement create() method.
         return $this->accountModel->create($data);
     }
+
+    public function findByIpAddress($ip)
+    {
+        // TODO: Implement findByIpAddress() method.
+        return $this->accountModel->where('ip_address', $ip)->first();
+    }
 }

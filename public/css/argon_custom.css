@@ -99,7 +99,9 @@
     text-align: center;
     word-break: break-word;
 }
-.budget {
-    max-width: 300px;
-    white-space: initial !important;
+
+.role-check {
+    display: inline;
+    position: absolute;
+    left: 25%;
 }

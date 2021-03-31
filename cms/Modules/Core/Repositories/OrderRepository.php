@@ -3,8 +3,10 @@
 namespace Cms\Modules\Core\Repositories;
 
 
+use Carbon\Carbon;
 use Cms\Modules\Core\Models\Order;
 use Cms\Modules\Core\Repositories\Contracts\OrderRepositoryContract;
+use Illuminate\Support\Facades\Schema;
 
 class OrderRepository implements OrderRepositoryContract
 {
@@ -37,9 +39,30 @@ class OrderRepository implements OrderRepositoryContract
     public function findByQuery($request, $paginate)
     {
         // TODO: Implement findByQuery() method.
-        $account = $shipper = $status = $orderDate = ['orders.id', '!=', null];
+        $startDate = $endDate = $account = $shipper = $status = ['orders.id', '!=', null];
+        $role = ['id', '!=', null];
+        $randomSearch = 'orders.id';
 
-        if (isset($request['account'])) {
+        if (isset($request['random-search'])) {
+            $randomSearch = '(';
+            $columns = Schema::getColumnListing('orders');
+            unset($columns['id']);
+            unset($columns['created_at']);
+            unset($columns['updated_at']);
+            unset($columns['deleted_at']);
+
+            foreach ($columns as $key => $column) {
+                if ($key + 1 == count($columns)) {
+                    $randomSearch .= 'orders.' . $column . ' like "%' . $request['random-search'] . '%"';
+                } else {
+                    $randomSearch .= 'orders.' . $column . ' like "%' . $request['random-search'] . '%" or ';
+                }
+            }
+
+            $randomSearch .= ')';
+        }
+
+        if (isset($request['account']) && $request['account'] != 'default') {
             $account = ['orders.account_id', $request['account']];
         }
 
@@ -47,25 +70,42 @@ class OrderRepository implements OrderRepositoryContract
             $shipper = ['users.name', 'like' , '%' . $request['shipper'] . '%'];
         }
 
-        if (isset($request['status'])) {
+        if (isset($request['list'])) {
+            $shipper = ['users.name', 'like' , '%' . $request['list'] . '%'];
+            $role = ['name','manager'];
+        }
+
+        if (isset($request['status']) && $request['status'] != 'default') {
             $status = ['orders.status', $request['status']];
         }
 
-        if (isset($request['order_date'])) {
-            $orderDate = ['orders.order_date', 'like', '%'. $request['order_date'] .'%'];
+        if (isset($request['start_date']) && isset($request['end_date'])) {
+            $startDate = ['order_date', '>=', Carbon::parse($request['start_date'])->format('Y-m-d')];
+            $endDate = ['order_date', '<=', Carbon::parse($request['end_date'])->format('Y-m-d')];
+        } elseif (isset($request['start_date'])) {
+            $startDate = ['order_date', '>=', Carbon::parse($request['start_date'])->format('Y-m-d')];
+        } elseif (isset($request['end_date'])) {
+            $endDate = ['order_date', '<=', Carbon::parse($request['end_date'])->format('Y-m-d')];
         }
 
         return $this->orderModel
             ->select('orders.id as order_id', 'users.*', 'orders.*')
-            ->join('users', 'orders.shipping_user_id', '=', 'users.id')
+            ->leftJoin('users', 'orders.shipping_user_id', '=', 'users.id')
             ->where(
                 [
                     $account,
                     $shipper,
                     $status,
-                    $orderDate
+                    $startDate,
+                    $endDate
                 ]
             )
+            ->whereRaw($randomSearch)
+            ->with(['lister' => function ($query) use ($role) {
+                $query->whereHas('roles', function ($roleQuery) use ($role) {
+                    $roleQuery->where([$role]);
+                });
+            }])
             ->orderBy('orders.created_at', 'desc')
             ->paginate($paginate);
     }

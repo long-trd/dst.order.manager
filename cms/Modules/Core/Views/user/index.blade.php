@@ -9,7 +9,7 @@
             <div class="header-body">
                 <div class="row align-items-center py-4 nav-bar-height position-relative">
                     <div class="btn-search left-element">
-                        <a href="{{route('admin.account.create')}}" class="btn btn-success text-white">Create</a>
+                        <a href="{{route('admin.user.create')}}" class="btn btn-success text-white">Create</a>
                     </div>
                 </div>
             </div>
@@ -30,60 +30,39 @@
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col" class="sort" data-sort="no">No</th>
-                                <th scope="col" class="sort" data-sort="shipper">Shipper</th>
-                                <th scope="col" class="sort" data-sort="ip-address">Ip Address</th>
-                                <th scope="col" class="sort" data-sort="status">Status</th>
-                                <th scope="col">Email</th>
-                                @if(auth()->user()->hasRole('admin'))
-                                    <th scope="col" class="sort" data-sort="paypal-note">Paypal Note</th>
-                                @endif
+                                <th scope="col" class="sort" data-sort="name">Name</th>
+                                <th scope="col" class="sort" data-sort="email">Email</th>
+                                <th scope="col" class="sort" data-sort="role">Role</th>
                                 <th scope="col"></th>
                             </tr>
                             </thead>
                             <tbody class="list">
-                            @foreach($accounts as $account)
-                                <tr class="list-account" data-account="{{$account->id}}">
+                            @foreach($users as $user)
+                                <tr class="list-account {{$user->roles[0]['name']}}-role" data-user="{{$user->id}}">
                                     <th scope="row" class="budget">
                                         <div class="media align-items-center">
                                             <div class="media-body">
-                                                <span class="name mb-0 text-sm">{{$account->id}}</span>
+                                                <span class="name mb-0 text-sm">{{$user->id}}</span>
                                             </div>
                                         </div>
                                     </th>
                                     <td class="budget">
-                                        @foreach($account->users as $user)
-                                            {{$user->name}} <br>
-                                        @endforeach
-                                    </td>
-                                    <td class="budget">
-                                        {{$account->ip_address}}
-                                    </td>
-                                    <td class="budget">
-                                        <span class="badge badge-dot mr-4">
-                                            <i class="
-                                                @if($account->status == 'live')
-                                                    bg-success
-                                                @elseif ($account->status == 'suspended')
-                                                    bg-danger
-                                                @else
-                                                    bg-warning
-                                                @endif
-                                            "></i>
-                                            <span class="status">{{$account->status}}</span>
-                                        </span>
+                                        {{$user->name}}
                                     </td>
                                     <td class="budget">
                                         <div class="avatar-group">
-                                            <span class="name mb-0 text-sm">{{$account->email}}</span>
+                                            <span class="name mb-0 text-sm">{{$user->email}}</span>
                                         </div>
                                     </td>
-                                    @if(auth()->user()->hasRole('admin'))
-                                        <td>
-                                            <div class="avatar-group">
-                                                <span class="name mb-0 text-sm">{{$account->paypal_notes}}</span>
-                                            </div>
-                                        </td>
-                                    @endif
+                                    <td class="budget">
+                                        <div class="avatar-group">
+                                            <span class="name mb-0 text-sm">
+                                                @foreach($user->roles as $role)
+                                                    {{$role->name}}<br>
+                                                @endforeach
+                                            </span>
+                                        </div>
+                                    </td>
                                     <td class="text-right budget">
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
@@ -92,13 +71,9 @@
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                                 <a class="dropdown-item list-account-dropdown"
-                                                   href="{{route('admin.order.index', ['account' => $account->ip_address])}}">Orders</a>
-                                                <a class="dropdown-item list-account-dropdown"
-                                                   href="{{route('admin.account.edit', ['account' => $account->id])}}">Edit</a>
-                                                @if(auth()->user()->hasRole('admin'))
-                                                    <a class="dropdown-item list-account-dropdown delete-account"
-                                                       href="#" data-id="{{$account->id}}">Delete</a>
-                                                @endif
+                                                   href="{{route('admin.user.edit', ['id' => $user->id])}}">Edit</a>
+                                                <a class="dropdown-item list-account-dropdown delete-user"
+                                                   href="#" data-id="{{$user->id}}">Delete</a>
                                             </div>
                                         </div>
                                     </td>
@@ -109,7 +84,7 @@
                     </div>
                     <!-- Card footer -->
                     <div class="card-footer py-4 position-relative">
-                        {!! $accounts->links() !!}
+                        {!! $users->links() !!}
                     </div>
                 </div>
             </div>
@@ -130,11 +105,11 @@
 @push('js')
     <script type="text/javascript">
         $(document).ready(function () {
-            $('.delete-account').on('click', function (e) {
-                if (confirm('Do you want to delete this account ?')) {
+            $('.delete-user').on('click', function (e) {
+                if (confirm('Do you want to delete this user ?')) {
                     $.ajax({
                         type: 'DELETE',
-                        url: '{{ route('admin.account.delete', ['id' => ''])}}' + '/' + $(this).attr('data-id'),
+                        url: '{{ route('admin.user.delete', ['id' => ''])}}' + '/' + $(this).attr('data-id'),
                         headers: {
                             'X-CSRF-TOKEN': '{!! csrf_token() !!}'
                         },
