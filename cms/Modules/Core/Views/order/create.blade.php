@@ -97,6 +97,14 @@
                                     <input type="number" name="quantity" class="form-control form-control-alternative w-25" required>
                                 </div>
                                 <div class="form-group">
+                                    <div class="input-group input-group-alternative w-25">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                        </div>
+                                        <input class="form-control datepicker" placeholder="Select date" type="text" name="order_date" value="" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label class="form-control-label" for="input-email">{{ __('Customer Notes') }}</label>
                                     <textarea name="customer_notes" class="form-control w-90" rows="3" required></textarea>
                                 </div>
