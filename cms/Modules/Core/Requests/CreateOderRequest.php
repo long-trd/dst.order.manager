@@ -27,8 +27,16 @@ class CreateOderRequest extends FormRequest
         $rules = [
             'account_ip' => [
                 function ($attr, $values, $fail) {
+                    $userID = auth()->user()->id;
+
                     if (!$values) return $fail('account ip not null');
-                    if (!Account::where('ip_address', $values)->first()) return $fail('account is not registered');
+
+                    if (!Account::where('ip_address', $values)
+                        ->whereHas('users', function ($query) use ($userID) {
+                            $query->where('users.id', $userID);
+                        })
+                        ->first())
+                        return $fail('account is not registered');
                 }
             ]
         ];

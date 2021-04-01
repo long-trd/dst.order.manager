@@ -32,6 +32,7 @@
                             <tr>
                                 <th scope="col" class="sort" data-sort="no">No</th>
                                 <th scope="col" class="sort" data-sort="status">Status</th>
+                                <th scope="col" class="sort" data-sort="manager">Manager</th>
                                 <th scope="col" class="sort" data-sort="shipper">Shipper</th>
                                 <th scope="col" class="sort" data-sort="helper">Helper</th>
                                 <th scope="col" class="sort" data-sort="name">Info</th>
@@ -78,6 +79,9 @@
                                             "></i>
                                             <span class="status">{{$order->status}}</span>
                                         </span>
+                                    </td>
+                                    <td class="budget">
+                                        {{isset($order->manager->name) ? $order->manager->name : ''}}
                                     </td>
                                     <td class="budget">
                                         {{isset($order->shipper->name) ? $order->shipper->name : ''}}
@@ -211,8 +215,8 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control" name="list" placeholder="List name"
-                                                               value="{{isset($request['list']) ? $request['list'] : ''}}">
+                                                        <input type="text" class="form-control" name="manager" placeholder="List name"
+                                                               value="{{isset($request['manager']) ? $request['manager'] : ''}}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -251,6 +255,10 @@
 @push('js')
     <script type="text/javascript">
         $(document).ready(function () {
+            @if($errors->has('shipper'))
+                    alert("Don't have any shipper !!!");
+            @endif
+
             $('.order-status, .order-account').on('change', function () {
                 var option = $(this).find('option:first');
                 if (this.value == 'default') {

@@ -40,8 +40,6 @@ class OrderService implements OrderServiceContract
     public function store($data)
     {
         // TODO: Implement store() method.
-        if (!auth()->user()->hasRole('admin')) $data['shipping_user_id'] = auth()->user()->id;
-
         $data['order_date'] = Carbon::parse($data['order_date'])->format('Y-m-d');
         $data['listing_user_id'] = auth()->user()->id;
         $data['account_id'] = $this->accountRepository->findByIpAddress($data['account_ip'])->id;

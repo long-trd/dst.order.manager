@@ -45,7 +45,7 @@ class Order extends Model
         return $this->belongsTo(User::class, 'helping_user_id');
     }
 
-    public function lister()
+    public function manager()
     {
         return $this->belongsTo(User::class, 'listing_user_id');
     }

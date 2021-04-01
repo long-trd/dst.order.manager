@@ -28,7 +28,7 @@
 
                             @if (count($errors) > 0)
                                 <div class="alert alert-danger alert-dismissible fade show alert-missing-info" role="alert">
-                                    <label class="form-control-label text-center text-white w-50">{{ __('Missing information !!!') }}</label>
+                                    <label class="form-control-label text-center text-white w-50">{{ __('Invalid data !!!') }}</label>
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -38,7 +38,7 @@
                             <div class="alert alert-warning alert-dismissible fade show alert-notice" role="alert">
                                 <label class="form-control-label text-center text-white w-50">{{ __('NOTICE') }}</label><br>
                                 <label class="form-control-label text-center text-white w-50">{{ __('If you set this order with tracking or shipped status, the tracking field can not be empty.') }}</label>
-                                <label class="form-control-label text-center text-white w-50">{{ __('The account ip must be registered.') }}</label>
+                                <label class="form-control-label text-center text-white w-50">{{ __('The account ip must be registered and belongs to you.') }}</label>
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -46,6 +46,15 @@
 
 
                             <div class="pl-lg-4 pd-left-25">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-name">{{ __('Shipper') }}</label>
+                                    @foreach($shippers as $key => $shipper)
+                                        <div class="custom-control custom-radio mb-3">
+                                            <input name="shipping_user_id" value="{{$shipper->id}}" class="custom-control-input" id="shipper-{{$key}}" type="radio">
+                                            <label class="custom-control-label" for="shipper-{{$key}}">{{$shipper->name}}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-name">{{ __('Account IP') }}</label>
                                     <input type="text" name="account_ip" class="form-control form-control-alternative w-90" required autofocus>

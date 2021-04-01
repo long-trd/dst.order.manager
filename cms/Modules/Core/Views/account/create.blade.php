@@ -37,19 +37,6 @@
                             @endif
 
                             <div class="pl-lg-4 pd-left-25">
-                                @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('manager'))
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-name">{{ __('Shipper') }}</label>
-                                        @foreach($users as $key => $user)
-                                            @if(!$user->hasRole('admin') && !$user->hasRole('manager'))
-                                                <div class="custom-control custom-checkbox mb-3">
-                                                    <input class="custom-control-input" id="customCheck{{$key}}" type="checkbox" name="shipper[]" value="{{$user->id}}">
-                                                    <label class="custom-control-label" for="customCheck{{$key}}">{{$user->name}}</label>
-                                                </div>
-                                            @endif
-                                        @endforeach
-                                    </div>
-                                @endif
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-name">{{ __('Ip Address') }}</label>
                                     <input type="text" name="ip_address" id="input-name" class="form-control form-control-alternative w-90" required autofocus>

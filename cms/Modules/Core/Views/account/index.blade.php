@@ -10,6 +10,7 @@
                 <div class="row align-items-center py-4 nav-bar-height position-relative">
                     <div class="btn-search left-element">
                         <a href="{{route('admin.account.create')}}" class="btn btn-success text-white">Create</a>
+                        <a href="{{route('admin.account.index', ['id' => auth()->user()->id])}}" class="btn btn-info text-white">My Account</a>
                     </div>
                 </div>
             </div>
@@ -30,7 +31,7 @@
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col" class="sort" data-sort="no">No</th>
-                                <th scope="col" class="sort" data-sort="shipper">Shipper</th>
+                                <th scope="col" class="sort" data-sort="shipper">Manager</th>
                                 <th scope="col" class="sort" data-sort="ip-address">Ip Address</th>
                                 <th scope="col" class="sort" data-sort="status">Status</th>
                                 <th scope="col">Email</th>

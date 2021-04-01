@@ -7,17 +7,20 @@ use App\Http\Controllers\Controller;
 use Cms\Modules\Core\Requests\CreateOderRequest;
 use Cms\Modules\Core\Services\Contracts\AccountServiceContract;
 use Cms\Modules\Core\Services\Contracts\OrderServiceContract;
+use Cms\Modules\Core\Services\Contracts\UserServiceContract;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
     protected $orderService;
     protected $accountService;
+    protected $userService;
 
-    public function __construct(OrderServiceContract $orderService, AccountServiceContract $accountService)
+    public function __construct(OrderServiceContract $orderService, AccountServiceContract $accountService, UserServiceContract $userService)
     {
         $this->orderService = $orderService;
         $this->accountService = $accountService;
+        $this->userService = $userService;
     }
 
     public function index(Request $request)
@@ -28,7 +31,7 @@ class OrderController extends Controller
         $orders = $this->orderService->findByQuery($request->all(), $paginate);
 
         foreach ($orders as $order) {
-            $totalPrice += $order->price;
+            $totalPrice += intval($order->price) * intval($order->quantity);
         }
 
         $accounts = $this->accountService->getAll();
@@ -38,7 +41,11 @@ class OrderController extends Controller
 
     public function create()
     {
-        return view('Core::order.create');
+        $shippers = $this->userService->findAllShipper();
+
+        if (!$shippers) return redirect()->route('admin.order.index')->withErrors(['shipper' => "Don't have any shipper"]);
+
+        return view('Core::order.create', ['shippers' => $shippers]);
     }
 
     public function store(CreateOderRequest $request)

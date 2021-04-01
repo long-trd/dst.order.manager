@@ -24,7 +24,6 @@ class CreateAccountRequest extends FormRequest
     public function rules()
     {
         return [
-            'shipper' => 'required',
             'ip_address' => 'required',
             'email' => 'required',
             'status' => 'required',

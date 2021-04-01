@@ -20,11 +20,11 @@ class AccountController extends Controller
         $this->userService = $userService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $paginate = 10;
 
-        $accounts = $this->accountService->paginateAccount($paginate);
+        $accounts = $this->accountService->paginateAccount($request->all(), $paginate);
 
         return view('Core::account.index', ['accounts' => $accounts]);
     }
@@ -38,7 +38,7 @@ class AccountController extends Controller
 
     public function store(CreateAccountRequest $request)
     {
-        $data = auth()->user()->hasRole('admin') ? $request->only(['shipper', 'ip_address', 'email', 'status', 'paypal_notes']) : $request->only(['shipper', 'ip_address', 'email', 'status']);
+        $data = auth()->user()->hasRole('admin') ? $request->only(['ip_address', 'email', 'status', 'paypal_notes']) : $request->only(['ip_address', 'email', 'status']);
 
         if ($this->accountService->create($data)) {
             return redirect()->route('admin.account.index');

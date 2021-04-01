@@ -70,8 +70,8 @@ class OrderRepository implements OrderRepositoryContract
             $shipper = ['users.name', 'like' , '%' . $request['shipper'] . '%'];
         }
 
-        if (isset($request['list'])) {
-            $shipper = ['users.name', 'like' , '%' . $request['list'] . '%'];
+        if (isset($request['manager'])) {
+            $shipper = ['users.name', 'like' , '%' . $request['manager'] . '%'];
             $role = ['name','manager'];
         }
 
@@ -101,7 +101,7 @@ class OrderRepository implements OrderRepositoryContract
                 ]
             )
             ->whereRaw($randomSearch)
-            ->with(['lister' => function ($query) use ($role) {
+            ->with(['manager' => function ($query) use ($role) {
                 $query->whereHas('roles', function ($roleQuery) use ($role) {
                     $roleQuery->where([$role]);
                 });

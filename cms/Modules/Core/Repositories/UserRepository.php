@@ -65,4 +65,12 @@ class UserRepository implements UserRepositoryContract
         // TODO: Implement delete() method.
         return $this->model->find($id)->delete();
     }
+
+    public function findAllShipper()
+    {
+        // TODO: Implement findAllShipper() method.
+        return $this->model->whereHas('role', function ($query) {
+            $query->where('name', 'shipper');
+        })->get();
+    }
 }

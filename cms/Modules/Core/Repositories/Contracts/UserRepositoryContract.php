@@ -19,4 +19,6 @@ interface UserRepositoryContract
     public function findRole($id);
 
     public function delete($id);
+
+    public function findAllShipper();
 }

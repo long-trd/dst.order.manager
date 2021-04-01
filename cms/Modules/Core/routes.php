@@ -42,7 +42,7 @@ Route::group([
             //ACCOUNT
             Route::group(['prefix' => 'account'], function () {
                 Route::get('/', 'AccountController@index')->name('admin.account.index');
-                Route::get('create', 'AccountController@create')->name('admin.account.create');
+                Route::get('create', 'AccountController@create')->name('admin.account.create')->middleware(['role:manager']);;
                 Route::post('create', 'AccountController@store')->name('admin.account.store');
                 Route::get('edit/{id}', 'AccountController@edit')->name('admin.account.edit');
                 Route::put('update/{id}', 'AccountController@update')->name('admin.account.update');

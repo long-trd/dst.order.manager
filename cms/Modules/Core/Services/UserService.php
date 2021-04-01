@@ -96,4 +96,10 @@ class UserService implements UserServiceContract
         // TODO: Implement delete() method.
         return $this->user->delete($id);
     }
+
+    public function findAllShipper()
+    {
+        // TODO: Implement findAllShipper() method.
+        return $this->user->findAllShipper();
+    }
 }

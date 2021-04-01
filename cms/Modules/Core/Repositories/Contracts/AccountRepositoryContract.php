@@ -7,7 +7,7 @@ interface AccountRepositoryContract
 {
     public function getAll();
 
-    public function paginateAccount($paginate);
+    public function paginateAccount($request, $paginate);
 
     public function findById($id);
 

@@ -21,10 +21,10 @@ class AccountService implements AccountServiceContract
         return $this->accountRepository->getAll();
     }
 
-    public function paginateAccount($paginate)
+    public function paginateAccount($request, $paginate)
     {
         // TODO: Implement paginateAccount() method.
-        return $this->accountRepository->paginateAccount($paginate);
+        return $this->accountRepository->paginateAccount($request, $paginate);
     }
 
     public function findByID($id)
@@ -60,22 +60,10 @@ class AccountService implements AccountServiceContract
     public function create($data)
     {
         // TODO: Implement create() method.
-        $dataAccount = false;
-        $userAccount = false;
-
-        foreach ($data as $key => $value) {
-            if ($key != 'shipper') $dataAccount[$key] = $value;
-        }
-
-        if ($dataAccount) {
-            $accountCreated = $this->accountRepository->create($data);
-
-            foreach ($data['shipper'] as $userID) {
-                $userAccount['user_id'] = $userID;
-                $userAccount['account_id'] = $accountCreated->id;
-                $accountCreated->users()->attach($accountCreated->id, $userAccount);
-            }
-        }
+        $accountCreated = $this->accountRepository->create($data);
+        $userAccount['user_id'] = auth()->user()->id;
+        $userAccount['account_id'] = $accountCreated->id;
+        $accountCreated->users()->attach($accountCreated->id, $userAccount);
 
         return true;
     }
