@@ -18,4 +18,6 @@ interface AccountRepositoryContract
     public function create($data);
 
     public function findByIpAddress($ip);
+
+    public function findByManager($id);
 }

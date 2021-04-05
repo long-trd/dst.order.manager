@@ -65,4 +65,13 @@ class AccountRepository implements AccountRepositoryContract
         // TODO: Implement findByIpAddress() method.
         return $this->accountModel->where('ip_address', $ip)->first();
     }
+
+    public function findByManager($id)
+    {
+        // TODO: Implement findByManager() method.
+        return $this->accountModel
+            ->whereHas('users', function ($query) use ($id) {
+                $query->where('users.id', $id);
+        })->get();
+    }
 }

@@ -67,4 +67,10 @@ class AccountService implements AccountServiceContract
 
         return true;
     }
+
+    public function findByManager($id)
+    {
+        // TODO: Implement findByManager() method.
+        return $this->accountRepository->findByManager($id);
+    }
 }

@@ -43,9 +43,11 @@ class OrderController extends Controller
     {
         $shippers = $this->userService->findAllShipper();
 
+        $accounts = $this->accountService->findByManager(auth()->user()->id);
+
         if (!$shippers) return redirect()->route('admin.order.index')->withErrors(['shipper' => "Don't have any shipper"]);
 
-        return view('Core::order.create', ['shippers' => $shippers]);
+        return view('Core::order.create', ['shippers' => $shippers, 'accounts' => $accounts]);
     }
 
     public function store(CreateOderRequest $request)

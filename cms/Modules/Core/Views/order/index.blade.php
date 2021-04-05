@@ -31,6 +31,7 @@
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col" class="sort" data-sort="no">No</th>
+                                <th scope="col" class="sort" data-sort="account_ip">Account IP</th>
                                 <th scope="col" class="sort" data-sort="status">Status</th>
                                 <th scope="col" class="sort" data-sort="manager">Manager</th>
                                 <th scope="col" class="sort" data-sort="shipper">Shipper</th>
@@ -60,6 +61,9 @@
                                             </div>
                                         </div>
                                     </th>
+                                    <td class="budget">
+                                        {{$order->account->ip_address}}
+                                    </td>
                                     <td class="budget">
                                         <span class="badge badge-dot mr-4">
                                             <i class="

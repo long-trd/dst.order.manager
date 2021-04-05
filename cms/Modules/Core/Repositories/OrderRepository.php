@@ -40,7 +40,7 @@ class OrderRepository implements OrderRepositoryContract
     {
         // TODO: Implement findByQuery() method.
         $startDate = $endDate = $account = $shipper = $status = ['orders.id', '!=', null];
-        $role = ['id', '!=', null];
+        $role = $manager = ['id', '!=', null];
         $randomSearch = 'orders.id';
 
         if (isset($request['random-search'])) {
@@ -53,11 +53,11 @@ class OrderRepository implements OrderRepositoryContract
 
             foreach ($columns as $key => $column) {
                 if ($key + 1 == count($columns)) {
-                    $randomSearch .= 'orders.' . $column . ' like "%' . $request['random-search'] . '%"';
-                } else {
                     $randomSearch .= 'orders.' . $column . ' like "%' . $request['random-search'] . '%" or ';
                 }
             }
+
+            $randomSearch .= 'accounts.ip_address like "%' . $request['random-search'] . '%"';
 
             $randomSearch .= ')';
         }
@@ -71,7 +71,7 @@ class OrderRepository implements OrderRepositoryContract
         }
 
         if (isset($request['manager'])) {
-            $shipper = ['users.name', 'like' , '%' . $request['manager'] . '%'];
+            $manager = ['users.name', 'like' , '%' . $request['manager'] . '%'];
             $role = ['name','manager'];
         }
 
@@ -91,6 +91,7 @@ class OrderRepository implements OrderRepositoryContract
         return $this->orderModel
             ->select('orders.id as order_id', 'users.*', 'orders.*')
             ->leftJoin('users', 'orders.shipping_user_id', '=', 'users.id')
+            ->leftJoin('accounts', 'orders.account_id', '=', 'accounts.id')
             ->where(
                 [
                     $account,
@@ -101,10 +102,10 @@ class OrderRepository implements OrderRepositoryContract
                 ]
             )
             ->whereRaw($randomSearch)
-            ->with(['manager' => function ($query) use ($role) {
-                $query->whereHas('roles', function ($roleQuery) use ($role) {
+            ->with(['account', 'manager' => function ($query) use ($role, $manager) {
+                $query->whereHas('roles', function ($roleQuery) use ($role, $manager) {
                     $roleQuery->where([$role]);
-                });
+                })->where([$manager]);
             }])
             ->orderBy('orders.created_at', 'desc')
             ->paginate($paginate);

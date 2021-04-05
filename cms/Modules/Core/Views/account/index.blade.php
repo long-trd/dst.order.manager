@@ -93,7 +93,7 @@
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                                 <a class="dropdown-item list-account-dropdown"
-                                                   href="{{route('admin.order.index', ['account' => $account->ip_address])}}">Orders</a>
+                                                   href="{{route('admin.order.index', ['account' => $account->id])}}">Orders</a>
                                                 <a class="dropdown-item list-account-dropdown"
                                                    href="{{route('admin.account.edit', ['account' => $account->id])}}">Edit</a>
                                                 @if(auth()->user()->hasRole('admin'))

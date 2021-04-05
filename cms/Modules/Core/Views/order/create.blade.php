@@ -57,7 +57,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-name">{{ __('Account IP') }}</label>
-                                    <input type="text" name="account_ip" class="form-control form-control-alternative w-90" required autofocus>
+                                    <select class="form-control order-status w-25" data-toggle="select" data-live-search="true" name="account_ip">
+                                        @foreach($accounts as $account)
+                                            <option value="{{$account->ip_address}}">{{$account->ip_address}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-name">{{ __('Info') }}</label>
