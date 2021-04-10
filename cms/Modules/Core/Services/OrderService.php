@@ -57,7 +57,7 @@ class OrderService implements OrderServiceContract
     public function update($id, $data)
     {
         // TODO: Implement update() method.
-        if (!auth()->user()->hasRole('admin')) $data['shipping_user_id'] = auth()->user()->id;
+        if (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('manager')) $data['shipping_user_id'] = auth()->user()->id;
 
         $order = $this->findByID($id);
         $data['order_date'] = Carbon::parse($data['order_date'])->format('Y-m-d');
