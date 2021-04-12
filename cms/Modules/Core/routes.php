@@ -55,6 +55,7 @@ Route::group([
                 Route::get('create', 'OrderController@create')->name('admin.order.create')->middleware(['role:manager']);
                 Route::post('create', 'OrderController@store')->name('admin.order.store');
                 Route::get('edit/{id}', 'OrderController@edit')->name('admin.order.edit');
+                Route::post('/{id}', 'OrderController@detail')->name('admin.order.detail');
                 Route::put('update/{id}', 'OrderController@update')->name('admin.order.update');
                 Route::delete('delete/{id}', 'OrderController@delete')->name('admin.order.delete')->middleware(['role' => 'admin']);
             });

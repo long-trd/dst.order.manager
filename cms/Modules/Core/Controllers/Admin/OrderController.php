@@ -73,10 +73,20 @@ class OrderController extends Controller
         $request = $request->except('_token');
 
         if ($this->orderService->update($id, $request)) {
-            return redirect()->route('admin.order.edit', ['id' => $id])->with('success', 'successful');
+            return redirect()->route('admin.order.index')->with('success', 'successful');
         }
 
         abort(404);
+    }
+
+    public function detail($id)
+    {
+        return response()->json([
+            'error' => false,
+            'status' => 200,
+            'message' => 'success',
+            'data' => $this->orderService->findByID($id)
+        ]);
     }
 
     public function delete($id)

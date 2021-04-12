@@ -105,3 +105,10 @@
     position: absolute;
     left: 25%;
 }
+
+.shipping_information {
+    max-width: 396px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}

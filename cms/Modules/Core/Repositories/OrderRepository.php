@@ -121,7 +121,7 @@ class OrderRepository implements OrderRepositoryContract
     {
         // TODO: Implement findByID() method.
         return $this->orderModel
-            ->with(['helper', 'shipper'])
+            ->with(['helper', 'shipper', 'manager', 'account'])
             ->findOrFail($id);
     }
 

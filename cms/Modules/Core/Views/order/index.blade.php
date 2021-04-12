@@ -11,6 +11,7 @@
                     <div class="btn-search left-element">
                         <a href="{{route('admin.order.create')}}" class="btn btn-success text-white">Create</a>
                         <button class="btn btn-info text-white" data-toggle="modal" data-target="#modal-form">Search</button>
+                        <button id="btn-order-detail" class="btn btn-info text-white" data-toggle="modal" data-target="#modal-form-detail" style="display: none">Detail</button>
                     </div>
                 </div>
             </div>
@@ -36,15 +37,15 @@
                                 <th scope="col" class="sort" data-sort="manager">Manager</th>
                                 <th scope="col" class="sort" data-sort="shipper">Shipper</th>
                                 <th scope="col" class="sort" data-sort="helper">Helper</th>
-                                <th scope="col" class="sort" data-sort="name">Info</th>
-                                <th scope="col" class="sort" data-sort="ebay_url">Ebay URL</th>
-                                <th scope="col" class="sort" data-sort="product_url">Product URL</th>
+                                <th scope="col" class="sort" data-sort="name" style="display: none">Info</th>
+                                <th scope="col" class="sort" data-sort="ebay_url" style="display: none">Ebay URL</th>
+                                <th scope="col" class="sort" data-sort="product_url" style="display: none">Product URL</th>
                                 <th scope="col" class="sort" data-sort="shipping_infomation">Shipping Infomation</th>
-                                <th scope="col" class="sort" data-sort="price">Price</th>
-                                <th scope="col" class="sort" data-sort="quantity">Quantity</th>
-                                <th scope="col" class="sort" data-sort="order_date">Order Date</th>
-                                <th scope="col" class="sort" data-sort="customer_notes">Customer Notes</th>
-                                <th scope="col" class="sort" data-sort="tracking">Tracking</th>
+                                <th scope="col" class="sort" data-sort="price" style="display: none">Price</th>
+                                <th scope="col" class="sort" data-sort="quantity" style="display: none">Quantity</th>
+                                <th scope="col" class="sort" data-sort="order_date" style="display: none">Order Date</th>
+                                <th scope="col" class="sort" data-sort="customer_notes" style="display: none">Customer Notes</th>
+                                <th scope="col" class="sort" data-sort="tracking" style="display: none">Tracking</th>
                                 @if(auth()->user()->hasRole('admin'))
                                     <th scope="col" class="sort" data-sort="paypal-notes">Paypal Notes</th>
                                 @endif
@@ -53,7 +54,7 @@
                             </thead>
                             <tbody class="list">
                             @foreach($orders as $key => $order)
-                                <tr class="order-{{$order->status}} right-click" data-order="{{$order->order_id}}">
+                                <tr class="order-{{$order->status}} right-click" data-order="{{$order->order_id}}" data-no="{{$key}}">
                                     <th scope="row" class="budget">
                                         <div class="media align-items-center">
                                             <div class="media-body">
@@ -61,10 +62,10 @@
                                             </div>
                                         </div>
                                     </th>
-                                    <td class="budget">
+                                    <td class="budget ip_address">
                                         {{$order->account->ip_address}}
                                     </td>
-                                    <td class="budget">
+                                    <td class="budget status">
                                         <span class="badge badge-dot mr-4">
                                             <i class="
                                                 @if($order->status == 'new')
@@ -84,40 +85,40 @@
                                             <span class="status">{{$order->status}}</span>
                                         </span>
                                     </td>
-                                    <td class="budget">
+                                    <td class="budget manager_name">
                                         {{isset($order->manager->name) ? $order->manager->name : ''}}
                                     </td>
-                                    <td class="budget">
+                                    <td class="budget shipper_name">
                                         {{isset($order->shipper->name) ? $order->shipper->name : ''}}
                                     </td>
-                                    <td class="budget">
+                                    <td class="budget helper_name">
                                         {{isset($order->helper->name) ? $order->helper->name : ''}}
                                     </td>
-                                    <td class="budget">
+                                    <td class="budget name" style="display: none">
                                         {{$order->name}}
                                     </td>
-                                    <td class="budget">
+                                    <td class="budget ebay_url" style="display: none">
                                         {{$order->ebay_url}}
                                     </td>
-                                    <td class="budget">
+                                    <td class="budget product_url" style="display: none">
                                         {{$order->product_url}}
                                     </td>
-                                    <td class="budget">
+                                    <td class="budget shipping_information">
                                         {{$order->shipping_information}}
                                     </td>
-                                    <td class="budget">
+                                    <td class="budget price" style="display: none">
                                         {{$order->price.'$'}}
                                     </td>
-                                    <td class="budget">
+                                    <td class="budget quantity" style="display: none">
                                         {{$order->quantity}}
                                     </td>
-                                    <td class="budget">
+                                    <td class="budget order_date" style="display: none">
                                         {{$order->order_date}}
                                     </td>
-                                    <td class="budget">
+                                    <td class="budget customer_notes" style="display: none">
                                         {{$order->customer_notes}}
                                     </td>
-                                    <td class="budget">
+                                    <td class="budget tracking" style="display: none">
                                         {{$order->tracking}}
                                     </td>
                                     @if(auth()->user()->hasRole('admin'))
@@ -254,6 +255,103 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="modal fade" id="modal-form-detail" tabindex="-1" role="dialog" aria-labelledby="modal-form-detail" aria-hidden="true">
+                    <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body p-0">
+                                <div class="card bg-secondary shadow border-0">
+                                    <div class="card-body px-lg-5 py-lg-5">
+                                        <form id="form-detail" role="form" action="" method="POST">
+                                            @method('PUT')
+                                            @csrf
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-name">{{ __('Info') }}</label>
+                                                <input type="text" name="name" value="" class="form-control form-control-alternative w-90" required autofocus>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-email">{{ __('Ebay URL') }}</label>
+                                                <input type="url" name="ebay_url" value="" class="form-control form-control-alternative w-90" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-email">{{ __('Product URL') }}</label>
+                                                <input type="url" name="product_url" value="" class="form-control form-control-alternative w-90" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-email">{{ __('Status') }}</label>
+                                                <div class="custom-control custom-radio mb-3">
+                                                    <input name="status" class="custom-control-input" value="new" id="customRadio1" type="radio">
+                                                    <label class="custom-control-label" for="customRadio1">New</label>
+                                                </div>
+                                                <div class="custom-control custom-radio mb-3">
+                                                    <input name="status" class="custom-control-input" value="processing" id="customRadio2" type="radio">
+                                                    <label class="custom-control-label" for="customRadio2">Processing</label>
+                                                </div>
+                                                <div class="custom-control custom-radio mb-3">
+                                                    <input name="status" class="custom-control-input" value="needhelp" id="customRadio3" type="radio">
+                                                    <label class="custom-control-label" for="customRadio3">Needhelp</label>
+                                                </div>
+                                                <div class="custom-control custom-radio mb-3">
+                                                    <input name="status" class="custom-control-input" value="cancel" id="customRadio4" type="radio">
+                                                    <label class="custom-control-label" for="customRadio4">Cancel</label>
+                                                </div>
+                                                <div class="custom-control custom-radio mb-3">
+                                                    <input name="status" class="custom-control-input" value="tracking" id="customRadio5" type="radio">
+                                                    <label class="custom-control-label" for="customRadio5">Tracking</label>
+                                                </div>
+                                                <div class="custom-control custom-radio mb-3">
+                                                    <input name="status" class="custom-control-input" value="shipped" id="customRadio6" type="radio">
+                                                    <label class="custom-control-label" for="customRadio6">Shipped</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-email">{{ __('Shipping Information') }}</label>
+                                                <textarea name="shipping_information" class="form-control w-90" rows="3" required></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-email">{{ __('Price') }}</label>
+                                                <input type="number" name="price" value="" class="form-control form-control-alternative w-25" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-email">{{ __('Quantity') }}</label>
+                                                <input type="number" name="quantity" value="" class="form-control form-control-alternative w-25" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group input-group-alternative w-25">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                    </div>
+                                                    <input class="form-control datepicker" placeholder="Select date" type="text" name="order_date" value="" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-email">{{ __('Customer Notes') }}</label>
+                                                <textarea name="customer_notes" class="form-control w-90" rows="3" required></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-email">{{ __('Tracking') }}</label>
+                                                <textarea name="tracking" class="form-control w-90" rows="3"></textarea>
+                                            </div>
+                                            @if(auth()->user()->hasRole('admin'))
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-email">{{ __('Paypal Notes') }}</label>
+                                                    <textarea name="paypal_notes" class="form-control w-90" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                                </div>
+                                            @endif
+
+                                            <div class="text-center">
+                                                <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 @push('js')
@@ -273,7 +371,42 @@
             });
 
             $('.right-click').dblclick(function () {
-                window.location = `{{route('admin.order.edit', ['id' => ''])}}/${$(this).attr('data-order')}`;
+                var _self = $(this);
+                var btnOrderDetail = $('#btn-order-detail');
+                var formOrderDetail = $('#modal-form-detail').find('form');
+                var orderID = _self.attr('data-order');
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('admin.order.detail', ['id' => '']) }}' + '/' + orderID,
+                    headers: {
+                        'X-CSRF-TOKEN': '{!! csrf_token() !!}'
+                    },
+
+                    success: function (data) {
+                        if (data.status == 200) {
+                            data = data.data;
+                            formOrderDetail.find('input[name=name]').val(data.name);
+                            formOrderDetail.find('input[name=ebay_url]').val(data.ebay_url);
+                            formOrderDetail.find('input[name=product_url]').val(data.product_url);
+                            formOrderDetail.find('textarea[name=shipping_information]').val(data.shipping_information);
+                            formOrderDetail.find('input[name=price]').val(data.price);
+                            formOrderDetail.find('input[name=quantity]').val(data.quantity);
+                            formOrderDetail.find('input[name=order_date]').val(data.order_date);
+                            formOrderDetail.find('textarea[name=customer_notes]').val(data.customer_notes);
+                            formOrderDetail.find('textarea[name=tracking]').val(data.tracking);
+                            formOrderDetail.find('input[name=status][value=' + data.status + ']').attr('checked', true);
+                            @if(auth()->user()->hasRole('admin'))
+                                formOrderDetail.find('textarea[name=paypal_notes]').val(data.paypal_notes);
+                            @endif
+
+                            formOrderDetail.attr('action', '{{ route('admin.order.update', ['id' => '']) }}' + '/' + orderID);
+                            btnOrderDetail.click();
+                        } else {
+                            alert('Something went wrong, please try again or contact for support !');
+                        }
+                    }
+                });
             });
 
             $('.delete-order').on('click', function (e) {
