@@ -9,6 +9,7 @@ use Cms\Modules\Core\Services\Contracts\AccountServiceContract;
 use Cms\Modules\Core\Services\Contracts\OrderServiceContract;
 use Cms\Modules\Core\Services\Contracts\UserServiceContract;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
@@ -29,6 +30,8 @@ class OrderController extends Controller
         $totalPrice = 0;
 
         $orders = $this->orderService->findByQuery($request->all(), $paginate);
+
+        Session::put('order-search', $request->all());
 
         foreach ($orders as $order) {
             $totalPrice += intval($order->price) * intval($order->quantity);
@@ -73,6 +76,21 @@ class OrderController extends Controller
         $request = $request->except('_token');
 
         if ($this->orderService->update($id, $request)) {
+            $search = Session::get('order-search');
+            Session::forget('order-search');
+
+            if ($search) {
+                return redirect()->route('admin.order.index', [
+                    'random-search' => $search['random-search'],
+                    'status' => $search['status'],
+                    'account' => $search['account'],
+                    'shipper' => $search['shipper'],
+                    'manager' => $search['manager'],
+                    'start_date' => $search['start_date'],
+                    'end_date' => $search['end_date'],
+                ])->with('success', 'successful');
+            }
+
             return redirect()->route('admin.order.index')->with('success', 'successful');
         }
 
