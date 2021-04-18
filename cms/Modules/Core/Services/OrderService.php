@@ -63,8 +63,9 @@ class OrderService implements OrderServiceContract
         $data['order_date'] = Carbon::parse($data['order_date'])->format('Y-m-d');
 
         if ($order->status == 'needhelp') {
-            if ($data['status'] == 'tracking' || $data['status'] == 'shipped') {
+            if ($data['status'] == 'tracking' || $data['status'] == 'shipped' || isset($data['helping'])) {
                 $data['helping_user_id'] = auth()->user()->id;
+                $data['shipping_user_id'] = auth()->user()->id;
             }
         }
 

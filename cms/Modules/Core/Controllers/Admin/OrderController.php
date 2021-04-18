@@ -81,13 +81,13 @@ class OrderController extends Controller
 
             if ($search) {
                 return redirect()->route('admin.order.index', [
-                    'random-search' => $search['random-search'],
-                    'status' => $search['status'],
-                    'account' => $search['account'],
-                    'shipper' => $search['shipper'],
-                    'manager' => $search['manager'],
-                    'start_date' => $search['start_date'],
-                    'end_date' => $search['end_date'],
+                    'random-search' => $search['random-search'] != null ? $search['random-search'] : '',
+                    'status' => $search['status'] != null ? $search['status'] : '',
+                    'account' => $search['account'] != null ? $search['account'] : '',
+                    'shipper' => $search['shipper'] != null ? $search['shipper'] : '',
+                    'manager' => $search['manager'] != null ? $search['manager'] : '',
+                    'start_date' => $search['start_date'] != null ? $search['start_date'] : '',
+                    'end_date' => $search['end_date'] != null ? $search['end_date'] : '',
                 ])->with('success', 'successful');
             }
 

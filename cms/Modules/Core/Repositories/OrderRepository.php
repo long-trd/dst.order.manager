@@ -40,19 +40,19 @@ class OrderRepository implements OrderRepositoryContract
     {
         // TODO: Implement findByQuery() method.
         $startDate = $endDate = $account = $shipper = $status = ['orders.id', '!=', null];
-        $role = $manager = ['id', '!=', null];
+        $role = $manager = $shipperRole = ['id', '!=', null];
         $randomSearch = 'orders.id';
 
         if (isset($request['random-search'])) {
             $randomSearch = '(';
             $columns = Schema::getColumnListing('orders');
-            unset($columns['id']);
-            unset($columns['created_at']);
-            unset($columns['updated_at']);
-            unset($columns['deleted_at']);
+            unset($columns[array_search('id', $columns)]);
+            unset($columns[array_search('created_at', $columns)]);
+            unset($columns[array_search('updated_at', $columns)]);
+            unset($columns[array_search('deleted_at', $columns)]);
 
             foreach ($columns as $key => $column) {
-                if ($key + 1 == count($columns)) {
+                if ($key + 1 != count($columns)) {
                     $randomSearch .= 'orders.' . $column . ' like "%' . $request['random-search'] . '%" or ';
                 }
             }

@@ -134,6 +134,12 @@
                                     <label class="form-control-label" for="input-email">{{ __('Tracking') }}</label>
                                     <textarea name="tracking" class="form-control w-90" rows="3">{{$order->tracking}}</textarea>
                                 </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox mb-3">
+                                        <input class="custom-control-input" id="customCheck1" type="checkbox" name="helping" value="1" {{count($order->helper) > 0 ? 'checked' : ''}}>
+                                        <label class="custom-control-label" for="customCheck1">Helping</label>
+                                    </div>
+                                </div>
                                 @if(auth()->user()->hasRole('admin'))
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-email">{{ __('Paypal Notes') }}</label>

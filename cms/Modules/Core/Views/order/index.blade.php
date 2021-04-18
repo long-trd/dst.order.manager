@@ -152,7 +152,7 @@
                     <!-- Card footer -->
                     <div class="card-footer py-4 position-relative">
                         <div class="total-price">{{'Total: '. $totalPrice . '$'}}</div>
-                        {!! $orders->links() !!}
+                        {!! $orders->appends(request()->query())->links() !!}
                     </div>
                 </div>
             </div>
@@ -333,6 +333,12 @@
                                                 <label class="form-control-label" for="input-email">{{ __('Tracking') }}</label>
                                                 <textarea name="tracking" class="form-control w-90" rows="3"></textarea>
                                             </div>
+                                            <div class="form-group">
+                                                <div class="custom-control custom-checkbox mb-3">
+                                                    <input class="custom-control-input" id="customCheck1" type="checkbox" name="helping" value="1">
+                                                    <label class="custom-control-label" for="customCheck1">Helping</label>
+                                                </div>
+                                            </div>
                                             @if(auth()->user()->hasRole('admin'))
                                                 <div class="form-group">
                                                     <label class="form-control-label" for="input-email">{{ __('Paypal Notes') }}</label>
@@ -386,6 +392,7 @@
                     success: function (data) {
                         if (data.status == 200) {
                             data = data.data;
+                            console.log(data);
                             formOrderDetail.find('input[name=name]').val(data.name);
                             formOrderDetail.find('input[name=ebay_url]').val(data.ebay_url);
                             formOrderDetail.find('input[name=product_url]').val(data.product_url);
@@ -396,6 +403,11 @@
                             formOrderDetail.find('textarea[name=customer_notes]').val(data.customer_notes);
                             formOrderDetail.find('textarea[name=tracking]').val(data.tracking);
                             formOrderDetail.find('input[name=status][value=' + data.status + ']').attr('checked', true);
+
+                            if (data.helper) {
+                                formOrderDetail.find('input[name=helping]').attr('checked', true);
+                            }
+
                             @if(auth()->user()->hasRole('admin'))
                                 formOrderDetail.find('textarea[name=paypal_notes]').val(data.paypal_notes);
                             @endif
