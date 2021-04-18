@@ -104,7 +104,7 @@
                                         {{$order->product_url}}
                                     </td>
                                     <td class="budget shipping_information">
-                                        {{$order->shipping_information}}
+                                        {!! nl2br($order->shipping_information) !!}
                                     </td>
                                     <td class="budget price" style="display: none">
                                         {{$order->price.'$'}}
@@ -181,8 +181,7 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control" name="random-search" placeholder="Search something..."
-                                                               value="{{isset($request['random-search']) ? $request['random-search'] : ''}}">
+                                                        <textarea class="form-control" name="random-search"> {{isset($request['random-search']) ? $request['random-search'] : 'Search something...'}} </textarea>
                                                     </div>
                                                 </div>
                                             </div>
