@@ -181,7 +181,7 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <textarea class="form-control" name="random-search"> {{isset($request['random-search']) ? $request['random-search'] : 'Search something...'}} </textarea>
+                                                        <textarea class="form-control" name="random-search"> {{isset($request['random-search']) ? $request['random-search'] : ''}} </textarea>
                                                     </div>
                                                 </div>
                                             </div>

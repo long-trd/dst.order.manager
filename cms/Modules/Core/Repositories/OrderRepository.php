@@ -50,11 +50,10 @@ class OrderRepository implements OrderRepositoryContract
             unset($columns[array_search('created_at', $columns)]);
             unset($columns[array_search('updated_at', $columns)]);
             unset($columns[array_search('deleted_at', $columns)]);
+            $columns = array_values($columns);
 
             foreach ($columns as $key => $column) {
-                if ($key + 1 != count($columns)) {
-                    $randomSearch .= 'orders.' . $column . ' like "%' . $request['random-search'] . '%" or ';
-                }
+                $randomSearch .= 'orders.' . $column . ' like "%' . $request['random-search'] . '%" or ';
             }
 
             $randomSearch .= 'accounts.ip_address like "%' . $request['random-search'] . '%"';
