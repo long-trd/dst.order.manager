@@ -53,10 +53,10 @@ class OrderRepository implements OrderRepositoryContract
             $columns = array_values($columns);
 
             foreach ($columns as $key => $column) {
-                $randomSearch .= 'orders.' . $column . ' like "%' . $request['random-search'] . '%" or ';
+                $randomSearch .= "orders." . $column . " like '%" . $request['random-search'] . "%' or ";
             }
 
-            $randomSearch .= 'accounts.ip_address like "%' . $request['random-search'] . '%"';
+            $randomSearch .= "accounts.ip_address like '%" . $request['random-search'] . "%'";
 
             $randomSearch .= ')';
         }
