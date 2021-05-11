@@ -39,7 +39,7 @@
                                 <th scope="col" class="sort" data-sort="helper">Helper</th>
                                 <th scope="col" class="sort" data-sort="name" style="display: none">Info</th>
                                 <th scope="col" class="sort" data-sort="ebay_url" style="display: none">Ebay URL</th>
-                                <th scope="col" class="sort" data-sort="product_url" style="display: none">Product URL</th>
+                                <th scope="col" class="sort" data-sort="product_url">Product URL</th>
                                 <th scope="col" class="sort" data-sort="shipping_infomation">Shipping Infomation</th>
                                 <th scope="col" class="sort" data-sort="price" style="display: none">Price</th>
                                 <th scope="col" class="sort" data-sort="quantity" style="display: none">Quantity</th>
@@ -100,7 +100,7 @@
                                     <td class="budget ebay_url" style="display: none">
                                         {{$order->ebay_url}}
                                     </td>
-                                    <td class="budget product_url" style="display: none">
+                                    <td class="budget product_url">
                                         {{$order->product_url}}
                                     </td>
                                     <td class="budget shipping_information">
@@ -151,7 +151,7 @@
                     </div>
                     <!-- Card footer -->
                     <div class="card-footer py-4 position-relative">
-                        <div class="total-price">{{'Total: '. $totalPrice . '$'}}</div>
+                        <div class="total-price">Total: 0$</div>
                         {!! $orders->appends(request()->query())->links() !!}
                     </div>
                 </div>
@@ -365,6 +365,18 @@
             @if($errors->has('shipper'))
                     alert("Don't have any shipper !!!");
             @endif
+
+            $(document).ready(function () {
+                let price = $('.price');
+                let totalPrice = 0;
+
+                price.each(function (index, value) {
+                    value = parseInt($(value).html().trim().replace('$', ''));
+                    totalPrice += value;
+                });
+
+                $('.total-price').html(`Total: ${totalPrice}$`);
+            });
 
             $('.order-status, .order-account').on('change', function () {
                 var option = $(this).find('option:first');

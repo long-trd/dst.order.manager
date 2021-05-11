@@ -46,7 +46,7 @@ Route::group([
                 Route::post('create', 'AccountController@store')->name('admin.account.store');
                 Route::get('edit/{id}', 'AccountController@edit')->name('admin.account.edit');
                 Route::put('update/{id}', 'AccountController@update')->name('admin.account.update');
-                Route::delete('delete/{id}', 'AccountController@delete')->name('admin.account.delete')->middleware(['role' => 'admin']);
+                Route::delete('delete/{id}', 'AccountController@delete')->name('admin.account.delete')->middleware(['role:admin']);
             });
 
             //ORDER
@@ -57,7 +57,7 @@ Route::group([
                 Route::get('edit/{id}', 'OrderController@edit')->name('admin.order.edit');
                 Route::post('/{id}', 'OrderController@detail')->name('admin.order.detail');
                 Route::put('update/{id}', 'OrderController@update')->name('admin.order.update');
-                Route::delete('delete/{id}', 'OrderController@delete')->name('admin.order.delete')->middleware(['role' => 'admin']);
+                Route::delete('delete/{id}', 'OrderController@delete')->name('admin.order.delete')->middleware(['role:admin']);
             });
 
             //USER

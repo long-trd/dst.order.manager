@@ -28,10 +28,14 @@ class AccountRepository implements AccountRepositoryContract
             return $this->accountModel
                 ->whereHas('users', function ($query) use ($request) {
                     $query->where('users.id', $request['id']);
-                })->paginate($paginate);
+                })
+                ->orderByRaw("FIELD(status , 'live', 'restrict', 'suspended') ASC")
+                ->paginate($paginate);
 
         } else {
-            return $this->accountModel->with('users')->paginate($paginate);
+            return $this->accountModel->with('users')
+                ->orderByRaw("FIELD(status , 'live', 'restrict', 'suspended') ASC")
+                ->paginate($paginate);
         }
 
     }
