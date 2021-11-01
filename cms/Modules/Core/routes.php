@@ -69,6 +69,13 @@ Route::group([
                 Route::put('update/{id}', 'UserController@update')->name('admin.user.update');
                 Route::delete('delete/{id}', 'UserController@delete')->name('admin.user.delete');
             });
+
+
+            //NOTE
+            Route::group(['prefix' => 'note'], function () {
+                Route::get('/', 'NoteController@index')->name('admin.note.index');
+                Route::put('update', 'NoteController@update')->name('admin.note.update');
+            });
         });
     });
 });

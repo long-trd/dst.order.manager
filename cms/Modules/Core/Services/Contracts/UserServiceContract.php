@@ -17,4 +17,6 @@ interface UserServiceContract
     public function delete($id);
 
     public function findAllShipper();
+
+    public function updateNote($id, $note);
 }

@@ -1,0 +1,60 @@
+.cke.cke_reset {
+    border: 1px solid #EEEEEE !important;
+    box-shadow: none !important;
+    border-radius: 11px;
+    overflow: auto;
+}
+
+.cke_top,
+.cke_bottom {
+    display: none !important;
+}
+
+.cke_dialog_title,
+.cke_dialog_footer {
+    background-image: none !important;
+    background: #fff !important;
+}
+
+.cke_dialog_ui_button_ok {
+    background: #4B4B4B !important;
+    background-image: none !important;
+    border-color: #4B4B4B !important;;
+}
+
+.cke_dialog_body {
+    background: #fff !important;
+    background-image: none !important;
+}
+
+.cke_editable {
+    font-family:"Hiragino Kaku Gothic ProN W3"
+}
+
+.page_message iframe {
+    /*border-radius: 11px !important;*/
+    border: 1px solid #fff !important;
+    width: calc(100% - 16px) !important;
+    height: calc(100% - 16px) !important;
+    transform: translateY(8px) !important;
+}
+
+#topic_page iframe, #edit_comment_topic iframe{
+    width: calc(100%) !important;
+    height: calc(100%) !important;
+    transform: translate(0) !important;
+}
+
+
+@media (max-width: 500px) {
+    .cke.cke_reset {
+        border-radius: 2.133333333vw;
+    }
+}
+
+#topic_page #cke_comment {
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 11px;
+    overflow: auto;
+}

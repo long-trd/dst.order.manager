@@ -20,6 +20,7 @@
     <!-- Argon CSS -->
     <link type="text/css" href="{{ asset('argon') }}/css/argon.css?v=1.0.0" rel="stylesheet">
     <link type="text/css" href="{{ cxl_asset('/css/argon_custom.css')}}" rel="stylesheet">
+    @stack('style')
 </head>
 <body class="{{ $class ?? '' }}">
 @auth()

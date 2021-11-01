@@ -102,4 +102,10 @@ class UserService implements UserServiceContract
         // TODO: Implement findAllShipper() method.
         return $this->user->findAllShipper();
     }
+
+    public function updateNote($id, $note)
+    {
+        // TODO: Implement updateNote() method.
+        return $this->user->update($id, $note);
+    }
 }
