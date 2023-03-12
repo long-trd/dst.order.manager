@@ -35,13 +35,9 @@ class OrderController extends Controller
 
         Session::put('order-search', $request->all());
 
-        foreach ($orders as $order) {
-            $totalPrice += intval($order->price) * intval($order->quantity);
-        }
-
         $accounts = $this->accountService->getAll();
 
-        return view('Core::order.index', ['orders' => $orders, 'totalPrice' => $totalPrice, 'accounts' => $accounts, 'request' => $request->all()]);
+        return view('Core::order.index', ['orders' => $orders['paginated_data'], 'totalPrice' => $orders['total_price_of_all'], 'accounts' => $accounts, 'request' => $request->all()]);
     }
 
     public function create()

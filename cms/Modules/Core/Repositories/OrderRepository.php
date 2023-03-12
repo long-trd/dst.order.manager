@@ -87,8 +87,9 @@ class OrderRepository implements OrderRepositoryContract
             $endDate = ['order_date', '<=', Carbon::parse($request['end_date'])->format('Y-m-d')];
         }
 
-        return $this->orderModel
+        $orders = $this->orderModel
             ->select('orders.id as order_id', 'users.*', 'orders.*')
+            ->selectRaw('`orders`.`price` * `orders`.`quantity` as `order_price`')
             ->leftJoin('users', 'orders.shipping_user_id', '=', 'users.id')
             ->leftJoin('accounts', 'orders.account_id', '=', 'accounts.id')
             ->where(
@@ -106,8 +107,12 @@ class OrderRepository implements OrderRepositoryContract
                     $roleQuery->where([$role]);
                 })->where([$manager]);
             }])
-            ->orderBy('orders.created_at', 'desc')
-            ->paginate($paginate);
+            ->orderBy('orders.created_at', 'desc');
+        
+        return [
+            'total_price_of_all' => $orders->get()->sum('order_price'),
+            'paginated_data' => $orders->paginate($paginate)
+        ];
     }
 
     public function store($data)

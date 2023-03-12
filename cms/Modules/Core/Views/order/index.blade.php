@@ -163,7 +163,8 @@
                     </div>
                     <!-- Card footer -->
                     <div class="card-footer py-4 position-relative">
-                        <div class="total-price">Total: 0$</div>
+                        <div class="total-price">Total of this page: {{ $orders->sum('order_price') }}$</div>
+                        <div class="total-price-all">Total of all page: {{ $totalPrice }}$</div>
                         {!! $orders->appends(request()->query())->links() !!}
                     </div>
                 </div>
@@ -482,17 +483,18 @@
                 alert("Don't have any shipper !!!");
             @endif
 
-            $(document).ready(function() {
-                let price = $('.price');
-                let totalPrice = 0;
+            // $(document).ready(function() {
+            //     let price = $('.price');
+            //     let totalPrice = 0;
 
-                price.each(function(index, value) {
-                    value = parseInt($(value).html().trim().replace('$', ''));
-                    totalPrice += value;
-                });
+            //     price.each(function(index, value) {
+            //         value = parseInt($(value).html().trim().replace('$', ''));
+            //         totalPrice += value;
+            //     });
 
-                $('.total-price').html(`Total: ${totalPrice}$`);
-            });
+            //     $('.total-price').html(`Total of this page: ${$orders->sum('order_price')}$`);
+            //     $('.total-price-all').html(`Total of all page: ${totalPrice}$`);
+            // });
 
             $('.order-status, .order-account').on('change', function() {
                 var option = $(this).find('option:first');
