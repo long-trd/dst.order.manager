@@ -4,12 +4,14 @@ namespace Cms\Modules\Core\Controllers\Admin;
 
 
 use App\Http\Controllers\Controller;
+use Cms\Modules\Core\Export\OrderExport;
 use Cms\Modules\Core\Requests\CreateOderRequest;
 use Cms\Modules\Core\Services\Contracts\AccountServiceContract;
 use Cms\Modules\Core\Services\Contracts\OrderServiceContract;
 use Cms\Modules\Core\Services\Contracts\UserServiceContract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OrderController extends Controller
 {
@@ -124,5 +126,10 @@ class OrderController extends Controller
             'message' => 'failed',
             'data' => ''
         ], 400);
+    }
+
+    public function excel(Request $request)
+    {
+        return Excel::download(new OrderExport($this->orderService, $request->all()), 'data.xlsx');
     }
 }

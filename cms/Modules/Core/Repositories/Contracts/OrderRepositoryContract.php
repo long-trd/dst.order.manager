@@ -18,4 +18,6 @@ interface OrderRepositoryContract
     public function update($id, $data);
 
     public function delete($id);
+
+    public function downloadExcel($filter);
 }

@@ -135,4 +135,14 @@ class OrderRepository implements OrderRepositoryContract
         // TODO: Implement delete() method.
         return $this->orderModel->find($id)->delete();
     }
+
+    public function downloadExcel($filter)
+    {
+        return $this->orderModel
+        ->select('name', 'ebay_url', 'product_url')
+        ->where([
+            ['order_date', '>=', Carbon::parse($filter['start_date'])->format('Y-m-d')],
+            ['order_date', '<=', Carbon::parse($filter['end_date'])->format('Y-m-d')]
+        ])->get();
+    }
 }

@@ -77,4 +77,9 @@ class OrderService implements OrderServiceContract
         // TODO: Implement delete() method.
         return $this->orderRepository->delete($id);
     }
+
+    public function downloadExcel($filter)
+    {
+        return $this->orderRepository->downloadExcel($filter);
+    }
 }
