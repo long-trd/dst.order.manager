@@ -146,8 +146,8 @@ class OrderRepository implements OrderRepositoryContract
         return $this->orderModel
         ->select('name', 'ebay_url', 'product_url')
         ->where([
-            ['order_date', '>=', Carbon::parse($filter['start_date'])->format('Y-m-d')],
-            ['order_date', '<=', Carbon::parse($filter['end_date'])->format('Y-m-d')]
+            ['order_date', '>=', $filter['start_date'] ? Carbon::parse($filter['start_date'])->format('Y-m-d') : '1999-01-01'],
+            ['order_date', '<=', $filter['end_date'] ? Carbon::parse($filter['end_date'])->format('Y-m-d') : '2099-12-31']
         ])->get();
     }
 }
