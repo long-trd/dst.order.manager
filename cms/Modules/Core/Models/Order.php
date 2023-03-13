@@ -30,7 +30,9 @@ class Order extends Model
             'paypal_notes',
             'created_at',
             'updated_at',
-            'deleted_at'
+            'deleted_at',
+            'shipper_name',
+            'manager_name'
         ];
 
     protected $hidden = [];

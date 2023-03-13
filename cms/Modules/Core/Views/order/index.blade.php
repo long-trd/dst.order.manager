@@ -437,7 +437,34 @@
                                             <form role="form" action="{{ route('admin.order.excel') }}"
                                                 method="POST">
                                                 @csrf
-                                                <div class="row">
+                                                <div class="ml-1 row form-group">
+                                                    <div class="col-md-2 custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input"
+                                                            id="customCheck0" name="option[]" value="order_date">
+                                                        <label class="custom-control-label" for="customCheck0">Date</label>
+                                                    </div>
+                                                    <div class="col-md-2 custom-control custom-checkbox">
+                                                        <input type="checkbox" name="option[]" value="price" class="custom-control-input"
+                                                            id="customCheck2">
+                                                        <label class="custom-control-label" for="customCheck2">Price</label>
+                                                    </div>
+                                                    <div class="col-md-2 custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input"
+                                                            id="customCheck3" name="option[]" value="quantity">
+                                                        <label class="custom-control-label" for="customCheck3">Quantity</label>
+                                                    </div>
+                                                    <div class="col-md-2 custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input"
+                                                            id="customCheck4" name="option[]" value="shipper">
+                                                        <label class="custom-control-label" for="customCheck4">Shipper</label>
+                                                    </div>
+                                                    <div class="col-md-2 custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input"
+                                                            id="customCheck5" name="option[]" value="list">
+                                                        <label class="custom-control-label" for="customCheck5">List</label>
+                                                    </div>
+                                                </div>
+                                                <div class="row form-group">
                                                     <div class="col-md-6">
                                                         <div class="input-group input-group-alternative">
                                                             <div class="input-group-prepend">

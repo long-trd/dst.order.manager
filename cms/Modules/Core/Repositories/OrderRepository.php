@@ -66,12 +66,12 @@ class OrderRepository implements OrderRepositoryContract
         }
 
         if (isset($request['shipper'])) {
-            $shipper = ['users.name', 'like' , '%' . $request['shipper'] . '%'];
+            $shipper = ['users.name', 'like', '%' . $request['shipper'] . '%'];
         }
 
         if (isset($request['manager'])) {
-            $manager = ['users.name', 'like' , '%' . $request['manager'] . '%'];
-            $role = ['name','manager'];
+            $manager = ['users.name', 'like', '%' . $request['manager'] . '%'];
+            $role = ['name', 'manager'];
         }
 
         if (isset($request['status']) && $request['status'] != 'default') {
@@ -108,7 +108,7 @@ class OrderRepository implements OrderRepositoryContract
                 })->where([$manager]);
             }])
             ->orderBy('orders.created_at', 'desc');
-        
+
         return [
             'total_price_of_all' => $orders->get()->sum('order_price'),
             'paginated_data' => $orders->paginate($paginate)
@@ -143,11 +143,27 @@ class OrderRepository implements OrderRepositoryContract
 
     public function downloadExcel($filter)
     {
+        $rawSelect = 'orders.name, orders.ebay_url, orders.product_url';
+
+        if (isset($filter['option']) && count($filter['option']) > 0) {
+            foreach ($filter['option'] as $option) {
+                if (in_array($option, ['order_date', 'price', 'quantity']))
+                    $rawSelect .= ', orders.' . $option;
+                else if ($option === 'shipper')
+                    $rawSelect .= ', shipper.name as shipper_name ';
+                else if ($option === 'list')
+                    $rawSelect .= ', manager.name as manager_name';
+            }
+        }
+
         return $this->orderModel
-        ->select('name', 'ebay_url', 'product_url')
-        ->where([
-            ['order_date', '>=', $filter['start_date'] ? Carbon::parse($filter['start_date'])->format('Y-m-d') : '1999-01-01'],
-            ['order_date', '<=', $filter['end_date'] ? Carbon::parse($filter['end_date'])->format('Y-m-d') : '2099-12-31']
-        ])->get();
+            ->selectRaw($rawSelect)
+            ->join('users as shipper', 'shipper.id', '=', 'orders.shipping_user_id')
+            ->join('users as manager', 'manager.id', '=', 'orders.listing_user_id')
+            ->where([
+                ['order_date', '>=', $filter['start_date'] ? Carbon::parse($filter['start_date'])->format('Y-m-d') : '1999-01-01'],
+                ['order_date', '<=', $filter['end_date'] ? Carbon::parse($filter['end_date'])->format('Y-m-d') : '2099-12-31']
+            ])
+            ->get();
     }
 }

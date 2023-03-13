@@ -24,10 +24,16 @@ class OrderExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return [
-            'Information',
-            'Ebay URL',
-            'Product URL',
+        $options = [
+            'information',
+            'ebay_url',
+            'product_url',
         ];
+
+        if (isset($this->filter['option']) && count($this->filter['option']) > 0) {
+            return array_merge($options, $this->filter['option']);
+        }
+
+        return $options;
     }
 }
