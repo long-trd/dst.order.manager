@@ -32,12 +32,21 @@ class OrderController extends Controller
         $totalPrice = 0;
 
         $orders = $this->orderService->findByQuery($request->all(), $paginate);
+        // dd($orders);
 
         Session::put('order-search', $request->all());
 
         $accounts = $this->accountService->getAll();
 
-        return view('Core::order.index', ['orders' => $orders['paginated_data'], 'totalPrice' => $orders['total_price_of_all'], 'accounts' => $accounts, 'request' => $request->all()]);
+        return view('Core::order.index', [
+            'orders' => $orders['paginated_data'], 
+            'totalAmountByQuery' => $orders['total_amount_by_query'], 
+            'totalOrderByQuery' => $orders['total_order_by_query'], 
+            'totalAmountWithoutStatus' => $orders['total_amount_without_status'], 
+            'totalOrderWithoutStatus' => $orders['total_order_without_status'], 
+            'accounts' => $accounts, 
+            'request' => $request->all()
+        ]);
     }
 
     public function create()

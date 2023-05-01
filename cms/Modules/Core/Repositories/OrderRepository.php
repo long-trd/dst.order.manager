@@ -42,6 +42,7 @@ class OrderRepository implements OrderRepositoryContract
         $startDate = $endDate = $account = $shipper = $status = ['orders.id', '!=', null];
         $role = $manager = $shipperRole = ['id', '!=', null];
         $randomSearch = 'orders.id';
+        $isManagerQuery = false;
 
         if (isset($request['random-search'])) {
             $randomSearch = '(';
@@ -72,6 +73,7 @@ class OrderRepository implements OrderRepositoryContract
         if (isset($request['manager'])) {
             $manager = ['users.name', 'like', '%' . $request['manager'] . '%'];
             $role = ['name', 'manager'];
+            $isManagerQuery = true;
         }
 
         if (isset($request['status']) && $request['status'] != 'default') {
@@ -89,7 +91,7 @@ class OrderRepository implements OrderRepositoryContract
 
         $orders = $this->orderModel
             ->select('orders.id as order_id', 'users.*', 'orders.*')
-            ->selectRaw('`orders`.`price` * `orders`.`quantity` as `order_price`')
+            ->selectRaw('`orders`.`price` as `order_price`')
             ->leftJoin('users', 'orders.shipping_user_id', '=', 'users.id')
             ->leftJoin('accounts', 'orders.account_id', '=', 'accounts.id')
             ->where(
@@ -102,16 +104,34 @@ class OrderRepository implements OrderRepositoryContract
                 ]
             )
             ->whereRaw($randomSearch)
-            ->with(['account', 'manager' => function ($query) use ($role, $manager) {
-                $query->whereHas('roles', function ($roleQuery) use ($role, $manager) {
-                    $roleQuery->where([$role]);
-                })->where([$manager]);
-            }])
+            ->when($isManagerQuery, function ($query) use ($manager) {
+                $query->whereHas('manager', function ($managerQuery) use ($manager) {
+                    $managerQuery->where([$manager]);
+                });
+            })
+            ->with(['account', 'manager'])
+            ->orderBy('orders.created_at', 'desc');
+
+        $totalOrderWithoutStatus = $this->orderModel
+            ->select('orders.id as order_id', 'users.*', 'orders.*')
+            ->selectRaw('`orders`.`price` as `order_price`')
+            ->leftJoin('users', 'orders.shipping_user_id', '=', 'users.id')
+            ->leftJoin('accounts', 'orders.account_id', '=', 'accounts.id')
+            ->where(
+                [
+                    $startDate,
+                    $endDate
+                ]
+            )
+            ->with(['account', 'manager'])
             ->orderBy('orders.created_at', 'desc');
 
         return [
-            'total_price_of_all' => $orders->get()->sum('order_price'),
-            'paginated_data' => $orders->paginate($paginate)
+            'total_amount_by_query' => $orders->get()->sum('order_price'),
+            'total_order_by_query' => $orders->count(),
+            'paginated_data' => $orders->paginate($paginate),
+            'total_order_without_status' => $totalOrderWithoutStatus->count(),
+            'total_amount_without_status' => $totalOrderWithoutStatus->get()->sum('order_price'),
         ];
     }
 
