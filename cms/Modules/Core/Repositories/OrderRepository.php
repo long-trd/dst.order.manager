@@ -119,10 +119,18 @@ class OrderRepository implements OrderRepositoryContract
             ->leftJoin('accounts', 'orders.account_id', '=', 'accounts.id')
             ->where(
                 [
+                    $account,
+                    $shipper,
                     $startDate,
                     $endDate
                 ]
             )
+            ->whereRaw($randomSearch)
+            ->when($isManagerQuery, function ($query) use ($manager) {
+                $query->whereHas('manager', function ($managerQuery) use ($manager) {
+                    $managerQuery->where([$manager]);
+                });
+            })
             ->with(['account', 'manager'])
             ->orderBy('orders.created_at', 'desc');
 
