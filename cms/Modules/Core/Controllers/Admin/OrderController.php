@@ -32,7 +32,6 @@ class OrderController extends Controller
         $totalPrice = 0;
 
         $orders = $this->orderService->findByQuery($request->all(), $paginate);
-        // dd($orders);
 
         Session::put('order-search', $request->all());
 

@@ -166,8 +166,8 @@
                         <div class="sumup">Total amount of this page: <b>{{ $orders->sum('order_price') }}$</b></div>
                         <div class="sumup">Total amount of all pages: <b>{{ $totalAmountByQuery }}$</b></div>
                         <div class="sumup">Total orders: <b>{{ $totalOrderByQuery }} orders</b></div>
-                        <div class="sumup">Percentage of orders: <b>{{ round($totalOrderByQuery / $totalOrderWithoutStatus * 100, 2) }}%</b></div>
-                        <div class="sumup">Percentage of orders amount: <b>{{ round($totalAmountByQuery / $totalAmountWithoutStatus * 100), 2 }}%</b></div>
+                        <div class="sumup">Percentage of orders: <b>{{ $totalOrderWithoutStatus ? round($totalOrderByQuery / $totalOrderWithoutStatus * 100, 2) : 0 }}%</b></div>
+                        <div class="sumup">Percentage of orders amount: <b>{{ $totalAmountWithoutStatus ? round($totalAmountByQuery / $totalAmountWithoutStatus * 100, 2) : 0 }}%</b></div>
                         {!! $orders->appends(request()->query())->links() !!}
                     </div>
                 </div>
