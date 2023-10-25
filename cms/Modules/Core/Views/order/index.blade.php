@@ -203,6 +203,13 @@
                                                 </div>
                                             </div>
                                             <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <input class="form-control" name="branch" value="{{ isset($request['branch']) ? $request['branch'] : '' }}" placeholder="Branch name" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <select class="form-control order-status" data-toggle="select"

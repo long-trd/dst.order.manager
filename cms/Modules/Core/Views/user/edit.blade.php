@@ -56,11 +56,17 @@
                                     <label class="form-control-label" for="input-password-confirmation">{{ __('Confirm Password') }}</label>
                                     <input type="password" name="password_confirmation" id="input-password-confirmation" class="form-control form-control-alternative w-90" value="" autocomplete>
                                 </div>
-                                <div class="form-group">
+                                @if($user->branch)
+                                    <div class="form-group branch">
+                                        <label class="form-control-label" for="branch">{{ __('Chi nhánh') }}</label>
+                                        <input type="text" name="branch" id="branch" class="form-control form-control-alternative w-90" value="{{ $user->branch }}" autocomplete>
+                                    </div>
+                                @endif
+                                <div class="form-group manager">
                                     <label class="form-control-label" for="input-email">{{ __('Manager') }}</label>
                                     <div class="role-check">
                                         <label class="custom-toggle">
-                                            <input type="checkbox" name="role[]" value="3" {{$user->hasRole('manager') ? 'checked' : ''}}>
+                                            <input type="checkbox" name="role[]" id="role-manager" value="3" {{$user->hasRole('manager') ? 'checked' : ''}}>
                                             <span class="custom-toggle-slider rounded-circle"></span>
                                         </label>
                                     </div>
@@ -74,7 +80,6 @@
                                         </label>
                                     </div>
                                 </div>
-
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
                                 </div>
@@ -103,5 +108,18 @@
 @endsection
 @push('js')
     <script type="text/javascript">
+        $(function () {
+            $('#role-manager').on('change', function () {
+                if($('#role-manager').is(':checked')) {
+                    const html = `<div class="form-group branch">
+                                    <label class="form-control-label" for="branch">{{ __('Chi nhánh') }}</label>
+                                    <input type="text" name="branch" id="branch" class="form-control form-control-alternative w-90" value="" autocomplete>
+                                  </div>`;
+                    $(html).insertBefore('.manager');
+                } else {
+                    $('.branch').remove();
+                }
+            })
+        })
     </script>
 @endpush
