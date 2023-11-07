@@ -27,9 +27,11 @@
                             @csrf
 
                             @if (count($errors) > 0)
-                                <div class="alert alert-danger alert-dismissible fade show alert-missing-info" role="alert">
+                                <div class="alert alert-danger alert-dismissible fade show alert-missing-info"
+                                     role="alert">
                                     {{ session('status') }}
-                                    <label class="form-control-label text-center text-white w-50">{{ __('Missing information !!!') }}</label>
+                                    <label
+                                        class="form-control-label text-center text-white w-50">{{ __('Missing information !!!') }}</label>
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -38,20 +40,30 @@
                             <div class="pl-lg-4 pd-left-25" id="form-group-wrapper">
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-name">{{ __('Name') }}</label>
-                                    <input type="text" name="name" id="input-name" class="form-control form-control-alternative w-90" value="" required>
+                                    <input type="text" name="name" id="input-name"
+                                           class="form-control form-control-alternative w-90" value="" required>
 
                                 </div>
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-email">{{ __('Email') }}</label>
-                                    <input type="email" name="email" id="input-email" class="form-control form-control-alternative w-90" value="" required>
+                                    <input type="email" name="email" id="input-email"
+                                           class="form-control form-control-alternative w-90" value="" required>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-password">{{ __('Password') }}</label>
-                                    <input type="password" name="password" id="input-password" class="form-control form-control-alternative w-90" value="" autocomplete>
+                                    <input type="password" name="password" id="input-password"
+                                           class="form-control form-control-alternative w-90" value="" autocomplete>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-password-confirmation">{{ __('Confirm Password') }}</label>
-                                    <input type="password" name="password_confirmation" id="input-password-confirmation" class="form-control form-control-alternative w-90" value="" autocomplete>
+                                    <label class="form-control-label"
+                                           for="input-password-confirmation">{{ __('Confirm Password') }}</label>
+                                    <input type="password" name="password_confirmation" id="input-password-confirmation"
+                                           class="form-control form-control-alternative w-90" value="" autocomplete>
+                                </div>
+                                <div class="form-group branch">
+                                    <label class="form-control-label" for="branch">{{ __('Chi nhánh') }}</label>
+                                    <input type="text" name="branch" id="branch"
+                                           class="form-control form-control-alternative w-90" value="">
                                 </div>
                                 <div class="form-group manager">
                                     <label class="form-control-label" for="input-email">{{ __('Manager') }}</label>
@@ -98,19 +110,19 @@
     </div>
 @endsection
 @push('js')
-    <script type="text/javascript">
-        $(function () {
-            $('#role-manager').on('change', function () {
-                if($('#role-manager').is(':checked')) {
-                    const html = `<div class="form-group branch">
-                                    <label class="form-control-label" for="branch">{{ __('Chi nhánh') }}</label>
-                                    <input type="text" name="branch" id="branch" class="form-control form-control-alternative w-90" value="" autocomplete>
-                                  </div>`;
-                    $(html).insertBefore('.manager');
-                } else {
-                    $('.branch').remove();
-                }
-            })
-        })
-    </script>
+    {{--    <script type="text/javascript">--}}
+    {{--        $(function () {--}}
+    {{--            $('#role-manager').on('change', function () {--}}
+    {{--                if($('#role-manager').is(':checked')) {--}}
+    {{--                    const html = `<div class="form-group branch">--}}
+    {{--                                    <label class="form-control-label" for="branch">{{ __('Chi nhánh') }}</label>--}}
+    {{--                                    <input type="text" name="branch" id="branch" class="form-control form-control-alternative w-90" value="" autocomplete>--}}
+    {{--                                  </div>`;--}}
+    {{--                    $(html).insertBefore('.manager');--}}
+    {{--                } else {--}}
+    {{--                    $('.branch').remove();--}}
+    {{--                }--}}
+    {{--            })--}}
+    {{--        })--}}
+    {{--    </script>--}}
 @endpush
