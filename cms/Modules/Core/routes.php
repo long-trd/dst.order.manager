@@ -4,7 +4,7 @@ Route::group([
     'prefix' => '',
     'namespace' => 'Cms\Modules\Core\Controllers',
     'middleware' => 'web',
-], function() {
+], function () {
     Route::get('/', 'CoreController@welcome')->name('core.welcome');
 
     Route::group([
@@ -71,11 +71,20 @@ Route::group([
                 Route::delete('delete/{id}', 'UserController@delete')->name('admin.user.delete');
             });
 
-
             //NOTE
             Route::group(['prefix' => 'note'], function () {
                 Route::get('/', 'NoteController@index')->name('admin.note.index');
                 Route::put('update', 'NoteController@update')->name('admin.note.update');
+            });
+
+            //Notification
+            Route::group(['prefix' => 'notification', 'middleware' => ['role:admin']], function () {
+                Route::get('/', 'NotificationController@index')->name('admin.notification.index');
+                Route::get('create', 'NotificationController@create')->name('admin.notification.create');
+                Route::post('create', 'NotificationController@store')->name('admin.notification.store');
+                Route::get('edit/{id}', 'NotificationController@edit')->name('admin.notification.edit');
+                Route::post('update/{id}', 'NotificationController@update')->name('admin.notification.update');
+                Route::delete('delete/{id}', 'NotificationController@delete')->name('admin.notification.delete');
             });
         });
     });

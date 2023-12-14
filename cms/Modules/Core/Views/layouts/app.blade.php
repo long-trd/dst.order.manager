@@ -29,8 +29,26 @@
     </form>
     @include('Core::layouts.navbars.sidebar')
 @endauth
-
 <div class="main-content">
+    @if(auth()->check())
+        @if(count($globalNotification) > 0)
+            <div class="notification-wrapper d-flex flex-row">
+                <div class="advertise">
+                    <img class="ml-3 mt-1 advertise-menu" style="height: 30px" src="{{ cxl_asset('assets/img/icons/icon-speaker.png') }}"/>
+                </div>
+                <div class="advertise w-100 mr-2" style="display: flex; align-items: center;">
+                    <marquee>
+                        <div style="display: flex; align-items: center; vertical-align: center">
+                            <strong class="text-white mr-4">Thông báo hôm nay: </strong>
+                            @foreach($globalNotification as $notification)
+                                <p style="margin-bottom: 0; margin-right: 50px"><i class="ni ni-tag text-success mr-2"></i>{{ $notification->content }}</p>
+                            @endforeach
+                        </div>
+                    </marquee>
+                </div>
+            </div>
+        @endif
+    @endif
     @include('Core::layouts.navbars.navbar')
     @yield('content')
 </div>
@@ -49,3 +67,14 @@
 <script src="{{ asset('argon') }}/js/argon.js?v=1.0.0"></script>
 </body>
 </html>
+<style>
+    .notification-wrapper {
+        background: red;
+        position: relative;
+        font-size: 18px;
+        line-height: unset;
+        padding: 6px 10px;
+        color: #ffffff;
+        z-index: 999999;
+    }
+</style>
