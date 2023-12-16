@@ -23,14 +23,17 @@
                     </div>
                     <!-- Light table -->
                     <div class="table-responsive">
-                        <form method="post" action="{{ route('admin.user.update', ['id' => $user->id]) }}" autocomplete="off">
+                        <form method="post" action="{{ route('admin.user.update', ['id' => $user->id]) }}"
+                              autocomplete="off">
                             @csrf
                             @method('put')
 
                             @if (count($errors) > 0)
-                                <div class="alert alert-danger alert-dismissible fade show alert-missing-info" role="alert">
+                                <div class="alert alert-danger alert-dismissible fade show alert-missing-info"
+                                     role="alert">
                                     {{ session('status') }}
-                                    <label class="form-control-label text-center text-white w-50">{{ __('Missing information !!!') }}</label>
+                                    <label
+                                        class="form-control-label text-center text-white w-50">{{ __('Missing information !!!') }}</label>
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -41,26 +44,40 @@
                             <div class="pl-lg-4 pd-left-25">
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-name">{{ __('Name') }}</label>
-                                    <input type="text" name="name" id="input-name" class="form-control form-control-alternative w-90" value="{{$user->name}}" required>
+                                    <input type="text" name="name" id="input-name"
+                                           class="form-control form-control-alternative w-90" value="{{$user->name}}"
+                                           required>
 
                                 </div>
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-email">{{ __('Email') }}</label>
-                                    <input type="email" name="email" id="input-email" class="form-control form-control-alternative w-90" value="{{$user->email}}" required>
+                                    <input type="email" name="email" id="input-email"
+                                           class="form-control form-control-alternative w-90" value="{{$user->email}}"
+                                           required>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-password">{{ __('Password') }}</label>
-                                    <input type="password" name="password" id="input-password" class="form-control form-control-alternative w-90" value="" autocomplete>
+                                    <input type="password" name="password" id="input-password"
+                                           class="form-control form-control-alternative w-90" value="" autocomplete>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-password-confirmation">{{ __('Confirm Password') }}</label>
-                                    <input type="password" name="password_confirmation" id="input-password-confirmation" class="form-control form-control-alternative w-90" value="" autocomplete>
+                                    <label class="form-control-label"
+                                           for="input-password-confirmation">{{ __('Confirm Password') }}</label>
+                                    <input type="password" name="password_confirmation" id="input-password-confirmation"
+                                           class="form-control form-control-alternative w-90" value="" autocomplete>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group branch">
+                                    <label class="form-control-label" for="branch">{{ __('Chi nhánh') }}</label>
+                                    <input type="text" name="branch" id="branch"
+                                           class="form-control form-control-alternative w-90"
+                                           value="{{ $user->branch }}">
+                                </div>
+                                <div class="form-group manager">
                                     <label class="form-control-label" for="input-email">{{ __('Manager') }}</label>
                                     <div class="role-check">
                                         <label class="custom-toggle">
-                                            <input type="checkbox" name="role[]" value="3" {{$user->hasRole('manager') ? 'checked' : ''}}>
+                                            <input type="checkbox" name="role[]" id="role-manager"
+                                                   value="3" {{$user->hasRole('manager') ? 'checked' : ''}}>
                                             <span class="custom-toggle-slider rounded-circle"></span>
                                         </label>
                                     </div>
@@ -69,12 +86,12 @@
                                     <label class="form-control-label" for="input-email">{{ __('Shipper') }}</label>
                                     <div class="role-check">
                                         <label class="custom-toggle">
-                                            <input type="checkbox" name="role[]" value="2" {{$user->hasRole('shipper') ? 'checked' : ''}}>
+                                            <input type="checkbox" name="role[]"
+                                                   value="2" {{$user->hasRole('shipper') ? 'checked' : ''}}>
                                             <span class="custom-toggle-slider rounded-circle"></span>
                                         </label>
                                     </div>
                                 </div>
-
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
                                 </div>
@@ -102,6 +119,19 @@
     </div>
 @endsection
 @push('js')
-    <script type="text/javascript">
-    </script>
+{{--    <script type="text/javascript">--}}
+        {{--$(function () {--}}
+        {{--    $('#role-manager').on('change', function () {--}}
+        {{--        if($('#role-manager').is(':checked')) {--}}
+        {{--            const html = `<div class="form-group branch">--}}
+        {{--                            <label class="form-control-label" for="branch">{{ __('Chi nhánh') }}</label>--}}
+        {{--                            <input type="text" name="branch" id="branch" class="form-control form-control-alternative w-90" value="" autocomplete>--}}
+        {{--                          </div>`;--}}
+        {{--            $(html).insertBefore('.manager');--}}
+        {{--        } else {--}}
+        {{--            $('.branch').remove();--}}
+        {{--        }--}}
+        {{--    })--}}
+        {{--})--}}
+{{--    </script>--}}
 @endpush

@@ -43,6 +43,8 @@ class OrderRepository implements OrderRepositoryContract
         $role = $manager = $shipperRole = ['id', '!=', null];
         $randomSearch = 'orders.id';
         $isManagerQuery = false;
+        $isBranchQuery = false;
+        $branch = null;
 
         if (isset($request['random-search'])) {
             $randomSearch = '(';
@@ -74,6 +76,11 @@ class OrderRepository implements OrderRepositoryContract
             $manager = ['users.name', 'like', '%' . $request['manager'] . '%'];
             $role = ['name', 'manager'];
             $isManagerQuery = true;
+        }
+
+        if (isset($request['branch'])) {
+            $branch = ['users.branch', 'like', '%' . $request['branch'] . '%'];
+            $isBranchQuery = true;
         }
 
         if (isset($request['status']) && $request['status'] != 'default') {
@@ -109,6 +116,11 @@ class OrderRepository implements OrderRepositoryContract
                     $managerQuery->where([$manager]);
                 });
             })
+            ->when($isBranchQuery, function ($query) use ($branch) {
+                $query->whereHas('manager', function ($managerQuery) use ($branch) {
+                    $managerQuery->where([$branch]);
+                });
+            })
             ->with(['account', 'manager'])
             ->orderBy('orders.created_at', 'desc');
 
@@ -129,6 +141,11 @@ class OrderRepository implements OrderRepositoryContract
             ->when($isManagerQuery, function ($query) use ($manager) {
                 $query->whereHas('manager', function ($managerQuery) use ($manager) {
                     $managerQuery->where([$manager]);
+                });
+            })
+            ->when($isBranchQuery, function ($query) use ($branch) {
+                $query->whereHas('manager', function ($managerQuery) use ($branch) {
+                    $managerQuery->where([$branch]);
                 });
             })
             ->with(['account', 'manager'])
