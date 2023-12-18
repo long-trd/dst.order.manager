@@ -118,20 +118,3 @@
         </footer>
     </div>
 @endsection
-@push('js')
-{{--    <script type="text/javascript">--}}
-        {{--$(function () {--}}
-        {{--    $('#role-manager').on('change', function () {--}}
-        {{--        if($('#role-manager').is(':checked')) {--}}
-        {{--            const html = `<div class="form-group branch">--}}
-        {{--                            <label class="form-control-label" for="branch">{{ __('Chi nhánh') }}</label>--}}
-        {{--                            <input type="text" name="branch" id="branch" class="form-control form-control-alternative w-90" value="" autocomplete>--}}
-        {{--                          </div>`;--}}
-        {{--            $(html).insertBefore('.manager');--}}
-        {{--        } else {--}}
-        {{--            $('.branch').remove();--}}
-        {{--        }--}}
-        {{--    })--}}
-        {{--})--}}
-{{--    </script>--}}
-@endpush

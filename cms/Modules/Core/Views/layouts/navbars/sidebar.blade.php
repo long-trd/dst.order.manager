@@ -60,6 +60,11 @@
                             <i class="ni ni-single-02 text-primary"></i> {{ __('Users') }}
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('admin.notification.index')}}">
+                            <i class="ni ni-notification-70 text-primary"></i> {{ __('Notifications') }}
+                        </a>
+                    </li>
                 @endif
             </ul>
         </div>
