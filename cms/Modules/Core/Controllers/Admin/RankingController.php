@@ -22,8 +22,10 @@ class RankingController
         $timeShipped = $request->timeShipped ?? 'month';
 
         $rankingTotal = $this->orderService->getRankingByRoleAndTime($role, $time);
+        $page = $request->page ?? 1;
+
         $rankingShipped = $this->orderService->getRankingShippedByTime($timeShipped);
 
-        return view('Core::ranking.index', compact('rankingTotal', 'rankingShipped'));
+        return view('Core::ranking.index', compact('rankingTotal', 'rankingShipped', 'page'));
     }
 }

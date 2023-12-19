@@ -223,15 +223,15 @@ class OrderRepository implements OrderRepositoryContract
 
         $query = $this->orderModel
             ->with($role)
-            ->select($columnGroupBy, DB::raw('SUM(price * quantity) as amount_total'))
+            ->select($columnGroupBy, DB::raw('SUM(price) as amount_total'))
             ->where('status', 'shipped');
 
         if ($time == 'year') {
-            $query = $query->whereYear('created_at', Carbon::now()->year);
+            $query = $query->whereYear('order_date', Carbon::now()->year);
         }
 
         if ($time == 'month') {
-            $query = $query->whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month);
+            $query = $query->whereYear('order_date', Carbon::now()->year)->whereMonth('order_date', Carbon::now()->month);
         }
 
         $orders = $query->groupBy($columnGroupBy)
@@ -247,14 +247,15 @@ class OrderRepository implements OrderRepositoryContract
             ->with('shipper')
             ->select('shipping_user_id',
                 DB::raw('(SUM(CASE WHEN status = "shipped" THEN 1 ELSE 0 END) / COUNT(*))*100 as ratio')
-            );
+            )
+            ->whereHas('shipper');
 
         if ($time == 'year') {
-            $query = $query->whereYear('created_at', Carbon::now()->year);
+            $query = $query->whereYear('order_date', Carbon::now()->year);
         }
 
         if ($time == 'month') {
-            $query = $query->whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month);
+            $query = $query->whereYear('order_date', Carbon::now()->year)->whereMonth('order_date', Carbon::now()->month);
         }
 
         $orders = $query->groupBy('shipping_user_id')

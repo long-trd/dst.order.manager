@@ -70,7 +70,7 @@
                                 @foreach($rankingTotal as $index => $item)
                                     <tr>
                                         <th scope="row">
-                                            {{ $index + 1 }}
+                                            {{ ($page - 1)*10 + $index + 1 }}
                                         </th>
                                         <td>
                                             {{ request('role') == 'shipper' ? $item->shipper->name : $item->manager->name }}
@@ -134,7 +134,7 @@
                             @foreach($rankingShipped as $index => $item)
                             <tr>
                                 <th scope="row">
-                                    {{ $index }}
+                                    {{ $index + 1 }}
                                 </th>
                                 <td>
                                     {{ $item->shipper ? $item->shipper->name : '' }}
