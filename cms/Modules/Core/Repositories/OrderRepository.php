@@ -102,6 +102,13 @@ class OrderRepository implements OrderRepositoryContract
             ->selectRaw('`orders`.`price` as `order_price`')
             ->leftJoin('users', 'orders.shipping_user_id', '=', 'users.id')
             ->leftJoin('accounts', 'orders.account_id', '=', 'accounts.id')
+            ->when($isBranchQuery, function ($query) use ($branch) {
+                $query->whereHas('manager', function ($managerQuery) use ($branch) {
+                    $managerQuery->where([$branch]);
+                })->orWhereHas('shipper', function ($shipperQuery) use ($branch) {
+                    $shipperQuery->where([$branch]);
+                });
+            })
             ->where(
                 [
                     $account,
@@ -117,13 +124,6 @@ class OrderRepository implements OrderRepositoryContract
                     $managerQuery->where([$manager]);
                 });
             })
-            ->when($isBranchQuery, function ($query) use ($branch) {
-                $query->whereHas('manager', function ($managerQuery) use ($branch) {
-                    $managerQuery->where([$branch]);
-                })->orWhereHas('shipper', function ($shipperQuery) use ($branch) {
-                    $shipperQuery->where([$branch]);
-                });
-            })
             ->with(['account', 'manager'])
             ->orderBy('orders.created_at', 'desc');
 
@@ -132,6 +132,13 @@ class OrderRepository implements OrderRepositoryContract
             ->selectRaw('`orders`.`price` as `order_price`')
             ->leftJoin('users', 'orders.shipping_user_id', '=', 'users.id')
             ->leftJoin('accounts', 'orders.account_id', '=', 'accounts.id')
+            ->when($isBranchQuery, function ($query) use ($branch) {
+                $query->whereHas('manager', function ($managerQuery) use ($branch) {
+                    $managerQuery->where([$branch]);
+                })->orWhereHas('shipper', function ($shipperQuery) use ($branch) {
+                    $shipperQuery->where([$branch]);
+                });
+            })
             ->where(
                 [
                     $account,
@@ -144,13 +151,6 @@ class OrderRepository implements OrderRepositoryContract
             ->when($isManagerQuery, function ($query) use ($manager) {
                 $query->whereHas('manager', function ($managerQuery) use ($manager) {
                     $managerQuery->where([$manager]);
-                });
-            })
-            ->when($isBranchQuery, function ($query) use ($branch) {
-                $query->whereHas('manager', function ($managerQuery) use ($branch) {
-                    $managerQuery->where([$branch]);
-                })->orWhereHas('shipper', function ($shipperQuery) use ($branch) {
-                    $shipperQuery->where([$branch]);
                 });
             })
             ->with(['account', 'manager'])
@@ -259,7 +259,7 @@ class OrderRepository implements OrderRepositoryContract
 
         $orders = $query->groupBy('shipping_user_id')
             ->orderByRaw('SUM(CASE WHEN status = "shipped" THEN 1 ELSE 0 END) / COUNT(*) DESC')
-            ->paginate(10);
+            ->get();
 
         return $orders;
     }

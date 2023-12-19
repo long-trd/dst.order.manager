@@ -20,6 +20,7 @@
     <!-- Argon CSS -->
     <link type="text/css" href="{{ asset('argon') }}/css/argon.css?v=1.0.0" rel="stylesheet">
     <link type="text/css" href="{{ cxl_asset('/css/argon_custom.css')}}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Pridi:600" rel="stylesheet">
     @stack('style')
 </head>
 <body class="{{ $class ?? '' }}">
@@ -40,7 +41,7 @@
                     <marquee>
                         <div style="display: flex; align-items: center; vertical-align: center">
                             @foreach($globalNotification as $notification)
-                                <strong style="margin-bottom: 0; margin-right: 50px"><i class="ni ni-diamond text-white mr-2"></i>{{ $notification->content }} <i class="ni ni-diamond text-white mr-2"></i></strong>
+                                <strong class="marquee__line" style="margin-right: 50px">{{ $notification->content }}</strong>
                             @endforeach
                         </div>
                     </marquee>
@@ -68,12 +69,36 @@
 </html>
 <style>
     .notification-wrapper {
-        background: red;
+        background: #FFDC00;
         position: relative;
-        font-size: 18px;
+        color: #000000;
         line-height: unset;
         padding: 6px 10px;
-        color: #ffffff;
         z-index: 999999;
+        font-family: "Pridi", sans-serif;
+        font-weight: 600;
+        font-size: 20px;
+        text-transform: uppercase;
+    }
+
+    .marquee__line {
+        flex-shrink: 0;
+        margin: 0;
+        min-width: 100%;
+        white-space: nowrap;
+        animation-name: marqueeLine;
+        animation-duration: 10s;
+        animation-timing-function: ease-in-out;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes marqueeLine {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(-100%);
+        }
     }
 </style>

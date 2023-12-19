@@ -137,10 +137,10 @@
                                     {{ $index }}
                                 </th>
                                 <td>
-                                    {{ $item->shipper->name }}
+                                    {{ $item->shipper ? $item->shipper->name : '' }}
                                 </td>
                                 <td>
-                                    {{ $item->shipper->email }}
+                                    {{  $item->shipper ? $item->shipper->email : '' }}
                                 </td>
                                 <td>
                                     {{ ceil($item->ratio) }}%
