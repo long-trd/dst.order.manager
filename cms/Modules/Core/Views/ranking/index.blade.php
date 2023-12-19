@@ -149,7 +149,6 @@
                             @endforeach
                             </tbody>
                         </table>
-                        {!! $rankingShipped->appends(request()->query())->links() !!}
                     </div>
                 </div>
             </div>
