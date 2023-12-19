@@ -45,7 +45,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                         </div>
-                                        <input class="form-control datepicker" placeholder="Select date" type="text" name="start_date" value="{{ old('start_date', $notification->start_date) }}" required>
+                                        <input class="form-control datepicker" placeholder="Select date" type="text" name="start_date" value="{{ old('start_date', \Carbon\Carbon::parse($notification->start_date)->format('d-m-Y')) }}" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -54,7 +54,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                         </div>
-                                        <input class="form-control datepicker" placeholder="Select date" type="text" name="end_date" value="{{ old('end_date', $notification->end_date) }}" required>
+                                        <input class="form-control datepicker" placeholder="Select date" type="text" name="end_date" value="{{ old('end_date', \Carbon\Carbon::parse($notification->end_date)->format('d-m-Y')) }}" required>
                                     </div>
                                 </div>
                                 <div class="text-center">

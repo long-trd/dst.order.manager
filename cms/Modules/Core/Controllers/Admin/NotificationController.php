@@ -52,8 +52,8 @@ class NotificationController extends Controller
     public function update($id, CreateNotificationRequest $request)
     {
         $data['content'] = $request->input('content');
-        $data['start_date'] = $request->start_date;
-        $data['end_date'] = $request->end_date;
+        $data['start_date'] = Carbon::parse($request->start_date)->format('Y-m-d');
+        $data['end_date'] = Carbon::parse($request->end_date)->format('Y-m-d');
 
         $notification = $this->service->update($id, $data);
 
