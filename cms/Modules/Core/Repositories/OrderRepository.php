@@ -6,6 +6,7 @@ namespace Cms\Modules\Core\Repositories;
 use Carbon\Carbon;
 use Cms\Modules\Core\Models\Order;
 use Cms\Modules\Core\Repositories\Contracts\OrderRepositoryContract;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class OrderRepository implements OrderRepositoryContract
@@ -119,6 +120,8 @@ class OrderRepository implements OrderRepositoryContract
             ->when($isBranchQuery, function ($query) use ($branch) {
                 $query->whereHas('manager', function ($managerQuery) use ($branch) {
                     $managerQuery->where([$branch]);
+                })->orWhereHas('shipper', function ($shipperQuery) use ($branch) {
+                    $shipperQuery->where([$branch]);
                 });
             })
             ->with(['account', 'manager'])
@@ -146,6 +149,8 @@ class OrderRepository implements OrderRepositoryContract
             ->when($isBranchQuery, function ($query) use ($branch) {
                 $query->whereHas('manager', function ($managerQuery) use ($branch) {
                     $managerQuery->where([$branch]);
+                })->orWhereHas('shipper', function ($shipperQuery) use ($branch) {
+                    $shipperQuery->where([$branch]);
                 });
             })
             ->with(['account', 'manager'])
@@ -210,5 +215,52 @@ class OrderRepository implements OrderRepositoryContract
                 ['order_date', '<=', $filter['end_date'] ? Carbon::parse($filter['end_date'])->format('Y-m-d') : '2099-12-31']
             ])
             ->get();
+    }
+
+    public function getRankingByRoleAndTime($role, $time)
+    {
+        $columnGroupBy = ($role == 'manager' ? 'listing_user_id' : 'shipping_user_id');
+
+        $query = $this->orderModel
+            ->with($role)
+            ->select($columnGroupBy, DB::raw('SUM(price * quantity) as amount_total'))
+            ->where('status', 'shipped');
+
+        if ($time == 'year') {
+            $query = $query->whereYear('created_at', Carbon::now()->year);
+        }
+
+        if ($time == 'month') {
+            $query = $query->whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month);
+        }
+
+        $orders = $query->groupBy($columnGroupBy)
+            ->orderBy('amount_total', 'desc')
+            ->paginate(10);
+
+        return $orders;
+    }
+
+    public function getRankingShippedByTime($time)
+    {
+        $query = $this->orderModel
+            ->with('shipper')
+            ->select('shipping_user_id',
+                DB::raw('(SUM(CASE WHEN status = "shipped" THEN 1 ELSE 0 END) / COUNT(*))*100 as ratio')
+            );
+
+        if ($time == 'year') {
+            $query = $query->whereYear('created_at', Carbon::now()->year);
+        }
+
+        if ($time == 'month') {
+            $query = $query->whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month);
+        }
+
+        $orders = $query->groupBy('shipping_user_id')
+            ->orderByRaw('SUM(CASE WHEN status = "shipped" THEN 1 ELSE 0 END) / COUNT(*) DESC')
+            ->paginate(10);
+
+        return $orders;
     }
 }

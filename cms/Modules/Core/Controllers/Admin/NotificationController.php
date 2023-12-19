@@ -4,6 +4,7 @@ namespace Cms\Modules\Core\Controllers\Admin;
 
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Cms\Modules\Core\Requests\CreateNotificationRequest;
 use Cms\Modules\Core\Requests\UpdateUserRequest;
 use Cms\Modules\Core\Services\Contracts\NotificationServiceContract;
@@ -33,8 +34,8 @@ class NotificationController extends Controller
     public function store(CreateNotificationRequest $request)
     {
         $data['content'] = $request->input('content');
-        $data['start_date'] = $request->start_date;
-        $data['end_date'] = $request->end_date;
+        $data['start_date'] = Carbon::parse($request->start_date)->format('Y-m-d');
+        $data['end_date'] = Carbon::parse($request->end_date)->format('Y-m-d');
 
         $notification = $this->service->store($data);
 

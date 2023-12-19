@@ -82,4 +82,14 @@ class OrderService implements OrderServiceContract
     {
         return $this->orderRepository->downloadExcel($filter);
     }
+
+    public function getRankingByRoleAndTime($role, $time)
+    {
+        return $this->orderRepository->getRankingByRoleAndTime($role, $time);
+    }
+
+    public function getRankingShippedByTime($time)
+    {
+        return $this->orderRepository->getRankingShippedByTime($time);
+    }
 }

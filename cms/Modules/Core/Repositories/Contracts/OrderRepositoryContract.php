@@ -20,4 +20,8 @@ interface OrderRepositoryContract
     public function delete($id);
 
     public function downloadExcel($filter);
+
+    public function getRankingByRoleAndTime($role, $time);
+
+    public function getRankingShippedByTime($time);
 }
