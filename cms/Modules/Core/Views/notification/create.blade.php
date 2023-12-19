@@ -37,17 +37,24 @@
                                 <div class="form-group">
                                     <label class="form-control-label" for="content">{{ __('Content') }}</label>
                                     <textarea type="text" name="content" id="content" class="form-control form-control-alternative w-90" required>{{ old('content') }}</textarea>
-
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-control-label" for="start_date">{{ __('Start Date') }}</label>
-                                    <input type="date" name="start_date" id="start_date"
-                                           class="form-control form-control-alternative w-90" value="{{ old('start_date') }}" required>
+                                    <label class="form-control-label" for="content">{{ __('Start date') }}</label>
+                                    <div class="input-group input-group-alternative w-25">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                        </div>
+                                        <input class="form-control datepicker" placeholder="Select date" type="text" name="start_date" value="{{ old('start_date') }}" required>
+                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-control-label" for="end_date">{{ __('End Date') }}</label>
-                                    <input type="date" name="end_date" id="end_date"
-                                           class="form-control form-control-alternative w-90" value="{{ old('end_date') }}" required>
+                                    <label class="form-control-label" for="content">{{ __('End date') }}</label>
+                                    <div class="input-group input-group-alternative w-25">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                        </div>
+                                        <input class="form-control datepicker" placeholder="Select date" type="text" name="end_date" value="{{ old('end_date') }}" required>
+                                    </div>
                                 </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>

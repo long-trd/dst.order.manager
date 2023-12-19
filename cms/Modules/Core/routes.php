@@ -85,6 +85,12 @@ Route::group([
                 Route::get('edit/{id}', 'NotificationController@edit')->name('admin.notification.edit');
                 Route::post('update/{id}', 'NotificationController@update')->name('admin.notification.update');
                 Route::delete('delete/{id}', 'NotificationController@delete')->name('admin.notification.delete');
+                //NOTE
+            });
+
+            //
+            Route::group(['prefix' => 'ranking'], function () {
+                Route::get('/', 'RankingController@index')->name('admin.ranking.index');
             });
         });
     });

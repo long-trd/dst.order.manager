@@ -54,6 +54,11 @@
                         <i class="ni ni-book-bookmark text-primary"></i> {{ __('Notes') }}
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('admin.ranking.index')}}">
+                        <i class="ni ni-diamond text-primary"></i> {{ __('Ranking') }}
+                    </a>
+                </li>
                 @if(auth()->user()->hasRole('admin'))
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('admin.user.index')}}">
