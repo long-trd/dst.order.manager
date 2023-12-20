@@ -92,4 +92,14 @@ class OrderService implements OrderServiceContract
     {
         return $this->orderRepository->getRankingShippedByTime($time);
     }
+
+    public function getTop3Manager()
+    {
+        return $this->orderRepository->getTop3Manager();
+    }
+
+    public function getTop3Shipper()
+    {
+        return $this->orderRepository->getTop3Shipper();
+    }
 }

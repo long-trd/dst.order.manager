@@ -21,8 +21,8 @@
                                     <li class="nav-item mr-2 mr-md-0">
                                         <a href="{{ request()->fullUrlWithQuery(['role' => 'manager']) }} "
                                            class="nav-link py-2 px-3 {{ !request('role') || request('role') == 'manager' ? 'active' : '' }}">
-                                            <span class="d-none d-md-block">Manager</span>
-                                            <span class="d-md-none">M</span>
+                                            <span class="d-none d-md-block">List</span>
+                                            <span class="d-md-none">L</span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -143,7 +143,7 @@
                                     {{  $item->shipper ? $item->shipper->email : '' }}
                                 </td>
                                 <td>
-                                    {{ ceil($item->ratio) }}%
+                                    {{ round($item->ratio) }}%
                                 </td>
                             </tr>
                             @endforeach

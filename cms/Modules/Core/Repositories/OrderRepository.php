@@ -264,4 +264,40 @@ class OrderRepository implements OrderRepositoryContract
 
         return $orders;
     }
+
+    public function getTop3Shipper()
+    {
+        $orders = $this->orderModel
+            ->with('shipper')
+            ->select(
+                'shipping_user_id',
+                DB::raw('SUM(CASE WHEN status = "shipped" THEN price ELSE 0 END) as amount_total'),
+                DB::raw('SUM(CASE WHEN status = "shipped" THEN 1 ELSE 0 END) / COUNT(*) * 100 as shipped_ratio')
+            )
+            ->whereYear('order_date', Carbon::now()->year)
+            ->whereMonth('order_date', Carbon::now()->month)
+            ->groupBy('shipping_user_id')
+            ->orderBy('amount_total', 'desc')
+            ->take(3)
+            ->get();
+
+        return $orders;
+
+    }
+
+    public function getTop3Manager()
+    {
+        $orders = $this->orderModel
+            ->with('manager')
+            ->select('listing_user_id', DB::raw('SUM(price) as amount_total'))
+            ->where('status', 'shipped')
+            ->whereYear('order_date', Carbon::now()->year)
+            ->whereMonth('order_date', Carbon::now()->month)
+            ->groupBy('listing_user_id')
+            ->orderBy('amount_total', 'desc')
+            ->take(3)
+            ->get();
+
+        return $orders;
+    }
 }

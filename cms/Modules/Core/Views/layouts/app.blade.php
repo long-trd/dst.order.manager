@@ -32,7 +32,7 @@
 @endauth
 <div class="main-content">
     @if(auth()->check())
-        @if(count($globalNotification) > 0)
+        @if(count($globalData['notifications']) > 0)
             <div class="notification-wrapper d-flex flex-row">
                 <div class="advertise">
                     <img class="ml-3 mt-1 advertise-menu" style="height: 40px" src="{{ cxl_asset('assets/img/icons/icon-speaker.png') }}"/>
@@ -40,7 +40,7 @@
                 <div class="advertise w-100 mr-2" style="display: flex; align-items: center;">
                     <marquee>
                         <div style="display: flex; align-items: center; vertical-align: center">
-                            @foreach($globalNotification as $notification)
+                            @foreach($globalData['notifications'] as $notification)
                                 <strong class="marquee__line" style="margin-right: 50px">{{ $notification->content }}</strong>
                             @endforeach
                         </div>
@@ -87,9 +87,8 @@
         min-width: 100%;
         white-space: nowrap;
         animation-name: marqueeLine;
-        animation-duration: 10s;
+        animation-duration: 25s;
         animation-timing-function: ease-in-out;
-        animation-iteration-count: infinite;
     }
 
     @keyframes marqueeLine {

@@ -1,5 +1,5 @@
 <!-- Top navbar -->
-<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main" style="top: {{ count($globalNotification) > 0 ? "56px" : 0 }}">
+<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main" style="top: {{ count($globalData['notifications']) > 0 ? "56px" : 0 }}">
     <div class="container-fluid position-relative">
         <!-- Brand -->
         <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="{{route('home')}}">{{ __('Dashboard') }}</a>

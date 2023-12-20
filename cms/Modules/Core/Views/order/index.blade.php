@@ -1,5 +1,4 @@
 @extends('Core::layouts.app')
-
 @section('content')
     <!-- Topnav -->
     <!-- Header -->
@@ -97,10 +96,10 @@
                                             </span>
                                         </td>
                                         <td class="budget manager_name">
-                                            {{ isset($order->manager->name) ? $order->manager->name : '' }}
+                                            {{ isset($order->manager->name) ? ($order->manager->name . ($globalData['arrTop3Manager'][$order->manager->name] ?? '')) : '' }}
                                         </td>
                                         <td class="budget shipper_name">
-                                            {{ isset($order->shipper->name) ? $order->shipper->name : '' }}
+                                            {{ isset($order->shipper->name) ? ($order->shipper->name . ($globalData['arrTop3Shipper'][$order->shipper->name] ?? '')) : '' }}
                                         </td>
                                         <td class="budget helper_name">
                                             {{ isset($order->helper->name) ? $order->helper->name : '' }}

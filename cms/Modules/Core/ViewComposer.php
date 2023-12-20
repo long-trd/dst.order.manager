@@ -3,13 +3,14 @@
 namespace Cms\Modules\Core;
 
 use Cms\Modules\Core\Services\Contracts\NotificationServiceContract;
+use Cms\Modules\Core\Services\Contracts\OrderServiceContract;
 use Illuminate\View\View;
 
 class ViewComposer
 {
-
-    protected $notifications;
+    protected $globalData;
     protected $notificationService;
+    protected $orderService;
 
     /**
      * Create a movie composer.
@@ -18,11 +19,32 @@ class ViewComposer
      */
     public function __construct
     (
-        NotificationServiceContract $notificationService
+        NotificationServiceContract $notificationService,
+        OrderServiceContract $orderService
     )
     {
         $this->notificationService = $notificationService;
-        $this->notifications = $this->notificationService->getCurrentNotification();
+        $this->orderService = $orderService;
+
+        $notifications = $this->notificationService->getCurrentNotification();
+        $top3Manager = $this->orderService->getTop3Manager();
+        $top3Shipper = $this->orderService->getTop3Shipper();
+        $arrTop3Manager = [];
+        $arrTop3Shipper = [];
+        foreach ($top3Shipper as $index => $item) {
+            $arrTop3Shipper[$item->shipper->name] = ' - Top ' . ($index + 1);
+        }
+        foreach ($top3Manager as $index => $item) {
+            $arrTop3Manager[$item->manager->name] = ' - Top ' . ($index + 1);
+        }
+
+        $this->globalData = [
+            'notifications' => $notifications,
+            'top3Manager' => $top3Manager,
+            'top3Shipper' => $top3Shipper,
+            'arrTop3Manager' => $arrTop3Manager,
+            'arrTop3Shipper' => $arrTop3Shipper
+        ];
     }
 
     /**
@@ -33,6 +55,6 @@ class ViewComposer
      */
     public function compose(View $view)
     {
-        $view->with('globalNotification', $this->notifications);
+        $view->with('globalData', $this->globalData);
     }
 }

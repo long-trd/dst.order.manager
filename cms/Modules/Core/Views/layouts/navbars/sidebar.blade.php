@@ -27,16 +27,37 @@
                 </div>
             </div>
             <!-- Form -->
-            <form class="mt-4 mb-3 d-md-none">
-                <div class="input-group input-group-rounded input-group-merge">
-                    <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="{{ __('Search') }}" aria-label="Search">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <span class="fa fa-search"></span>
-                        </div>
-                    </div>
-                </div>
-            </form>
+           <div class="top-ranking text-center py-3 border" style="background: #FFDC00; font-family: 'Pridi', sans-serif; border-radius: 10px">
+               <h2>Top Ranking</h2>
+               <div class="text-center">
+                   <ul class="nav nav-pills justify-content-center">
+                       <li class="nav-item mr-2 mr-md-0">
+                           <a style="min-width: 85px" id="top3manager" href="#" class="nav-link nav-link-top3 py-2 px-3 active" data-toggle="tab">
+                               <span class="d-none d-md-block">List</span>
+                               <span class="d-md-none">L</span>
+                           </a>
+                       </li>
+                       <li class="nav-item">
+                           <a style="min-width: 85px" id="top3shipper" href="#" class="nav-link nav-link-top3 py-2 px-3" data-toggle="tab">
+                               <span class="d-none d-md-block">Shipper</span>
+                               <span class="d-md-none">S</span>
+                           </a>
+                       </li>
+                   </ul>
+               </div>
+               <div class="list-ranking">
+                   <div class="top3manager__data mt-3">
+                       @foreach($globalData['top3Manager'] as $index => $item)
+                       <p>{!! $index == 0 ? '<i class="ni ni-trophy"></i> ' : '' !!}{{ $item->manager->name }}</p>
+                       @endforeach
+                   </div>
+                   <div class="top3shipper__data mt-3" style="display: none">
+                       @foreach($globalData['top3Shipper'] as $index => $item)
+                           <p>{!! $index == 0 ? '<i class="ni ni-trophy"></i> ' : '' !!}{{ $item->shipper->name }} ({{ round($item->shipped_ratio) }}%)</p>
+                       @endforeach
+                   </div>
+               </div>
+           </div>
             <!-- Navigation -->
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -75,3 +96,13 @@
         </div>
     </div>
 </nav>
+@push('js')
+    <script type="text/javascript">
+        $(function () {
+            $(document).on('click', '.nav-link-top3', function () {
+                $('#top3manager').hasClass('active') ? $('.top3manager__data').show() : $('.top3manager__data').hide();
+                $('#top3shipper').hasClass('active') ? $('.top3shipper__data').show() : $('.top3shipper__data').hide();
+            })
+        })
+    </script>
+@endpush

@@ -53,7 +53,7 @@ class CoreServiceProvider extends ServiceProvider
             $router->aliasMiddleware($name, $class);
         }
 
-        view()->composer('Core::layouts.app', 'Cms\Modules\Core\ViewComposer');
+        view()->composer(['Core::layouts.app', 'Core::order.index'], 'Cms\Modules\Core\ViewComposer');
     }
 
     /**

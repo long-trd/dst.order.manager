@@ -24,4 +24,8 @@ interface OrderRepositoryContract
     public function getRankingByRoleAndTime($role, $time);
 
     public function getRankingShippedByTime($time);
+
+    public function getTop3Manager();
+
+    public function getTop3Shipper();
 }
