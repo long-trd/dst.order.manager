@@ -32,10 +32,12 @@ class ViewComposer
         $arrTop3Manager = [];
         $arrTop3Shipper = [];
         foreach ($top3Shipper as $index => $item) {
-            $arrTop3Shipper[$item->shipper->name] = ' - Top ' . ($index + 1);
+            $url = '/assets/img/top'.($index + 1).'.png';
+            $arrTop3Shipper[$item->shipper->name] = '<img style="height:20px;" src="'.$url.'"/>';
         }
         foreach ($top3Manager as $index => $item) {
-            $arrTop3Manager[$item->manager->name] = ' - Top ' . ($index + 1);
+            $url = '/assets/img/top'.($index + 1).'.png';
+            $arrTop3Manager[$item->manager->name] = '<img style="height:20px;" src="'.$url.'"/>';
         }
 
         $this->globalData = [

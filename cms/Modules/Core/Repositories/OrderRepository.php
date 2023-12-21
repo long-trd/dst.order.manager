@@ -223,8 +223,7 @@ class OrderRepository implements OrderRepositoryContract
 
         $query = $this->orderModel
             ->with($role)
-            ->select($columnGroupBy, DB::raw('SUM(price) as amount_total'))
-            ->where('status', 'shipped');
+            ->select($columnGroupBy, DB::raw('SUM(price) as amount_total'));
 
         if ($time == 'year') {
             $query = $query->whereYear('order_date', Carbon::now()->year);
@@ -289,8 +288,11 @@ class OrderRepository implements OrderRepositoryContract
     {
         $orders = $this->orderModel
             ->with('manager')
-            ->select('listing_user_id', DB::raw('SUM(price) as amount_total'))
-            ->where('status', 'shipped')
+            ->select(
+                'listing_user_id',
+                DB::raw('SUM(price) as amount_total'),
+                DB::raw('SUM(CASE WHEN status = "shipped" THEN 1 ELSE 0 END) / COUNT(*) * 100 as shipped_ratio')
+            )
             ->whereYear('order_date', Carbon::now()->year)
             ->whereMonth('order_date', Carbon::now()->month)
             ->groupBy('listing_user_id')

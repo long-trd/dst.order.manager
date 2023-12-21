@@ -91,6 +91,12 @@
         animation-timing-function: ease-in-out;
     }
 
+    .top-ranking {
+        box-shadow: 5px 5px 10px 3px rgba(8,7,7,0.4);
+        -webkit-box-shadow: 5px 5px 10px 3px rgba(8,7,7,0.4);
+        -moz-box-shadow: 5px 5px 10px 3px rgba(8,7,7,0.4);
+    }
+
     @keyframes marqueeLine {
         from {
             transform: translateX(0);

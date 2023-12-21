@@ -1,7 +1,8 @@
 <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
     <div class="container-fluid">
         <!-- Toggler -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main"
+                aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <!-- Brand -->
@@ -19,7 +20,9 @@
                         </a>
                     </div>
                     <div class="col-6 collapse-close">
-                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle sidenav">
+                        <button type="button" class="navbar-toggler" data-toggle="collapse"
+                                data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false"
+                                aria-label="Toggle sidenav">
                             <span></span>
                             <span></span>
                         </button>
@@ -27,37 +30,66 @@
                 </div>
             </div>
             <!-- Form -->
-           <div class="top-ranking text-center py-3 border" style="background: #FFDC00; font-family: 'Pridi', sans-serif; border-radius: 10px">
-               <h2>Top Ranking</h2>
-               <div class="text-center">
-                   <ul class="nav nav-pills justify-content-center">
-                       <li class="nav-item mr-2 mr-md-0">
-                           <a style="min-width: 85px" id="top3manager" href="#" class="nav-link nav-link-top3 py-2 px-3 active" data-toggle="tab">
-                               <span class="d-none d-md-block">List</span>
-                               <span class="d-md-none">L</span>
-                           </a>
-                       </li>
-                       <li class="nav-item">
-                           <a style="min-width: 85px" id="top3shipper" href="#" class="nav-link nav-link-top3 py-2 px-3" data-toggle="tab">
-                               <span class="d-none d-md-block">Shipper</span>
-                               <span class="d-md-none">S</span>
-                           </a>
-                       </li>
-                   </ul>
-               </div>
-               <div class="list-ranking">
-                   <div class="top3manager__data mt-3">
-                       @foreach($globalData['top3Manager'] as $index => $item)
-                       <p>{!! $index == 0 ? '<i class="ni ni-trophy"></i> ' : '' !!}{{ $item->manager->name }}</p>
-                       @endforeach
-                   </div>
-                   <div class="top3shipper__data mt-3" style="display: none">
-                       @foreach($globalData['top3Shipper'] as $index => $item)
-                           <p>{!! $index == 0 ? '<i class="ni ni-trophy"></i> ' : '' !!}{{ $item->shipper->name }} ({{ round($item->shipped_ratio) }}%)</p>
-                       @endforeach
-                   </div>
-               </div>
-           </div>
+            <div class="top-ranking text-center py-3 mb-2"
+                 style="background: #FFDC00; font-family: 'Pridi', sans-serif; border-radius: 10px">
+                <h3>Top Shipper</h3>
+                <div class="list-ranking">
+                    <div class="top3shipper__data">
+                        <table class="w-100" style="font-size: 13px">
+                            <thead style="background: #ffffff; border-bottom: 5px solid #FFDC00">
+                            <tr>
+                                <th>Top</th>
+                                <th>Name</th>
+                                <th>Amount</th>
+                                <th>%</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($globalData['top3Shipper'] as $index => $item)
+                            <tr style="background: #ffffff; border-bottom: 5px solid #FFDC00">
+                                <td>
+                                    <img style="height: 20px" src="{{ cxl_asset('assets/img/top'.($index + 1).'.png') }}" />
+                                </td>
+                                <td class="rank">{{ $item->shipper->name }}</td>
+                                <td class="team">{{ $item->amount_total }}</td>
+                                <td class="points">{{ round($item->shipped_ratio) }}</td>
+                            </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="top-ranking text-center py-3 border mb-4"
+                 style="background: #FFDC00; font-family: 'Pridi', sans-serif; border-radius: 10px">
+                <h3>Top List</h3>
+                <div class="list-ranking">
+                    <div class="top3manager__data">
+                        <table class="w-100" style="font-size: 13px">
+                            <thead style="background: #ffffff; border-bottom: 5px solid #FFDC00">
+                            <tr>
+                                <th>Top</th>
+                                <th>Name</th>
+                                <th>Amount</th>
+                                <th>%</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($globalData['top3Manager'] as $index => $item)
+                                <tr style="background: #ffffff; border-bottom: 5px solid #FFDC00">
+                                    <td>
+                                        <img style="height: 20px" src="{{ cxl_asset('assets/img/top'.($index + 1).'.png') }}" />
+                                    </td>
+                                    <td class="rank">{{ $item->manager->name }}</td>
+                                    <td class="team">{{ $item->amount_total }}</td>
+                                    <td class="points">{{ round($item->shipped_ratio) }}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
             <!-- Navigation -->
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -96,13 +128,3 @@
         </div>
     </div>
 </nav>
-@push('js')
-    <script type="text/javascript">
-        $(function () {
-            $(document).on('click', '.nav-link-top3', function () {
-                $('#top3manager').hasClass('active') ? $('.top3manager__data').show() : $('.top3manager__data').hide();
-                $('#top3shipper').hasClass('active') ? $('.top3shipper__data').show() : $('.top3shipper__data').hide();
-            })
-        })
-    </script>
-@endpush
