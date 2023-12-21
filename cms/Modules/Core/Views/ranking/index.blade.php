@@ -19,14 +19,14 @@
                             <div class="col">
                                 <ul class="nav nav-pills justify-content-start">
                                     <li class="nav-item mr-2 mr-md-0">
-                                        <a href="{{ request()->fullUrlWithQuery(['role' => 'manager']) }} "
+                                        <a href="{{ request()->fullUrlWithQuery(['role' => 'manager', 'page' => 1]) }} "
                                            class="nav-link py-2 px-3 {{ !request('role') || request('role') == 'manager' ? 'active' : '' }}">
                                             <span class="d-none d-md-block">List</span>
                                             <span class="d-md-none">L</span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ request()->fullUrlWithQuery(['role' => 'shipper']) }} "
+                                        <a href="{{ request()->fullUrlWithQuery(['role' => 'shipper', 'page' => 1]) }} "
                                            class="nav-link py-2 px-3 {{ request('role') == 'shipper' ? 'active' : '' }}">
                                             <span class="d-none d-md-block">Shipper</span>
                                             <span class="d-md-none">S</span>
@@ -37,14 +37,14 @@
                             <div class="col">
                                 <ul class="nav nav-pills justify-content-end">
                                     <li class="nav-item mr-2 mr-md-0">
-                                        <a href="{{ request()->fullUrlWithQuery(['time' => 'month']) }} "
+                                        <a href="{{ request()->fullUrlWithQuery(['time' => 'month', 'page' => 1]) }} "
                                            class="nav-link py-2 px-3 {{ !request('time') || request('time') == 'month' ? 'active' : '' }}">
                                             <span class="d-none d-md-block">Month</span>
                                             <span class="d-md-none">M</span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ request()->fullUrlWithQuery(['time' => 'year']) }} "
+                                        <a href="{{ request()->fullUrlWithQuery(['time' => 'year', 'page' => 1]) }} "
                                            class="nav-link py-2 px-3 {{ request('time') == 'year' ? 'active' : '' }}">
                                             <span class="d-none d-md-block">Year</span>
                                             <span class="d-md-none">Y</span>
@@ -73,10 +73,10 @@
                                             {{ ($page - 1)*10 + $index + 1 }}
                                         </th>
                                         <td>
-                                            {{ request('role') == 'shipper' ? $item->shipper->name : $item->manager->name }}
+                                            {{ request('role') == 'shipper' ? ($item->shipper ? $item->shipper->name : '') : ($item->manager ? $item->manager->name : '') }}
                                         </td>
                                         <td>
-                                            {{ request('role') == 'shipper' ? $item->shipper->email : $item->manager->email }}
+                                            {{ request('role') == 'shipper' ? ($item->shipper ? $item->shipper->email : '') : ($item->manager ? $item->manager->email : '') }}
                                         </td>
                                         <td>
                                             {{ $item->amount_total }}

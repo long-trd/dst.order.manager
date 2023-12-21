@@ -223,7 +223,12 @@ class OrderRepository implements OrderRepositoryContract
 
         $query = $this->orderModel
             ->with($role)
-            ->select($columnGroupBy, DB::raw('SUM(price) as amount_total'));
+            ->select($columnGroupBy, DB::raw('SUM(price) as amount_total'))
+            ->whereHas($role);
+
+        if ($role == 'shipper') {
+            $query = $query->where('status', 'shipped');
+        }
 
         if ($time == 'year') {
             $query = $query->whereYear('order_date', Carbon::now()->year);
