@@ -92,6 +92,24 @@
                                         </label>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-email">{{ __('Leader Manager') }}</label>
+                                    <div class="role-check">
+                                        <label class="custom-toggle">
+                                            <input type="checkbox" name="role[]" value="4" {{$user->hasRole('leader-manager') ? 'checked' : ''}}>
+                                            <span class="custom-toggle-slider rounded-circle"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-email">{{ __('Leader Shipper') }}</label>
+                                    <div class="role-check">
+                                        <label class="custom-toggle">
+                                            <input type="checkbox" name="role[]" value="5" {{$user->hasRole('leader-shipper') ? 'checked' : ''}}>
+                                            <span class="custom-toggle-slider rounded-circle"></span>
+                                        </label>
+                                    </div>
+                                </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
                                 </div>

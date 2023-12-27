@@ -4,6 +4,7 @@ namespace Cms\Modules\Core\Controllers\Admin;
 
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Cms\Modules\Core\Export\OrderExport;
 use Cms\Modules\Core\Requests\CreateOderRequest;
 use Cms\Modules\Core\Services\Contracts\AccountServiceContract;
@@ -38,12 +39,12 @@ class OrderController extends Controller
         $accounts = $this->accountService->getAll();
 
         return view('Core::order.index', [
-            'orders' => $orders['paginated_data'], 
-            'totalAmountByQuery' => $orders['total_amount_by_query'], 
-            'totalOrderByQuery' => $orders['total_order_by_query'], 
-            'totalAmountWithoutStatus' => $orders['total_amount_without_status'], 
-            'totalOrderWithoutStatus' => $orders['total_order_without_status'], 
-            'accounts' => $accounts, 
+            'orders' => $orders['paginated_data'],
+            'totalAmountByQuery' => $orders['total_amount_by_query'],
+            'totalOrderByQuery' => $orders['total_order_by_query'],
+            'totalAmountWithoutStatus' => $orders['total_amount_without_status'],
+            'totalOrderWithoutStatus' => $orders['total_order_without_status'],
+            'accounts' => $accounts,
             'request' => $request->all()
         ]);
     }
@@ -115,6 +116,19 @@ class OrderController extends Controller
 
     public function delete($id)
     {
+        $order = $this->orderService->findByID($id);
+        $currentTime = Carbon::now();
+        $createdAt = Carbon::parse($order->created_at);
+
+        if ($currentTime->greaterThan($createdAt->addMinutes(30)) && !auth()->user()->hasRole('admin')) {
+            return response()->json([
+                'error' => true,
+                'status' => 400,
+                'message' => 'failed',
+                'data' => ''
+            ], 400);
+        }
+
         if ($this->orderService->delete($id)) {
             return response()->json([
                 'error' => false,
@@ -123,13 +137,6 @@ class OrderController extends Controller
                 'data' => ''
             ], 201);
         }
-
-        return response()->json([
-            'error' => true,
-            'status' => 400,
-            'message' => 'failed',
-            'data' => ''
-        ], 400);
     }
 
     public function excel(Request $request)

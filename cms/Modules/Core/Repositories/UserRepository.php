@@ -36,11 +36,26 @@ class UserRepository implements UserRepositoryContract
     public function getAllWithPaginate($paginate)
     {
         // TODO: Implement getAllWithPaginate() method.
-        return $this->model
+        $query = $this->model
             ->whereHas('roles', function ($query) {
                 $query->where('name', '!=', 'admin');
-            })
-            ->paginate($paginate);
+            });
+
+        if (auth()->user()->hasRole('leader-manager')) {
+            $query = $query->whereHas('roles', function ($query) {
+                $query->where('name', 'manager');
+            });
+        }
+
+        if (auth()->user()->hasRole('leader-shipper')) {
+            $query = $query->whereHas('roles', function ($query) {
+                $query->where('name', 'shipper');
+            });
+        }
+
+        $users = $query->paginate($paginate);
+
+        return $users;
     }
 
     public function findById($id)

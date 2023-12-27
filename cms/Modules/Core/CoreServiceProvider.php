@@ -2,6 +2,7 @@
 
 namespace Cms\Modules\Core;
 
+use Cms\Modules\Core\Commands\AddRoleCommand;
 use Cms\Modules\Core\Repositories\AccountRepository;
 use Cms\Modules\Core\Repositories\Contracts\AccountRepositoryContract;
 use Cms\Modules\Core\Repositories\Contracts\NotificationRepositoryContract;
@@ -51,6 +52,12 @@ class CoreServiceProvider extends ServiceProvider
         // MODULE MIDDLEWARE REGISTER
         foreach($this->routeMiddleware as $name => $class) {
             $router->aliasMiddleware($name, $class);
+        }
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                AddRoleCommand::class,
+            ]);
         }
 
         view()->composer(['Core::layouts.app', 'Core::order.index'], 'Cms\Modules\Core\ViewComposer');

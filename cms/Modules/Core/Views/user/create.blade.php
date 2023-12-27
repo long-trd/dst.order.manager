@@ -65,7 +65,8 @@
                                     <input type="text" name="branch" id="branch"
                                            class="form-control form-control-alternative w-90" value="">
                                 </div>
-                                <div class="form-group manager">
+                                @if(auth()->user()->hasRole('admin'))
+                                <div class="form-group">
                                     <label class="form-control-label" for="input-email">{{ __('Manager') }}</label>
                                     <div class="role-check">
                                         <label class="custom-toggle">
@@ -83,6 +84,47 @@
                                         </label>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-email">{{ __('Leader Manager') }}</label>
+                                    <div class="role-check">
+                                        <label class="custom-toggle">
+                                            <input type="checkbox" name="role[]" value="4">
+                                            <span class="custom-toggle-slider rounded-circle"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-email">{{ __('Leader Shipper') }}</label>
+                                    <div class="role-check">
+                                        <label class="custom-toggle">
+                                            <input type="checkbox" name="role[]" value="5">
+                                            <span class="custom-toggle-slider rounded-circle"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                @endif
+                                @if(auth()->user()->hasRole('leader-manager'))
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-email">{{ __('Manager') }}</label>
+                                        <div class="role-check">
+                                            <label class="custom-toggle">
+                                                <input checked type="checkbox" id="role-manager" name="role[]" value="3">
+                                                <span class="custom-toggle-slider rounded-circle"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endif
+                                @if(auth()->user()->hasRole('leader-shipper'))
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-email">{{ __('Shipper') }}</label>
+                                        <div class="role-check">
+                                            <label class="custom-toggle">
+                                                <input checked type="checkbox" name="role[]" value="2">
+                                                <span class="custom-toggle-slider rounded-circle"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
                                 </div>

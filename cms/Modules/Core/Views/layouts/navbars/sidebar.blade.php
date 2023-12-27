@@ -112,7 +112,7 @@
                         <i class="ni ni-diamond text-primary"></i> {{ __('Ranking') }}
                     </a>
                 </li>
-                @if(auth()->user()->hasRole('admin'))
+                @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('leader-manager') || auth()->user()->hasRole('leader-shipper'))
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('admin.user.index')}}">
                             <i class="ni ni-single-02 text-primary"></i> {{ __('Users') }}

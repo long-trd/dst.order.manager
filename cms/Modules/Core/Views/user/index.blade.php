@@ -120,6 +120,9 @@
                             } else {
                                 alert('Something went wrong, please try again or contact for support !');
                             }
+                        },
+                        error: function (data) {
+                            alert('Something went wrong, please try again or contact for support !');
                         }
                     });
                 }
