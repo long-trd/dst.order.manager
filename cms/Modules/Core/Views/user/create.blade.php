@@ -66,49 +66,54 @@
                                            class="form-control form-control-alternative w-90" value="">
                                 </div>
                                 @if(auth()->user()->hasRole('admin'))
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-email">{{ __('Manager') }}</label>
-                                    <div class="role-check">
-                                        <label class="custom-toggle">
-                                            <input type="checkbox" id="role-manager" name="role[]" value="3">
-                                            <span class="custom-toggle-slider rounded-circle"></span>
-                                        </label>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-email">{{ __('Manager') }}</label>
+                                        <div class="role-check">
+                                            <label class="custom-toggle">
+                                                <input type="checkbox" id="role-manager" name="role[]" value="3">
+                                                <span class="custom-toggle-slider rounded-circle"></span>
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-email">{{ __('Shipper') }}</label>
-                                    <div class="role-check">
-                                        <label class="custom-toggle">
-                                            <input type="checkbox" name="role[]" value="2">
-                                            <span class="custom-toggle-slider rounded-circle"></span>
-                                        </label>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-email">{{ __('Shipper') }}</label>
+                                        <div class="role-check">
+                                            <label class="custom-toggle">
+                                                <input type="checkbox" name="role[]" value="2">
+                                                <span class="custom-toggle-slider rounded-circle"></span>
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-email">{{ __('Leader Manager') }}</label>
-                                    <div class="role-check">
-                                        <label class="custom-toggle">
-                                            <input type="checkbox" name="role[]" value="4">
-                                            <span class="custom-toggle-slider rounded-circle"></span>
-                                        </label>
+                                    <div class="form-group">
+                                        <label class="form-control-label"
+                                               for="input-email">{{ __('Leader Manager') }}</label>
+                                        <div class="role-check">
+                                            <label class="custom-toggle">
+                                                <input type="checkbox" name="role[]" value="4">
+                                                <span class="custom-toggle-slider rounded-circle"></span>
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-email">{{ __('Leader Shipper') }}</label>
-                                    <div class="role-check">
-                                        <label class="custom-toggle">
-                                            <input type="checkbox" name="role[]" value="5">
-                                            <span class="custom-toggle-slider rounded-circle"></span>
-                                        </label>
+                                    <div class="form-group">
+                                        <label class="form-control-label"
+                                               for="input-email">{{ __('Leader Shipper') }}</label>
+                                        <div class="role-check">
+                                            <label class="custom-toggle">
+                                                <input type="checkbox" name="role[]" value="5">
+                                                <span class="custom-toggle-slider rounded-circle"></span>
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
                                 @endif
                                 @if(auth()->user()->hasRole('leader-manager'))
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-email">{{ __('Manager') }}</label>
                                         <div class="role-check">
                                             <label class="custom-toggle">
-                                                <input checked type="checkbox" id="role-manager" name="role[]" value="3">
+                                                <input disabled checked type="checkbox" id="role-manager" name="role[]"
+                                                       value="3">
+                                                <input style="display: none" checked type="checkbox" id="role-manager"
+                                                       name="role[]" value="3">
                                                 <span class="custom-toggle-slider rounded-circle"></span>
                                             </label>
                                         </div>
@@ -119,7 +124,9 @@
                                         <label class="form-control-label" for="input-email">{{ __('Shipper') }}</label>
                                         <div class="role-check">
                                             <label class="custom-toggle">
-                                                <input checked type="checkbox" name="role[]" value="2">
+                                                <input disabled checked type="checkbox" name="role[]" value="2">
+                                                <input style="display: none" checked type="checkbox" id="role-manager"
+                                                       name="role[]" value="2">
                                                 <span class="custom-toggle-slider rounded-circle"></span>
                                             </label>
                                         </div>
@@ -151,3 +158,12 @@
         </footer>
     </div>
 @endsection
+@push('js')
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('input[name="role[]"]').change(function () {
+                $('input[name="role[]"]').not(this).prop('checked', false);
+            });
+        });
+    </script>
+@endpush

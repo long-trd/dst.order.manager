@@ -146,13 +146,11 @@
                                         <textarea name="paypal_notes" class="form-control w-90" id="exampleFormControlTextarea1" rows="3">{{$order->paypal_notes}}</textarea>
                                     </div>
                                 @endif
-
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
                                 </div>
                             </div>
                         </form>
-
                     </div>
                     <!-- Card footer -->
                     <div class="card-footer py-4 position-relative">

@@ -12,7 +12,7 @@ class AddRoleCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'cms:role {--name=} {--display_name=} {--description=}';
+    protected $signature = 'add:role';
 
     /**
      * The console command description.
@@ -38,19 +38,23 @@ class AddRoleCommand extends Command
      */
     public function handle()
     {
-        $name = $this->option('name');
-        $display_name = $this->option('display_name');
-        $description = $this->option('description');
-        if (empty($name) || empty($display_name) || empty($description)) {
-            $this->error('All options must be provided');
+        $roles = [
+            [
+                'name' => 'leader-manager',
+                'display_name' => 'Leader Manager',
+                'description' => 'Leader Manager'
+            ],
+            [
+                'name' => 'leader-shipper',
+                'display_name' => 'Leader Shipper',
+                'description' => 'Leader Shipper'
+            ]
+        ];
+
+        foreach ($roles as $role) {
+            Role::create($role);
         }
 
-        $newRole = Role::create([
-            'name' => $name,
-            'display_name' => $display_name,
-            'description' => $description
-        ]);
-
-        $this->info('Create role '. $name . ' success!');
+        $this->info('Create role success!');
     }
 }

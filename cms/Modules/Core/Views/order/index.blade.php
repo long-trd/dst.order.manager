@@ -415,7 +415,6 @@
                                                     <textarea name="paypal_notes" class="form-control w-90" id="exampleFormControlTextarea1" rows="3"></textarea>
                                                 </div>
                                             @endif
-
                                             <div class="text-center">
                                                 <button type="submit"
                                                     class="btn btn-success mt-4">{{ __('Save') }}</button>
