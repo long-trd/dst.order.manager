@@ -71,68 +71,47 @@
                                            value="{{ $user->branch }}">
                                 </div>
                                 @if(auth()->user()->hasRole('admin'))
-                                <div class="form-group manager">
-                                    <label class="form-control-label" for="input-email">{{ __('Manager') }}</label>
-                                    <div class="role-check">
-                                        <label class="custom-toggle">
-                                            <input type="checkbox" name="role[]" id="role-manager"
-                                                   value="3" {{$user->hasRole('manager') ? 'checked' : ''}}>
-                                            <span class="custom-toggle-slider rounded-circle"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-email">{{ __('Shipper') }}</label>
-                                    <div class="role-check">
-                                        <label class="custom-toggle">
-                                            <input type="checkbox" name="role[]"
-                                                   value="2" {{$user->hasRole('shipper') ? 'checked' : ''}}>
-                                            <span class="custom-toggle-slider rounded-circle"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-email">{{ __('Leader Manager') }}</label>
-                                    <div class="role-check">
-                                        <label class="custom-toggle">
-                                            <input type="checkbox" name="role[]" value="4" {{$user->hasRole('leader-manager') ? 'checked' : ''}}>
-                                            <span class="custom-toggle-slider rounded-circle"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-email">{{ __('Leader Shipper') }}</label>
-                                    <div class="role-check">
-                                        <label class="custom-toggle">
-                                            <input type="checkbox" name="role[]" value="5" {{$user->hasRole('leader-shipper') ? 'checked' : ''}}>
-                                            <span class="custom-toggle-slider rounded-circle"></span>
-                                        </label>
-                                    </div>
-                                </div>
+                                    @foreach($roles as $role)
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="{{ $role->name }}">{{ __($role->display_name) }}</label>
+                                            <div class="role-check">
+                                                <label class="custom-toggle">
+                                                    <input type="checkbox" id="{{ $role->name }}" name="role[]" {{ $user->hasRole($role->name) ? 'checked' : '' }} value="{{ $role->id }}">
+                                                    <span class="custom-toggle-slider rounded-circle"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 @endif
                                 @if(auth()->user()->hasRole('leader-manager'))
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-email">{{ __('Manager') }}</label>
-                                        <div class="role-check">
-                                            <label class="custom-toggle">
-                                                <input disabled checked type="checkbox" id="role-manager" name="role[]" value="3">
-                                                <input style="display: none" checked type="checkbox" id="role-manager" name="role[]" value="3">
-                                                <span class="custom-toggle-slider rounded-circle"></span>
-                                            </label>
-                                        </div>
-                                    </div>
+                                    @foreach($roles as $role)
+                                        @if($role->name == 'manager')
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="{{ $role->name }}">{{ __($role->display_name) }}</label>
+                                                <div class="role-check">
+                                                    <label class="custom-toggle">
+                                                        <input type="checkbox" id="{{ $role->name }}" name="role[]" {{$user->hasRole($role->name) ? 'checked' : ''}} value="{{ $role->id }}">
+                                                        <span class="custom-toggle-slider rounded-circle"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
                                 @endif
                                 @if(auth()->user()->hasRole('leader-shipper'))
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-email">{{ __('Shipper') }}</label>
-                                        <div class="role-check">
-                                            <label class="custom-toggle">
-                                                <input disabled checked type="checkbox" name="role[]" value="2">
-                                                <input style="display: none" checked type="checkbox" id="role-manager" name="role[]" value="2">
-                                                <span class="custom-toggle-slider rounded-circle"></span>
-                                            </label>
-                                        </div>
-                                    </div>
+                                    @foreach($roles as $role)
+                                        @if($role->name == 'shipper')
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="{{ $role->name }}">{{ __($role->display_name) }}</label>
+                                                <div class="role-check">
+                                                    <label class="custom-toggle">
+                                                        <input type="checkbox" id="{{ $role->name }}" name="role[]" {{$user->hasRole($role->name) ? 'checked' : '' }} value="{{ $role->id }}">
+                                                        <span class="custom-toggle-slider rounded-circle"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
                                 @endif
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
