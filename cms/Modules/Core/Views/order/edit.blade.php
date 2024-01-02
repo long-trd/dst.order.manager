@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-email">{{ __('Price') }}</label>
-                                    <input type="number" name="price" value="{{$order->price}}" class="form-control form-control-alternative w-25" required>
+                                    <input type="number" step="0.01" name="price" value="{{$order->price}}" class="form-control form-control-alternative w-25" required>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-email">{{ __('Quantity') }}</label>
