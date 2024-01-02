@@ -50,7 +50,7 @@
                                 <td>
                                     <img style="height: 20px" src="{{ cxl_asset('assets/img/top'.($index + 1).'.png') }}" />
                                 </td>
-                                <td class="rank">{{ $item->shipper->name }}</td>
+                                <td class="rank">{{ $item->shipper ? $item->shipper->name : "" }}</td>
                                 <td class="team">{{ $item->amount_total }}</td>
                                 <td class="points">{{ round($item->shipped_ratio) }}</td>
                             </tr>
@@ -80,7 +80,7 @@
                                     <td>
                                         <img style="height: 20px" src="{{ cxl_asset('assets/img/top'.($index + 1).'.png') }}" />
                                     </td>
-                                    <td class="rank">{{ $item->manager->name }}</td>
+                                    <td class="rank">{{ $item->manager ? $item->manager->name : "" }}</td>
                                     <td class="team">{{ $item->amount_total }}</td>
                                     <td class="points">{{ round($item->shipped_ratio) }}</td>
                                 </tr>
