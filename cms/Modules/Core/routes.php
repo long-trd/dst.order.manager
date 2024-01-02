@@ -90,9 +90,19 @@ Route::group([
                 //NOTE
             });
 
-            //
+            //Ranking
             Route::group(['prefix' => 'ranking'], function () {
                 Route::get('/', 'RankingController@index')->name('admin.ranking.index');
+            });
+
+            //Site
+            Route::group(['prefix' => 'site'], function () {
+                Route::get('/', 'SiteController@index')->name('admin.site.index');
+                Route::get('create', 'SiteController@create')->name('admin.site.create');
+                Route::post('create', 'SiteController@store')->name('admin.site.store');
+                Route::get('edit/{id}', 'SiteController@edit')->name('admin.site.edit');
+                Route::post('update/{id}', 'SiteController@update')->name('admin.site.update');
+                Route::delete('delete/{id}', 'SiteController@delete')->name('admin.site.delete');
             });
         });
     });
