@@ -124,6 +124,11 @@
                         </a>
                     </li>
                 @endif
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('admin.site.index')}}">
+                        <i class="ni ni-air-baloon text-primary"></i> {{ __('Sites') }}
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
