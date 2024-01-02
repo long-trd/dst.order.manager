@@ -42,22 +42,16 @@
                                     <th scope="col" class="sort" data-sort="shipper">Shipper</th>
                                     <th scope="col" class="sort" data-sort="helper">Helper</th>
                                     <th scope="col" class="sort" data-sort="name" style="display: none">Info</th>
-                                    <th scope="col" class="sort" data-sort="ebay_url" style="display: none">Ebay URL
-                                    </th>
+                                    <th scope="col" class="sort" data-sort="ebay_url" style="display: none">Ebay URL</th>
                                     <th scope="col" class="sort" data-sort="product_url">Product URL</th>
-                                    <th scope="col" class="sort" data-sort="shipping_infomation">Shipping Infomation
-                                    </th>
+                                    <th scope="col" class="sort" data-sort="shipping_infomation">Shipping Infomation</th>
                                     <th scope="col" class="sort" data-sort="price" style="display: none">Price</th>
-                                    <th scope="col" class="sort" data-sort="quantity" style="display: none">Quantity
-                                    </th>
-                                    <th scope="col" class="sort" data-sort="order_date" style="display: none">Order
-                                        Date</th>
-                                    <th scope="col" class="sort" data-sort="customer_notes" style="display: none">
-                                        Customer Notes</th>
-                                    <th scope="col" class="sort" data-sort="tracking" style="display: none">Tracking
-                                    </th>
-                                    @if (auth()->user()->hasRole('admin'))
-                                        <th scope="col" class="sort" data-sort="paypal-notes">Paypal Notes</th>
+                                    <th scope="col" class="sort" data-sort="quantity" style="display: none">Quantity</th>
+                                    <th scope="col" class="sort" data-sort="order_date" style="display: none">Order Date</th>
+                                    <th scope="col" class="sort" data-sort="customer_notes" style="display: none">Customer Notes</th>
+                                    <th scope="col" class="sort" data-sort="tracking" style="display: none">Tracking</th>
+                                    @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('shipper'))
+                                        <th scope="col" class="sort" data-sort="paypal-notes">Notes</th>
                                     @endif
                                     <th scope="col"></th>
                                 </tr>
@@ -133,7 +127,7 @@
                                         <td class="budget tracking" style="display: none">
                                             {{ $order->tracking }}
                                         </td>
-                                        @if (auth()->user()->hasRole('admin'))
+                                        @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('shipper'))
                                             <td class="budget">
                                                 <div class="avatar-group">
                                                     <span class="name mb-0 text-sm">{{ $order->paypal_notes }}</span>
@@ -414,14 +408,13 @@
                                                     <label class="custom-control-label" for="customCheck1">Helping</label>
                                                 </div>
                                             </div>
-                                            @if (auth()->user()->hasRole('admin'))
+                                            @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('shipper'))
                                                 <div class="form-group">
                                                     <label class="form-control-label"
-                                                        for="input-email">{{ __('Paypal Notes') }}</label>
+                                                        for="input-email">{{ __('Notes') }}</label>
                                                     <textarea name="paypal_notes" class="form-control w-90" id="exampleFormControlTextarea1" rows="3"></textarea>
                                                 </div>
                                             @endif
-
                                             <div class="text-center">
                                                 <button type="submit"
                                                     class="btn btn-success mt-4">{{ __('Save') }}</button>
@@ -520,19 +513,6 @@
             @if ($errors->has('shipper'))
                 alert("Don't have any shipper !!!");
             @endif
-
-            // $(document).ready(function() {
-            //     let price = $('.price');
-            //     let totalPrice = 0;
-
-            //     price.each(function(index, value) {
-            //         value = parseInt($(value).html().trim().replace('$', ''));
-            //         totalPrice += value;
-            //     });
-
-            //     $('.total-price').html(`Total of this page: ${$orders->sum('order_price')}$`);
-            //     $('.total-price-all').html(`Total of all page: ${totalPrice}$`);
-            // });
 
             $('.order-status, .order-account').on('change', function() {
                 var option = $(this).find('option:first');

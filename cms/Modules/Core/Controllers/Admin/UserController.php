@@ -4,6 +4,7 @@ namespace Cms\Modules\Core\Controllers\Admin;
 
 
 use App\Http\Controllers\Controller;
+use Cms\Modules\Core\Models\Role;
 use Cms\Modules\Core\Requests\CreateOderRequest;
 use Cms\Modules\Core\Requests\CreateUserRequest;
 use Cms\Modules\Core\Requests\UpdateUserRequest;
@@ -28,7 +29,9 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('Core::user.create');
+        $roles = Role::all();
+
+        return view('Core::user.create', ['roles' => $roles]);
     }
 
     public function store(CreateUserRequest $request)
@@ -45,10 +48,11 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = $this->userService->findById($id);
+        $roles = Role::all();
 
         if (!$user) abort(404);
 
-        return view('Core::user.edit', ['user' => $user]);
+        return view('Core::user.edit', ['user' => $user, 'roles' => $roles]);
     }
 
     public function update($id, UpdateUserRequest $request)

@@ -39,8 +39,6 @@
                                     </button>
                                 </div>
                             @endif
-
-
                             <div class="pl-lg-4 pd-left-25">
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-name">{{ __('Name') }}</label>
@@ -72,26 +70,49 @@
                                            class="form-control form-control-alternative w-90"
                                            value="{{ $user->branch }}">
                                 </div>
-                                <div class="form-group manager">
-                                    <label class="form-control-label" for="input-email">{{ __('Manager') }}</label>
-                                    <div class="role-check">
-                                        <label class="custom-toggle">
-                                            <input type="checkbox" name="role[]" id="role-manager"
-                                                   value="3" {{$user->hasRole('manager') ? 'checked' : ''}}>
-                                            <span class="custom-toggle-slider rounded-circle"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-email">{{ __('Shipper') }}</label>
-                                    <div class="role-check">
-                                        <label class="custom-toggle">
-                                            <input type="checkbox" name="role[]"
-                                                   value="2" {{$user->hasRole('shipper') ? 'checked' : ''}}>
-                                            <span class="custom-toggle-slider rounded-circle"></span>
-                                        </label>
-                                    </div>
-                                </div>
+                                @if(auth()->user()->hasRole('admin'))
+                                    @foreach($roles as $role)
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="{{ $role->name }}">{{ __($role->display_name) }}</label>
+                                            <div class="role-check">
+                                                <label class="custom-toggle">
+                                                    <input type="checkbox" id="{{ $role->name }}" name="role[]" {{ $user->hasRole($role->name) ? 'checked' : '' }} value="{{ $role->id }}">
+                                                    <span class="custom-toggle-slider rounded-circle"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                                @if(auth()->user()->hasRole('leader-manager'))
+                                    @foreach($roles as $role)
+                                        @if($role->name == 'manager')
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="{{ $role->name }}">{{ __($role->display_name) }}</label>
+                                                <div class="role-check">
+                                                    <label class="custom-toggle">
+                                                        <input type="checkbox" id="{{ $role->name }}" name="role[]" {{$user->hasRole($role->name) ? 'checked' : ''}} value="{{ $role->id }}">
+                                                        <span class="custom-toggle-slider rounded-circle"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                @endif
+                                @if(auth()->user()->hasRole('leader-shipper'))
+                                    @foreach($roles as $role)
+                                        @if($role->name == 'shipper')
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="{{ $role->name }}">{{ __($role->display_name) }}</label>
+                                                <div class="role-check">
+                                                    <label class="custom-toggle">
+                                                        <input type="checkbox" id="{{ $role->name }}" name="role[]" {{$user->hasRole($role->name) ? 'checked' : '' }} value="{{ $role->id }}">
+                                                        <span class="custom-toggle-slider rounded-circle"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                @endif
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
                                 </div>
@@ -118,3 +139,12 @@
         </footer>
     </div>
 @endsection
+@push('js')
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('input[name="role[]"]').change(function () {
+                $('input[name="role[]"]').not(this).prop('checked', false);
+            });
+        });
+    </script>
+@endpush

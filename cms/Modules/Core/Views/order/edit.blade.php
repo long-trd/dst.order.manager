@@ -136,23 +136,21 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="custom-control custom-checkbox mb-3">
-                                        <input class="custom-control-input" id="customCheck1" type="checkbox" name="helping" value="1" {{count($order->helper) > 0 ? 'checked' : ''}}>
+                                        <input class="custom-control-input" id="customCheck1" type="checkbox" name="helping" value="1" {{$order->helper && count($order->helper) > 0 ? 'checked' : ''}}>
                                         <label class="custom-control-label" for="customCheck1">Helping</label>
                                     </div>
                                 </div>
-                                @if(auth()->user()->hasRole('admin'))
+                                @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('shipper'))
                                     <div class="form-group">
-                                        <label class="form-control-label" for="input-email">{{ __('Paypal Notes') }}</label>
+                                        <label class="form-control-label" for="input-email">{{ __('Notes') }}</label>
                                         <textarea name="paypal_notes" class="form-control w-90" id="exampleFormControlTextarea1" rows="3">{{$order->paypal_notes}}</textarea>
                                     </div>
                                 @endif
-
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
                                 </div>
                             </div>
                         </form>
-
                     </div>
                     <!-- Card footer -->
                     <div class="card-footer py-4 position-relative">
