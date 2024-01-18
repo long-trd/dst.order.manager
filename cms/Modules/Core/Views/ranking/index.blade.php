@@ -19,7 +19,7 @@
                             <div class="col">
                                 <ul class="nav nav-pills justify-content-start">
                                     <li class="nav-item mr-2 mr-md-0">
-                                        <a href="{{ request()->fullUrlWithQuery(['role' => 'manager', 'page' => 1]) }} "
+                                        <a href="{{ request()->fullUrlWithQuery(['role' => 'manager', 'page' => 1]) }}"
                                            class="nav-link py-2 px-3 {{ !request('role') || request('role') == 'manager' ? 'active' : '' }}">
                                             <span class="d-none d-md-block">List</span>
                                             <span class="d-md-none">L</span>
@@ -37,17 +37,38 @@
                             <div class="col">
                                 <ul class="nav nav-pills justify-content-end">
                                     <li class="nav-item mr-2 mr-md-0">
-                                        <a href="{{ request()->fullUrlWithQuery(['time' => 'month', 'page' => 1]) }} "
-                                           class="nav-link py-2 px-3 {{ !request('time') || request('time') == 'month' ? 'active' : '' }}">
+                                        <a href="javascript:void(0)" class="nav-link py-2 px-3">
                                             <span class="d-none d-md-block">Month</span>
                                             <span class="d-md-none">M</span>
+                                            <select id="selectMonth" class="w-100">
+                                                <option value="all">All</option>
+                                                @for($i = 1; $i <= 12; $i++)
+                                                    <option
+                                                        {{ !request()->get('month') && \Carbon\Carbon::now()->month == $i ? 'selected' : '' }}
+                                                        {{ request()->get('month') && request()->get('month') == $i ? 'selected' : '' }}
+                                                        value="{{ $i }}"
+                                                    >
+                                                        {{ $i }}
+                                                    </option>
+                                                @endfor
+                                            </select>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ request()->fullUrlWithQuery(['time' => 'year', 'page' => 1]) }} "
-                                           class="nav-link py-2 px-3 {{ request('time') == 'year' ? 'active' : '' }}">
+                                        <a href="javascript:void(0)" class="nav-link py-2 px-3">
                                             <span class="d-none d-md-block">Year</span>
                                             <span class="d-md-none">Y</span>
+                                            <select id="selectYear" class="w-100">
+                                                @for($i = 2019; $i <= 2025; $i++)
+                                                    <option
+                                                        {{ !request()->get('year') && \Carbon\Carbon::now()->year == $i ? 'selected' : '' }}
+                                                        {{ request()->get('year') && request()->get('year') == $i ? 'selected' : '' }}
+                                                        value="{{ $i }}"
+                                                    >
+                                                        {{ $i }}
+                                                    </option>
+                                                @endfor
+                                            </select>
                                         </a>
                                     </li>
                                 </ul>
@@ -102,17 +123,38 @@
                             <div class="col text-right">
                                 <ul class="nav nav-pills justify-content-end">
                                     <li class="nav-item mr-2 mr-md-0">
-                                        <a href="{{ request()->fullUrlWithQuery(['timeShipped' => 'month']) }} "
-                                           class="nav-link py-2 px-3 {{ !request('timeShipped') || request('timeShipped') == 'month' ? 'active' : '' }}">
+                                        <a href="javascript:void(0)" class="nav-link py-2 px-3">
                                             <span class="d-none d-md-block">Month</span>
                                             <span class="d-md-none">M</span>
+                                            <select id="selectShippedMonth" class="w-100">
+                                                <option value="all">All</option>
+                                                @for($i = 1; $i <= 12; $i++)
+                                                    <option
+                                                        {{ !request()->get('shippedMonth') && \Carbon\Carbon::now()->month == $i ? 'selected' : '' }}
+                                                        {{ request()->get('shippedMonth') && request()->get('shippedMonth') == $i ? 'selected' : '' }}
+                                                        value="{{ $i }}"
+                                                    >
+                                                        {{ $i }}
+                                                    </option>
+                                                @endfor
+                                            </select>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ request()->fullUrlWithQuery(['timeShipped' => 'year']) }} "
-                                           class="nav-link py-2 px-3 {{ request('timeShipped') == 'year' ? 'active' : '' }}">
+                                        <a href="javascript:void(0)" class="nav-link py-2 px-3">
                                             <span class="d-none d-md-block">Year</span>
                                             <span class="d-md-none">Y</span>
+                                            <select id="selectShippedYear" class="w-100">
+                                                @for($i = 2019; $i <= 2025; $i++)
+                                                    <option
+                                                        {{ !request()->get('shippedYear') && \Carbon\Carbon::now()->year == $i ? 'selected' : '' }}
+                                                        {{ request()->get('shippedYear') && request()->get('shippedYear') == $i ? 'selected' : '' }}
+                                                        value="{{ $i }}"
+                                                    >
+                                                        {{ $i }}
+                                                    </option>
+                                                @endfor
+                                            </select>
                                         </a>
                                     </li>
                                 </ul>
@@ -132,20 +174,20 @@
                             </thead>
                             <tbody>
                             @foreach($rankingShipped as $index => $item)
-                            <tr>
-                                <th scope="row">
-                                    {{ $index + 1 }}
-                                </th>
-                                <td>
-                                    {{ $item->shipper ? $item->shipper->name : '' }}
-                                </td>
-                                <td>
-                                    {{  $item->shipper ? $item->shipper->email : '' }}
-                                </td>
-                                <td>
-                                    {{ round($item->ratio) }}%
-                                </td>
-                            </tr>
+                                <tr>
+                                    <th scope="row">
+                                        {{ $index + 1 }}
+                                    </th>
+                                    <td>
+                                        {{ $item->shipper ? $item->shipper->name : '' }}
+                                    </td>
+                                    <td>
+                                        {{  $item->shipper ? $item->shipper->email : '' }}
+                                    </td>
+                                    <td>
+                                        {{ round($item->ratio) }}%
+                                    </td>
+                                </tr>
                             @endforeach
                             </tbody>
                         </table>
@@ -168,7 +210,32 @@
 @push('js')
     <script type="text/javascript">
         $(document).ready(function () {
+            $('#selectMonth').on('change', function () {
+                changeUrl()
+            });
 
+            $('#selectYear').on('change', function () {
+                changeUrl()
+            });
+
+            $('#selectShippedMonth').on('change', function () {
+                changeUrl()
+            });
+
+            $('#selectShippedYear').on('change', function () {
+                changeUrl()
+            });
+
+            function changeUrl() {
+                let urlParams = new URLSearchParams(window.location.search);
+                let role = urlParams.get('role') ?? 'manager';
+                let month = $('#selectMonth').val();
+                let year = $('#selectYear').val();
+                let shippedMonth = $('#selectShippedMonth').val();
+                let shippedYear = $('#selectShippedYear').val();
+                let url = window.location.pathname + '?role=' + role + '&month=' + month + '&year=' + year + '&shippedMonth=' + shippedMonth + '&shippedYear=' + shippedYear + '&page=1';
+                window.location.href = url;
+            }
         });
     </script>
 @endpush

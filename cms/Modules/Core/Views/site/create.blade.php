@@ -40,14 +40,23 @@
                                            class="form-control form-control-alternative w-90" value="{{ old('name') }}" required>
 
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-user">{{ __('User') }}</label>
-                                    <select class="form-control order-status w-50" id="input-user" data-toggle="select" data-live-search="true" name="user_id">
-                                        @foreach($users as $user)
-                                            <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : (auth()->id() == $user->id ? 'selected' : '')}}>{{ $user->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                @if(auth()->user()->hasRole('admin'))
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-user">{{ __('User') }}</label>
+                                        <select class="form-control order-status w-50" id="input-user" data-toggle="select" data-live-search="true" name="user_id">
+                                            @foreach($users as $user)
+                                                <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : (auth()->id() == $user->id ? 'selected' : '')}}>{{ $user->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @else
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-user">{{ __('User') }}</label>
+                                        <select class="form-control order-status w-50" id="input-user" data-toggle="select" data-live-search="true" name="user_id">
+                                            <option value="{{ auth()->id() }}" selected>{{ auth()->user()->name }}</option>
+                                        </select>
+                                    </div>
+                                @endif
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-status">{{ __('Status') }}</label>
                                     <select class="form-control order-status w-50" id="input-status" data-toggle="select" data-live-search="true" name="status">

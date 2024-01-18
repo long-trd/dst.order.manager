@@ -21,9 +21,9 @@ interface OrderServiceContract
 
     public function downloadExcel($filter);
 
-    public function getRankingByRoleAndTime($role, $time);
+    public function getRankingByRoleAndTime($role, $month, $year);
 
-    public function getRankingShippedByTime($time);
+    public function getRankingShippedByTime($month, $year);
 
     public function getTop3Manager();
 

@@ -102,7 +102,7 @@ Route::group([
                 Route::post('create', 'SiteController@store')->name('admin.site.store');
                 Route::get('edit/{id}', 'SiteController@edit')->name('admin.site.edit');
                 Route::post('update/{id}', 'SiteController@update')->name('admin.site.update');
-                Route::delete('delete/{id}', 'SiteController@delete')->name('admin.site.delete');
+                Route::delete('delete/{id}', 'SiteController@delete')->middleware(['role:admin'])->name('admin.site.delete');
             });
         });
     });

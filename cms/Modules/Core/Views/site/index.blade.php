@@ -6,7 +6,8 @@
                 <div class="row align-items-center py-4 nav-bar-height position-relative">
                     <div class="btn-search left-element">
                         <a href="{{ route('admin.site.create') }}" class="btn btn-success text-white">Create</a>
-                        <button class="btn btn-info text-white" data-toggle="modal" data-target="#modal-form">Search</button>
+                        <button class="btn btn-info text-white" data-toggle="modal" data-target="#modal-form">Search
+                        </button>
                     </div>
                 </div>
             </div>
@@ -53,7 +54,7 @@
                                     </td>
                                     <td class="budget">
                                         <span class="badge badge-dot mr-4">
-                                                <i
+                                            <i
                                                     class="
                                                 @if ($site->status == 'live') bg-success
                                                 @elseif ($site->status == 'pause')
@@ -61,9 +62,10 @@
                                                 @elseif ($site->status == 'die')
                                                     bg-danger
                                                 @endif
-                                            "></i>
-                                                <span class="status">{{ $site->status }}</span>
-                                            </span>
+                                            ">
+                                            </i>
+                                            <span class="status">{{ $site->status }}</span>
+                                        </span>
                                     </td>
                                     <td class="budget">
                                         {{ $site->created_at }}
@@ -78,10 +80,17 @@
                                                 <i class="fas fa-ellipsis-v"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                <a class="dropdown-item list-account-dropdown"
-                                                   href="{{route('admin.site.edit', ['id' => $site->id])}}">Edit</a>
-                                                <a class="dropdown-item list-account-dropdown delete-site"
-                                                   href="#" data-id="{{ $site->id }}">Delete</a>
+                                                @if(auth()->user()->hasRole('admin') || auth()->id() == $site->user_id)
+                                                    <a class="dropdown-item list-account-dropdown"
+                                                       href="{{route('admin.site.edit', ['id' => $site->id])}}">Edit</a>
+                                                @endif
+                                                @if(auth()->user()->hasRole('admin'))
+                                                    <a class="dropdown-item list-account-dropdown delete-site"
+                                                       href="#" data-id="{{ $site->id }}">Delete</a>
+                                                    <a class="dropdown-item list-account-dropdown log-site"
+                                                       data-toggle="modal" data-target="#logModal"
+                                                       href="#" data-log="{{ json_encode($site->site_log->toArray()) }}">Logs</a>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>
@@ -121,7 +130,9 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <input class="form-control" name="name" value="{{ isset($request['name']) ? $request['name'] : '' }}" placeholder="Name" />
+                                                        <input class="form-control" name="name"
+                                                               value="{{ isset($request['name']) ? $request['name'] : '' }}"
+                                                               placeholder="Name"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -129,15 +140,19 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <select class="form-control order-status" data-toggle="select"
-                                                                title="Simple select" data-live-search="true" name="status">
+                                                                title="Simple select" data-live-search="true"
+                                                                name="status">
                                                             <option value="">--Status--</option>
-                                                            <option value="live" {{ isset($request['status']) && $request['status'] == 'live' ? 'selected' : '' }}>
+                                                            <option
+                                                                value="live" {{ isset($request['status']) && $request['status'] == 'live' ? 'selected' : '' }}>
                                                                 Live
                                                             </option>
-                                                            <option value="die" {{ isset($request['status']) && $request['status'] == 'die' ? 'selected' : '' }}>
+                                                            <option
+                                                                value="die" {{ isset($request['status']) && $request['status'] == 'die' ? 'selected' : '' }}>
                                                                 Die
                                                             </option>
-                                                            <option value="pause" {{ isset($request['status']) && $request['status'] == 'pause' ? 'selected' : '' }}>
+                                                            <option
+                                                                value="pause" {{ isset($request['status']) && $request['status'] == 'pause' ? 'selected' : '' }}>
                                                                 Pause
                                                             </option>
                                                         </select>
@@ -146,7 +161,8 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <select class="form-control order-account" data-toggle="select"
-                                                                title="Simple select" data-live-search="true" name="user">
+                                                                title="Simple select" data-live-search="true"
+                                                                name="user">
                                                             <option value="">--User--</option>
                                                             @foreach ($users as $user)
                                                                 <option value="{{ $user->id }}"
@@ -196,6 +212,26 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="logModal" tabindex="-1" role="dialog" aria-labelledby="logModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="logModalLabel">Title</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul id="listLogs">
+
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @push('js')
     <script type="text/javascript">
@@ -221,6 +257,14 @@
                         }
                     });
                 }
+            });
+            $('.log-site').on('click', function () {
+                let logs = JSON.parse($(this).attr('data-log'));
+                $('#logModal #listLogs').empty();
+                $.each(logs, function(index, item) {
+                    let liElement = $('<li>').text(item.message).attr('data-id', item.id);
+                    $('#listLogs').append(liElement);
+                });
             });
         });
     </script>

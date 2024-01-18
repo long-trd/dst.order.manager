@@ -7,20 +7,24 @@ use Cms\Modules\Core\Repositories\AccountRepository;
 use Cms\Modules\Core\Repositories\Contracts\AccountRepositoryContract;
 use Cms\Modules\Core\Repositories\Contracts\NotificationRepositoryContract;
 use Cms\Modules\Core\Repositories\Contracts\OrderRepositoryContract;
+use Cms\Modules\Core\Repositories\Contracts\SiteLogRepositoryContract;
 use Cms\Modules\Core\Repositories\Contracts\SiteRepositoryContract;
 use Cms\Modules\Core\Repositories\Contracts\UserRepositoryContract;
 use Cms\Modules\Core\Repositories\NotificationRepository;
 use Cms\Modules\Core\Repositories\OrderRepository;
+use Cms\Modules\Core\Repositories\SiteLogRepository;
 use Cms\Modules\Core\Repositories\SiteRepository;
 use Cms\Modules\Core\Repositories\UserRepository;
 use Cms\Modules\Core\Services\AccountService;
 use Cms\Modules\Core\Services\Contracts\AccountServiceContract;
 use Cms\Modules\Core\Services\Contracts\NotificationServiceContract;
 use Cms\Modules\Core\Services\Contracts\OrderServiceContract;
+use Cms\Modules\Core\Services\Contracts\SiteLogServiceContract;
 use Cms\Modules\Core\Services\Contracts\SiteServiceContract;
 use Cms\Modules\Core\Services\Contracts\UserServiceContract;
 use Cms\Modules\Core\Services\NotificationService;
 use Cms\Modules\Core\Services\OrderService;
+use Cms\Modules\Core\Services\SiteLogSerivce;
 use Cms\Modules\Core\Services\SiteService;
 use Cms\Modules\Core\Services\UserService;
 use Illuminate\Routing\Router;
@@ -84,5 +88,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(NotificationServiceContract::class, NotificationService::class);
         $this->app->bind(SiteRepositoryContract::class, SiteRepository::class);
         $this->app->bind(SiteServiceContract::class, SiteService::class);
+        $this->app->bind(SiteLogRepositoryContract::class, SiteLogRepository::class);
+        $this->app->bind(SiteLogServiceContract::class, SiteLogSerivce::class);
     }
 }

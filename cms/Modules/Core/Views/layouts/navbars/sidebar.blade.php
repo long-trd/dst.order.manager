@@ -30,66 +30,70 @@
                 </div>
             </div>
             <!-- Form -->
-            <div class="top-ranking text-center py-3 mb-2"
-                 style="background: #FFDC00; font-family: 'Pridi', sans-serif; border-radius: 10px">
-                <h3>Top Shipper</h3>
-                <div class="list-ranking">
-                    <div class="top3shipper__data">
-                        <table class="w-100" style="font-size: 13px">
-                            <thead style="background: #ffffff; border-bottom: 5px solid #FFDC00">
-                            <tr>
-                                <th>Top</th>
-                                <th>Name</th>
-                                <th>Amount</th>
-                                <th>%</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($globalData['top3Shipper'] as $index => $item)
-                            <tr style="background: #ffffff; border-bottom: 5px solid #FFDC00">
-                                <td>
-                                    <img style="height: 20px" src="{{ cxl_asset('assets/img/top'.($index + 1).'.png') }}" />
-                                </td>
-                                <td class="rank">{{ $item->shipper ? $item->shipper->name : "" }}</td>
-                                <td class="team">{{ $item->amount_total }}</td>
-                                <td class="points">{{ round($item->shipped_ratio) }}</td>
-                            </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="top-ranking text-center py-3 border mb-4"
-                 style="background: #FFDC00; font-family: 'Pridi', sans-serif; border-radius: 10px">
-                <h3>Top List</h3>
-                <div class="list-ranking">
-                    <div class="top3manager__data">
-                        <table class="w-100" style="font-size: 13px">
-                            <thead style="background: #ffffff; border-bottom: 5px solid #FFDC00">
-                            <tr>
-                                <th>Top</th>
-                                <th>Name</th>
-                                <th>Amount</th>
-                                <th>%</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($globalData['top3Manager'] as $index => $item)
-                                <tr style="background: #ffffff; border-bottom: 5px solid #FFDC00">
-                                    <td>
-                                        <img style="height: 20px" src="{{ cxl_asset('assets/img/top'.($index + 1).'.png') }}" />
-                                    </td>
-                                    <td class="rank">{{ $item->manager ? $item->manager->name : "" }}</td>
-                                    <td class="team">{{ $item->amount_total }}</td>
-                                    <td class="points">{{ round($item->shipped_ratio) }}</td>
+            @if(count($globalData['top3Shipper']) > 0)
+                <div class="top-ranking text-center py-3 mb-2"
+                     style="background: #FFDC00; font-family: 'Pridi', sans-serif; border-radius: 10px">
+                    <h3>Top Shipper</h3>
+                    <div class="list-ranking">
+                        <div class="top3shipper__data">
+                            <table class="w-100" style="font-size: 13px">
+                                <thead style="background: #ffffff; border-bottom: 5px solid #FFDC00">
+                                <tr>
+                                    <th>Top</th>
+                                    <th>Name</th>
+                                    <th>Amount</th>
+                                    <th>%</th>
                                 </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach($globalData['top3Shipper'] as $index => $item)
+                                    <tr style="background: #ffffff; border-bottom: 5px solid #FFDC00">
+                                        <td>
+                                            <img style="height: 20px" src="{{ cxl_asset('assets/img/top'.($index + 1).'.png') }}" />
+                                        </td>
+                                        <td class="rank">{{ $item->shipper ? $item->shipper->name : "" }}</td>
+                                        <td class="team">{{ $item->amount_total }}</td>
+                                        <td class="points">{{ round($item->shipped_ratio) }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
+            @if(count($globalData['top3Manager']) > 0)
+                <div class="top-ranking text-center py-3 border mb-4"
+                     style="background: #FFDC00; font-family: 'Pridi', sans-serif; border-radius: 10px">
+                    <h3>Top List</h3>
+                    <div class="list-ranking">
+                        <div class="top3manager__data">
+                            <table class="w-100" style="font-size: 13px">
+                                <thead style="background: #ffffff; border-bottom: 5px solid #FFDC00">
+                                <tr>
+                                    <th>Top</th>
+                                    <th>Name</th>
+                                    <th>Amount</th>
+                                    <th>%</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($globalData['top3Manager'] as $index => $item)
+                                    <tr style="background: #ffffff; border-bottom: 5px solid #FFDC00">
+                                        <td>
+                                            <img style="height: 20px" src="{{ cxl_asset('assets/img/top'.($index + 1).'.png') }}" />
+                                        </td>
+                                        <td class="rank">{{ $item->manager ? $item->manager->name : "" }}</td>
+                                        <td class="team">{{ $item->amount_total }}</td>
+                                        <td class="points">{{ round($item->shipped_ratio) }}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            @endif
             <!-- Navigation -->
             <ul class="navbar-nav">
                 <li class="nav-item">
