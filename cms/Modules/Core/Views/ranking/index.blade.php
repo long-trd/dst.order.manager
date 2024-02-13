@@ -35,43 +35,14 @@
                                 </ul>
                             </div>
                             <div class="col">
-                                <ul class="nav nav-pills justify-content-end">
-                                    <li class="nav-item mr-2 mr-md-0">
-                                        <a href="javascript:void(0)" class="nav-link py-2 px-3">
-                                            <span class="d-none d-md-block">Month</span>
-                                            <span class="d-md-none">M</span>
-                                            <select id="selectMonth" class="w-100">
-                                                <option value="all">All</option>
-                                                @for($i = 1; $i <= 12; $i++)
-                                                    <option
-                                                        {{ !request()->get('month') && \Carbon\Carbon::now()->month == $i ? 'selected' : '' }}
-                                                        {{ request()->get('month') && request()->get('month') == $i ? 'selected' : '' }}
-                                                        value="{{ $i }}"
-                                                    >
-                                                        {{ $i }}
-                                                    </option>
-                                                @endfor
-                                            </select>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="javascript:void(0)" class="nav-link py-2 px-3">
-                                            <span class="d-none d-md-block">Year</span>
-                                            <span class="d-md-none">Y</span>
-                                            <select id="selectYear" class="w-100">
-                                                @for($i = 2019; $i <= 2025; $i++)
-                                                    <option
-                                                        {{ !request()->get('year') && \Carbon\Carbon::now()->year == $i ? 'selected' : '' }}
-                                                        {{ request()->get('year') && request()->get('year') == $i ? 'selected' : '' }}
-                                                        value="{{ $i }}"
-                                                    >
-                                                        {{ $i }}
-                                                    </option>
-                                                @endfor
-                                            </select>
-                                        </a>
-                                    </li>
-                                </ul>
+                                <div class="d-flex justify-content-end">
+                                    <div class="input-group input-group-alternative w-25">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                        </div>
+                                        <input class="form-control month_year_only" value="{{ request('year') ? \Carbon\Carbon::create(request('year'), request('month'), 1, 0, 0, 0)->format('m/Y') : \Carbon\Carbon::now()->format('m/Y') }}" placeholder="Select time" id="selectTime">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -120,44 +91,15 @@
                             <div class="col">
                                 <h3 class="mb-0">Shipped Ranking</h3>
                             </div>
-                            <div class="col text-right">
-                                <ul class="nav nav-pills justify-content-end">
-                                    <li class="nav-item mr-2 mr-md-0">
-                                        <a href="javascript:void(0)" class="nav-link py-2 px-3">
-                                            <span class="d-none d-md-block">Month</span>
-                                            <span class="d-md-none">M</span>
-                                            <select id="selectShippedMonth" class="w-100">
-                                                <option value="all">All</option>
-                                                @for($i = 1; $i <= 12; $i++)
-                                                    <option
-                                                        {{ !request()->get('shippedMonth') && \Carbon\Carbon::now()->month == $i ? 'selected' : '' }}
-                                                        {{ request()->get('shippedMonth') && request()->get('shippedMonth') == $i ? 'selected' : '' }}
-                                                        value="{{ $i }}"
-                                                    >
-                                                        {{ $i }}
-                                                    </option>
-                                                @endfor
-                                            </select>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="javascript:void(0)" class="nav-link py-2 px-3">
-                                            <span class="d-none d-md-block">Year</span>
-                                            <span class="d-md-none">Y</span>
-                                            <select id="selectShippedYear" class="w-100">
-                                                @for($i = 2019; $i <= 2025; $i++)
-                                                    <option
-                                                        {{ !request()->get('shippedYear') && \Carbon\Carbon::now()->year == $i ? 'selected' : '' }}
-                                                        {{ request()->get('shippedYear') && request()->get('shippedYear') == $i ? 'selected' : '' }}
-                                                        value="{{ $i }}"
-                                                    >
-                                                        {{ $i }}
-                                                    </option>
-                                                @endfor
-                                            </select>
-                                        </a>
-                                    </li>
-                                </ul>
+                            <div class="col">
+                                <div class="d-flex justify-content-end">
+                                    <div class="input-group input-group-alternative w-25">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                        </div>
+                                        <input class="form-control month_year_only" value="{{ request('shippedYear') ? \Carbon\Carbon::create(request('shippedYear'), request('shippedMonth'), 1, 0, 0, 0)->format('m/Y') : \Carbon\Carbon::now()->format('m/Y') }}" placeholder="Select time" id="selectShippedTime">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -210,29 +152,30 @@
 @push('js')
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#selectMonth').on('change', function () {
+            $('.month_year_only').datepicker({
+                format: "mm/yyyy",
+                startView: "months",
+                minViewMode: "months",
+                autoclose: true
+            });
+
+            $('#selectTime').on('change', function () {
                 changeUrl()
             });
 
-            $('#selectYear').on('change', function () {
-                changeUrl()
-            });
-
-            $('#selectShippedMonth').on('change', function () {
-                changeUrl()
-            });
-
-            $('#selectShippedYear').on('change', function () {
+            $('#selectShippedTime').on('change', function () {
                 changeUrl()
             });
 
             function changeUrl() {
                 let urlParams = new URLSearchParams(window.location.search);
                 let role = urlParams.get('role') ?? 'manager';
-                let month = $('#selectMonth').val();
-                let year = $('#selectYear').val();
-                let shippedMonth = $('#selectShippedMonth').val();
-                let shippedYear = $('#selectShippedYear').val();
+                let time = $('#selectTime').val().split('/');
+                let shippedTime = $('#selectShippedTime').val().split('/');
+                let month = parseInt(time[0], 10);
+                let year = parseInt(time[1], 10);
+                let shippedMonth = parseInt(shippedTime[0], 10);
+                let shippedYear = parseInt(shippedTime[1], 10);
                 let url = window.location.pathname + '?role=' + role + '&month=' + month + '&year=' + year + '&shippedMonth=' + shippedMonth + '&shippedYear=' + shippedYear + '&page=1';
                 window.location.href = url;
             }
