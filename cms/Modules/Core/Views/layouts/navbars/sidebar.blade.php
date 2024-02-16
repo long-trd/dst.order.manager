@@ -129,6 +129,16 @@
                             <i class="ni ni-notification-70 text-primary"></i> {{ __('Notifications') }}
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('admin.wheel.index')}}">
+                            <i class="ni ni-bell-55 text-primary"></i> {{ __('Wheel Event') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('admin.prize.index')}}">
+                            <i class="ni ni-box-2 text-primary"></i> {{ __('Prize') }}
+                        </a>
+                    </li>
                 @endif
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('admin.site.index')}}">

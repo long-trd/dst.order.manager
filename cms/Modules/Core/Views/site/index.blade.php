@@ -39,7 +39,7 @@
                             <tbody class="list">
                             @foreach ($sites as $key => $site)
                                 <tr>
-                                    <th scope="row" class="budget">
+                                    <th scope="row" class="budget" style="height: 100px">
                                         <div class="media align-items-center">
                                             <div class="media-body">
                                                 <span class="name mb-0 text-sm">{{ $site->id }}</span>

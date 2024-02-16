@@ -3,17 +3,25 @@
 namespace Cms\Modules\Core\Services;
 
 use Carbon\Carbon;
+use Cms\Modules\Core\Repositories\Contracts\PrizeRepositoryContract;
 use Cms\Modules\Core\Repositories\Contracts\UserRepositoryContract;
+use Cms\Modules\Core\Resources\UserCollection;
 use Cms\Modules\Core\Services\Contracts\UserServiceContract;
 use Illuminate\Support\Facades\Hash;
 
 class UserService implements UserServiceContract
 {
     protected $user;
+    protected $prize;
 
-    public function __construct(UserRepositoryContract $user)
+    public function __construct
+    (
+        UserRepositoryContract $user,
+        PrizeRepositoryContract $prize
+    )
     {
         $this->user = $user;
+        $this->prize = $prize;
     }
 
     public function store($data)
@@ -107,5 +115,25 @@ class UserService implements UserServiceContract
     {
         // TODO: Implement updateNote() method.
         return $this->user->update($id, $note);
+    }
+
+    public function postGift($userId, $data)
+    {
+        return $this->user->postGift($userId, $data);
+    }
+
+    public function getGift($wheelEventId)
+    {
+        $data = UserCollection::collection($this->user->getGift($wheelEventId));
+
+        return $data;
+    }
+
+    public function userFormat($user, $wheelEventId)
+    {
+        $user['timesSpin'] =  $this->prize->countPrizeByUser($user['id'], $wheelEventId) ? 0 : 1;
+        $user = collect($user)->only(['id', 'name', 'email', 'timesSpin']);
+
+        return $user;
     }
 }

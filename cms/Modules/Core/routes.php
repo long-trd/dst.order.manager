@@ -8,7 +8,6 @@ Route::group([
     'middleware' => 'web',
 ], function () {
     Route::get('/', 'CoreController@welcome')->name('core.welcome');
-
     Route::group([
         'middleware' => ['auth', 'cms.verified']
     ], function () {
@@ -104,6 +103,49 @@ Route::group([
                 Route::post('update/{id}', 'SiteController@update')->name('admin.site.update');
                 Route::delete('delete/{id}', 'SiteController@delete')->middleware(['role:admin'])->name('admin.site.delete');
             });
+
+            Route::get('/lucky-wheel', 'LuckyWheelController@index')->name('lucky.wheel.index');
+
+            Route::group([
+                'prefix' => 'wheel-event',
+                'middleware' => ['role:admin']
+            ], function () {
+                Route::get('/', 'WheelEventController@index')->name('admin.wheel.index');
+                Route::get('/create', 'WheelEventController@create')->name('admin.wheel.create');
+                Route::post('/store', 'WheelEventController@store')->name('admin.wheel.store');
+                Route::get('/edit/{id}', 'WheelEventController@edit')->name('admin.wheel.edit');
+                Route::post('/update/{id}', 'WheelEventController@update')->name('admin.wheel.update');
+                Route::post('delete/{id}', 'WheelEventController@delete')->name('admin.wheel.delete');
+            });
+
+            Route::group([
+                'prefix' => 'prize',
+                'middleware' => ['role:admin']
+            ], function () {
+                Route::get('/', 'PrizeController@index')->name('admin.prize.index');
+                Route::get('/create', 'PrizeController@create')->name('admin.prize.create');
+                Route::post('/store', 'PrizeController@store')->name('admin.prize.store');
+                Route::get('/edit/{id}', 'PrizeController@edit')->name('admin.prize.edit');
+                Route::post('/update/{id}', 'PrizeController@update')->name('admin.prize.update');
+                Route::post('delete/{id}', 'PrizeController@delete')->name('admin.prize.delete');
+            });
         });
     });
 });
+
+Route::group([
+    'prefix' => 'api',
+    'namespace' => 'Cms\Modules\Core\Controllers\Admin',
+    'middleware' => ['web', 'auth']
+], function () {
+    Route::group(['prefix' => 'prize'], function () {
+        Route::get('/', 'LuckyWheelController@getPrize')->name('api.prize.index');
+        Route::put('/{id}', 'LuckyWheelController@updatePrizeNumber')->name('api.prize.number.update');
+    });
+
+    Route::group(['prefix' => 'gift'], function () {
+        Route::get('/', 'LuckyWheelController@getGift')->name('api.gift.list');
+        Route::put('/{prizeId}', 'LuckyWheelController@postGift')->name('api.gift.post');
+    });
+});
+
