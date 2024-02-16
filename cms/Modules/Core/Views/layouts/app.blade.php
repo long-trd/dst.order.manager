@@ -56,7 +56,7 @@
 
     @yield('content')
 
-    @if ($globalData['wheelEventActive'] && $globalData['countPrize'] == 0 && !auth()->user()->hasRole('admin'))
+    @if ($globalData['wheelEventActive'] && $globalData['countPrize'] == 0 && auth()->check() && !auth()->user()->hasRole('admin'))
         <div class="modal fade" id="lucky_wheel" tabindex="-1" role="dialog" aria-labelledby="lucky_wheel"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -91,7 +91,7 @@
 <script src="{{ asset('argon') }}/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('argon') }}/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
-@if ($globalData['wheelEventActive'] && $globalData['countPrize'] == 0 && !auth()->user()->hasRole('admin'))
+@if ($globalData['wheelEventActive'] && $globalData['countPrize'] == 0 && auth()->check() && !auth()->user()->hasRole('admin'))
     <script>
         $(document).ready(function() {
             $('#lucky_wheel').modal('show');
