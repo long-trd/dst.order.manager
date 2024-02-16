@@ -39,7 +39,11 @@ class ViewComposer
         $top3Manager = $this->orderService->getTop3Manager();
         $top3Shipper = $this->orderService->getTop3Shipper();
         $wheelEventActive = $this->wheelEventService->wheelEventActive();
-        $countPrize = $this->prizeService->countPrizeByUser(auth()->id(), $wheelEventActive->id);
+        if ($wheelEventActive) {
+            $countPrize = $this->prizeService->countPrizeByUser(auth()->id(), $wheelEventActive->id);
+        } else {
+            $countPrize = 0;
+        }
         $arrTop3Manager = [];
         $arrTop3Shipper = [];
         foreach ($top3Shipper as $index => $item) {
