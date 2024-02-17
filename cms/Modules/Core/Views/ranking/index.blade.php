@@ -19,7 +19,7 @@
                             <div class="col">
                                 <ul class="nav nav-pills justify-content-start">
                                     <li class="nav-item mr-2 mr-md-0">
-                                        <a href="{{ request()->fullUrlWithQuery(['role' => 'manager', 'page' => 1]) }} "
+                                        <a href="{{ request()->fullUrlWithQuery(['role' => 'manager', 'page' => 1]) }}"
                                            class="nav-link py-2 px-3 {{ !request('role') || request('role') == 'manager' ? 'active' : '' }}">
                                             <span class="d-none d-md-block">List</span>
                                             <span class="d-md-none">L</span>
@@ -35,22 +35,14 @@
                                 </ul>
                             </div>
                             <div class="col">
-                                <ul class="nav nav-pills justify-content-end">
-                                    <li class="nav-item mr-2 mr-md-0">
-                                        <a href="{{ request()->fullUrlWithQuery(['time' => 'month', 'page' => 1]) }} "
-                                           class="nav-link py-2 px-3 {{ !request('time') || request('time') == 'month' ? 'active' : '' }}">
-                                            <span class="d-none d-md-block">Month</span>
-                                            <span class="d-md-none">M</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ request()->fullUrlWithQuery(['time' => 'year', 'page' => 1]) }} "
-                                           class="nav-link py-2 px-3 {{ request('time') == 'year' ? 'active' : '' }}">
-                                            <span class="d-none d-md-block">Year</span>
-                                            <span class="d-md-none">Y</span>
-                                        </a>
-                                    </li>
-                                </ul>
+                                <div class="d-flex justify-content-end">
+                                    <div class="input-group input-group-alternative w-25">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                        </div>
+                                        <input class="form-control month_year_only" value="{{ request('year') ? \Carbon\Carbon::create(request('year'), request('month'), 1, 0, 0, 0)->format('m/Y') : \Carbon\Carbon::now()->format('m/Y') }}" placeholder="Select time" id="selectTime">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -99,23 +91,15 @@
                             <div class="col">
                                 <h3 class="mb-0">Shipped Ranking</h3>
                             </div>
-                            <div class="col text-right">
-                                <ul class="nav nav-pills justify-content-end">
-                                    <li class="nav-item mr-2 mr-md-0">
-                                        <a href="{{ request()->fullUrlWithQuery(['timeShipped' => 'month']) }} "
-                                           class="nav-link py-2 px-3 {{ !request('timeShipped') || request('timeShipped') == 'month' ? 'active' : '' }}">
-                                            <span class="d-none d-md-block">Month</span>
-                                            <span class="d-md-none">M</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ request()->fullUrlWithQuery(['timeShipped' => 'year']) }} "
-                                           class="nav-link py-2 px-3 {{ request('timeShipped') == 'year' ? 'active' : '' }}">
-                                            <span class="d-none d-md-block">Year</span>
-                                            <span class="d-md-none">Y</span>
-                                        </a>
-                                    </li>
-                                </ul>
+                            <div class="col">
+                                <div class="d-flex justify-content-end">
+                                    <div class="input-group input-group-alternative w-25">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                        </div>
+                                        <input class="form-control month_year_only" value="{{ request('shippedYear') ? \Carbon\Carbon::create(request('shippedYear'), request('shippedMonth'), 1, 0, 0, 0)->format('m/Y') : \Carbon\Carbon::now()->format('m/Y') }}" placeholder="Select time" id="selectShippedTime">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -132,20 +116,20 @@
                             </thead>
                             <tbody>
                             @foreach($rankingShipped as $index => $item)
-                            <tr>
-                                <th scope="row">
-                                    {{ $index + 1 }}
-                                </th>
-                                <td>
-                                    {{ $item->shipper ? $item->shipper->name : '' }}
-                                </td>
-                                <td>
-                                    {{  $item->shipper ? $item->shipper->email : '' }}
-                                </td>
-                                <td>
-                                    {{ round($item->ratio) }}%
-                                </td>
-                            </tr>
+                                <tr>
+                                    <th scope="row">
+                                        {{ $index + 1 }}
+                                    </th>
+                                    <td>
+                                        {{ $item->shipper ? $item->shipper->name : '' }}
+                                    </td>
+                                    <td>
+                                        {{  $item->shipper ? $item->shipper->email : '' }}
+                                    </td>
+                                    <td>
+                                        {{ round($item->ratio) }}%
+                                    </td>
+                                </tr>
                             @endforeach
                             </tbody>
                         </table>
@@ -168,7 +152,33 @@
 @push('js')
     <script type="text/javascript">
         $(document).ready(function () {
+            $('.month_year_only').datepicker({
+                format: "mm/yyyy",
+                startView: "months",
+                minViewMode: "months",
+                autoclose: true
+            });
 
+            $('#selectTime').on('change', function () {
+                changeUrl()
+            });
+
+            $('#selectShippedTime').on('change', function () {
+                changeUrl()
+            });
+
+            function changeUrl() {
+                let urlParams = new URLSearchParams(window.location.search);
+                let role = urlParams.get('role') ?? 'manager';
+                let time = $('#selectTime').val().split('/');
+                let shippedTime = $('#selectShippedTime').val().split('/');
+                let month = parseInt(time[0], 10);
+                let year = parseInt(time[1], 10);
+                let shippedMonth = parseInt(shippedTime[0], 10);
+                let shippedYear = parseInt(shippedTime[1], 10);
+                let url = window.location.pathname + '?role=' + role + '&month=' + month + '&year=' + year + '&shippedMonth=' + shippedMonth + '&shippedYear=' + shippedYear + '&page=1';
+                window.location.href = url;
+            }
         });
     </script>
 @endpush

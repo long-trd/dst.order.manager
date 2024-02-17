@@ -217,7 +217,7 @@ class OrderRepository implements OrderRepositoryContract
             ->get();
     }
 
-    public function getRankingByRoleAndTime($role, $time)
+    public function getRankingByRoleAndTime($role, $month, $year)
     {
         $columnGroupBy = ($role == 'manager' ? 'listing_user_id' : 'shipping_user_id');
 
@@ -230,12 +230,12 @@ class OrderRepository implements OrderRepositoryContract
             $query = $query->where('status', 'shipped');
         }
 
-        if ($time == 'year') {
-            $query = $query->whereYear('order_date', Carbon::now()->year);
+        if ($year) {
+            $query = $query->whereYear('order_date', $year);
         }
 
-        if ($time == 'month') {
-            $query = $query->whereYear('order_date', Carbon::now()->year)->whereMonth('order_date', Carbon::now()->month);
+        if ($month != 'all') {
+            $query = $query->whereYear('order_date', $year)->whereMonth('order_date', $month);
         }
 
         $orders = $query->groupBy($columnGroupBy)
@@ -245,7 +245,7 @@ class OrderRepository implements OrderRepositoryContract
         return $orders;
     }
 
-    public function getRankingShippedByTime($time)
+    public function getRankingShippedByTime($month, $year)
     {
         $query = $this->orderModel
             ->with('shipper')
@@ -254,12 +254,12 @@ class OrderRepository implements OrderRepositoryContract
             )
             ->whereHas('shipper');
 
-        if ($time == 'year') {
-            $query = $query->whereYear('order_date', Carbon::now()->year);
+        if ($year) {
+            $query = $query->whereYear('order_date', $year);
         }
 
-        if ($time == 'month') {
-            $query = $query->whereYear('order_date', Carbon::now()->year)->whereMonth('order_date', Carbon::now()->month);
+        if ($month != 'all') {
+            $query = $query->whereYear('order_date', $year)->whereMonth('order_date', $month);
         }
 
         $orders = $query->groupBy('shipping_user_id')

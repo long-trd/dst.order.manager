@@ -19,4 +19,10 @@ interface UserServiceContract
     public function findAllShipper();
 
     public function updateNote($id, $note);
+
+    public function postGift($userId, $data);
+
+    public function getGift($wheelEventId);
+
+    public function userFormat($user, $wheelEventId);
 }

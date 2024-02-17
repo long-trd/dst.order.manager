@@ -83,14 +83,14 @@ class OrderService implements OrderServiceContract
         return $this->orderRepository->downloadExcel($filter);
     }
 
-    public function getRankingByRoleAndTime($role, $time)
+    public function getRankingByRoleAndTime($role, $month, $year)
     {
-        return $this->orderRepository->getRankingByRoleAndTime($role, $time);
+        return $this->orderRepository->getRankingByRoleAndTime($role, $month, $year);
     }
 
-    public function getRankingShippedByTime($time)
+    public function getRankingShippedByTime($month, $year)
     {
-        return $this->orderRepository->getRankingShippedByTime($time);
+        return $this->orderRepository->getRankingShippedByTime($month, $year);
     }
 
     public function getTop3Manager()

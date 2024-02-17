@@ -6,22 +6,27 @@ namespace Cms\Modules\Core\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Cms\Modules\Core\Requests\CreateSiteRequest;
+use Cms\Modules\Core\Services\Contracts\SiteLogServiceContract;
 use Cms\Modules\Core\Services\Contracts\SiteServiceContract;
 use Cms\Modules\Core\Services\Contracts\UserServiceContract;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SiteController extends Controller
 {
     protected $service;
     protected $userService;
+    protected $siteLogService;
 
     public function __construct
     (
-        SiteServiceContract $service,
-        UserServiceContract $userService
+        SiteServiceContract    $service,
+        SiteLogServiceContract $siteLogService,
+        UserServiceContract    $userService
     )
     {
         $this->service = $service;
+        $this->siteLogService = $siteLogService;
         $this->userService = $userService;
     }
 
@@ -30,35 +35,51 @@ class SiteController extends Controller
         $paginate = 20;
         $request = $request->toArray();
         $sites = $this->service->findByQuery($request, $paginate);
-        $users = $this->userService->getAll();
+        $users = $this->userService->findAllShipper();
 
         return view('Core::site.index', ['sites' => $sites, 'users' => $users, 'request' => $request]);
     }
 
     public function create()
     {
-        $users = $this->userService->getAll();
+        $users = $this->userService->findAllShipper();
 
         return view('Core::site.create', ['users' => $users]);
     }
 
     public function store(CreateSiteRequest $request)
     {
-        $data['name'] = $request->name;
-        $data['user_id'] = $request->user_id;
-        $data['status'] = $request->status;
+        DB::beginTransaction();
+        try {
+            $data['name'] = $request->name;
+            $data['user_id'] = $request->user_id;
+            $data['status'] = $request->status;
 
-        $site = $this->service->store($data);
+            $site = $this->service->store($data);
+            $log = $this->siteLogService->store($site, 'created');
 
-        return redirect()->route('admin.site.index');
+            DB::commit();
+
+            return redirect()->route('admin.site.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return abort(500);
+        }
     }
 
     public function edit($id)
     {
         $site = $this->service->find($id);
-        $users = $this->userService->getAll();
+        $auth = auth()->user();
 
-        return view('Core::site.edit', ['site' => $site, 'users' => $users]);
+        if ($auth->id == $site->user_id || $auth->hasRole('admin')) {
+            $users = $this->userService->findAllShipper();
+
+            return view('Core::site.edit', ['site' => $site, 'users' => $users]);
+        }
+
+        return abort(403);
     }
 
     public function update($id, CreateSiteRequest $request)
@@ -67,7 +88,10 @@ class SiteController extends Controller
         $data['user_id'] = $request->user_id;
         $data['status'] = $request->status;
 
-        $site = $this->service->update($id, $data);
+        $this->service->update($id, $data);
+        $site = $this->service->find($id);
+
+        $log = $this->siteLogService->store($site, 'updated');
 
         return redirect()->route('admin.site.index');
     }

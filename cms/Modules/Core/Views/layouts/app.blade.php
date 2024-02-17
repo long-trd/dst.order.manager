@@ -35,13 +35,15 @@
         @if(count($globalData['notifications']) > 0)
             <div class="notification-wrapper d-flex flex-row">
                 <div class="advertise">
-                    <img class="ml-3 mt-1 advertise-menu" style="height: 40px" src="{{ cxl_asset('assets/img/icons/icon-speaker.png') }}"/>
+                    <img class="ml-3 mt-1 advertise-menu" style="height: 40px"
+                         src="{{ cxl_asset('assets/img/icons/icon-speaker.png') }}"/>
                 </div>
                 <div class="advertise w-100 mr-2" style="display: flex; align-items: center;">
                     <marquee>
                         <div style="display: flex; align-items: center; vertical-align: center">
                             @foreach($globalData['notifications'] as $notification)
-                                <strong class="marquee__line" style="margin-right: 50px">{{ $notification->content }}</strong>
+                                <strong class="marquee__line"
+                                        style="margin-right: 50px">{{ $notification->content }}</strong>
                             @endforeach
                         </div>
                     </marquee>
@@ -49,8 +51,36 @@
             </div>
         @endif
     @endif
+
     @include('Core::layouts.navbars.navbar')
+
     @yield('content')
+
+    @if ($globalData['wheelEventActive'] && $globalData['countPrize'] == 0 && auth()->check() && !auth()->user()->hasRole('admin'))
+        <div class="modal fade" id="lucky_wheel" tabindex="-1" role="dialog" aria-labelledby="lucky_wheel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thông báo</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <b class="text-center d-flex justify-content-center">Chúc mừng năm mới {{ now()->year }}!</b>
+                        <br>
+                        <span>Mau mau đến vòng quay may mắn để quay lì xì thôi!</span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <a type="button" href="{{ route('lucky.wheel.index') }}" class="btn btn-primary">Vòng quay may
+                            mắn</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 
 @guest()
@@ -60,6 +90,14 @@
 <script src="{{ asset('argon') }}/vendor/jquery/dist/jquery.min.js"></script>
 <script src="{{ asset('argon') }}/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('argon') }}/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+@if ($globalData['wheelEventActive'] && $globalData['countPrize'] == 0 && auth()->check() && !auth()->user()->hasRole('admin'))
+    <script>
+        $(document).ready(function() {
+            $('#lucky_wheel').modal('show');
+        });
+    </script>
+@endif
 
 @stack('js')
 
@@ -92,9 +130,9 @@
     }
 
     .top-ranking {
-        box-shadow: 5px 5px 10px 3px rgba(8,7,7,0.4);
-        -webkit-box-shadow: 5px 5px 10px 3px rgba(8,7,7,0.4);
-        -moz-box-shadow: 5px 5px 10px 3px rgba(8,7,7,0.4);
+        box-shadow: 5px 5px 10px 3px rgba(8, 7, 7, 0.4);
+        -webkit-box-shadow: 5px 5px 10px 3px rgba(8, 7, 7, 0.4);
+        -moz-box-shadow: 5px 5px 10px 3px rgba(8, 7, 7, 0.4);
     }
 
     @keyframes marqueeLine {

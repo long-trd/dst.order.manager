@@ -48,4 +48,16 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Account::class, 'user_account', 'user_id');
     }
+
+    public function prize()
+    {
+        return $this->belongsToMany(Prize::class, 'prize_user', 'user_id', 'prize_id');
+    }
+
+    public function getPrizeNumberAttribute()
+    {
+        return $this->prize()->whereRelation('wheelEvent', function ($q) {
+            $q->where('active_date', date('Y-m-d'));
+        })->count();
+    }
 }

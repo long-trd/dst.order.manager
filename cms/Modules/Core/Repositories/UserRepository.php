@@ -88,4 +88,27 @@ class UserRepository implements UserRepositoryContract
             $query->where('name', 'shipper');
         })->get();
     }
+
+    public function postGift($userId, $data)
+    {
+        $user = $this->model->find($userId);
+
+        if ($user && isset($data['prize_id'])) {
+            $user->prize()->attach($data['prize_id']);
+        }
+
+        return $user;
+    }
+
+    public function getGift($wheelEventId)
+    {
+        $result = $this->model->select('id', 'email', 'password', 'name')
+            ->whereHas('prize', function ($q) use($wheelEventId) {
+                $q->where('wheel_event_id', $wheelEventId);
+            })
+            ->with('prize')
+            ->get();
+
+        return $result;
+    }
 }

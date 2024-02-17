@@ -26,4 +26,9 @@ class Site extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function site_log()
+    {
+        return $this->hasMany(SiteLog::class, 'site_id', 'id');
+    }
 }

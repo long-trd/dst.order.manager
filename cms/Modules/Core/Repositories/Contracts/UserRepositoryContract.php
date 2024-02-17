@@ -21,4 +21,8 @@ interface UserRepositoryContract
     public function delete($id);
 
     public function findAllShipper();
+
+    public function getGift($wheelEventId);
+
+    public function postGift($userId, $data);
 }
