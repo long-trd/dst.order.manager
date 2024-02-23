@@ -80,17 +80,17 @@
                                                 <i class="fas fa-ellipsis-v"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                @if(auth()->user()->hasRole('admin') || auth()->id() == $site->user_id)
+                                                @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('leader-manager') || auth()->user()->hasRole('leader-shipper'))
                                                     <a class="dropdown-item list-account-dropdown"
                                                        href="{{route('admin.site.edit', ['id' => $site->id])}}">Edit</a>
                                                 @endif
                                                 @if(auth()->user()->hasRole('admin'))
                                                     <a class="dropdown-item list-account-dropdown delete-site"
                                                        href="#" data-id="{{ $site->id }}">Delete</a>
-                                                    <a class="dropdown-item list-account-dropdown log-site"
-                                                       data-toggle="modal" data-target="#logModal"
-                                                       href="#" data-log="{{ json_encode($site->site_log->toArray()) }}">Logs</a>
                                                 @endif
+                                                <a class="dropdown-item list-account-dropdown log-site"
+                                                   data-toggle="modal" data-target="#logModal"
+                                                   href="#" data-log="{{ json_encode($site->site_log->toArray()) }}">Logs</a>
                                             </div>
                                         </div>
                                     </td>

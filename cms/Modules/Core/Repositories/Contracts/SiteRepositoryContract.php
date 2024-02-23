@@ -18,4 +18,6 @@ interface SiteRepositoryContract
     public function delete($id);
 
     public function findByQuery($request, $paginate);
+
+    public function getActiveSite();
 }

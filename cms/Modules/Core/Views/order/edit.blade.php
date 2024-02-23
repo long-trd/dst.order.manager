@@ -101,7 +101,7 @@
                                     </div>
                                     <div class="custom-control custom-radio mb-3">
                                         <input name="status" class="custom-control-input" value="shipped" id="customRadio6" type="radio"
-                                            {{$order->shipped == 'cancel' ? 'checked' : '' }}
+                                            {{$order->status == 'shipped' ? 'checked' : '' }}
                                         >
                                         <label class="custom-control-label" for="customRadio6">Shipped</label>
                                     </div>
@@ -123,7 +123,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                         </div>
-                                        <input class="form-control datepicker" placeholder="Select date" type="text" name="order_date" value="{{cxl_carbon()::parse($order->order_date)->format('Y-m-d')}}" required>
+                                        <input class="form-control datepicker" placeholder="Select date" type="text" name="order_date" value="{{cxl_carbon()::parse($order->order_date)->format('Y-m-d')}}" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group">

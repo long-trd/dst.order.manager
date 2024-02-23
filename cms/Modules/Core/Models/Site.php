@@ -31,4 +31,14 @@ class Site extends Model
     {
         return $this->hasMany(SiteLog::class, 'site_id', 'id');
     }
+
+    public function order()
+    {
+        return $this->hasMany(Order::class, 'site_id');
+    }
+
+    public function site_pause_log()
+    {
+        return $this->hasMany(SitePauseLog::class, 'site_id','id');
+    }
 }

@@ -5,6 +5,7 @@ namespace Cms\Modules\Core\Repositories;
 use Carbon\Carbon;
 use Cms\Modules\Core\Models\Site;
 use Cms\Modules\Core\Repositories\Contracts\SiteRepositoryContract;
+use Illuminate\Support\Facades\DB;
 
 class SiteRepository implements SiteRepositoryContract
 {
@@ -80,6 +81,13 @@ class SiteRepository implements SiteRepositoryContract
         $sites = $query->paginate($paginate);
 
         return $sites;
+    }
+
+    public function getActiveSite()
+    {
+        return $this->model
+            ->whereIn('status', ['live', 'pause'])
+            ->get();
     }
 }
 

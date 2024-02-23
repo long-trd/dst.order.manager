@@ -95,7 +95,7 @@ Route::group([
             });
 
             //Site
-            Route::group(['prefix' => 'site'], function () {
+            Route::group(['prefix' => 'site', 'middleware' => ['role:admin|leader-manager|leader-shipper']], function () {
                 Route::get('/', 'SiteController@index')->name('admin.site.index');
                 Route::get('create', 'SiteController@create')->name('admin.site.create');
                 Route::post('create', 'SiteController@store')->name('admin.site.store');

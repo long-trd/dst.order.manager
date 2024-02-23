@@ -5,6 +5,8 @@ namespace Cms\Modules\Core\Repositories;
 
 use Carbon\Carbon;
 use Cms\Modules\Core\Models\Order;
+use Cms\Modules\Core\Models\Site;
+use Cms\Modules\Core\Models\SitePauseLog;
 use Cms\Modules\Core\Repositories\Contracts\OrderRepositoryContract;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -12,10 +14,19 @@ use Illuminate\Support\Facades\Schema;
 class OrderRepository implements OrderRepositoryContract
 {
     protected $orderModel;
+    protected $siteModel;
+    protected $sitePauseLogModel;
 
-    public function __construct(Order $orderModel)
+    public function __construct
+    (
+        Order $orderModel,
+        Site $siteModel,
+        SitePauseLog $sitePauseLogModel
+    )
     {
         $this->orderModel = $orderModel;
+        $this->siteModel = $siteModel;
+        $this->sitePauseLogModel = $sitePauseLogModel;
     }
 
     public function findAll($paginate)
@@ -40,12 +51,13 @@ class OrderRepository implements OrderRepositoryContract
     public function findByQuery($request, $paginate)
     {
         // TODO: Implement findByQuery() method.
-        $startDate = $endDate = $account = $shipper = $status = ['orders.id', '!=', null];
+        $startDate = $endDate = $account = $site = $shipper = $status = ['orders.id', '!=', null];
         $role = $manager = $shipperRole = ['id', '!=', null];
         $randomSearch = 'orders.id';
         $isManagerQuery = false;
         $isBranchQuery = false;
         $branch = null;
+        $sites = $this->siteModel->all();
 
         if (isset($request['random-search'])) {
             $randomSearch = '(';
@@ -88,6 +100,10 @@ class OrderRepository implements OrderRepositoryContract
             $status = ['orders.status', $request['status']];
         }
 
+        if (isset($request['site']) && $request['site'] != 'default') {
+            $site = ['orders.site_id', $request['site']];
+        }
+
         if (isset($request['start_date']) && isset($request['end_date'])) {
             $startDate = ['order_date', '>=', Carbon::parse($request['start_date'])->format('Y-m-d')];
             $endDate = ['order_date', '<=', Carbon::parse($request['end_date'])->format('Y-m-d')];
@@ -108,7 +124,8 @@ class OrderRepository implements OrderRepositoryContract
                     $shipper,
                     $status,
                     $startDate,
-                    $endDate
+                    $endDate,
+                    $site
                 ]
             )
             ->whereRaw($randomSearch)
@@ -137,7 +154,8 @@ class OrderRepository implements OrderRepositoryContract
                     $account,
                     $shipper,
                     $startDate,
-                    $endDate
+                    $endDate,
+                    $site
                 ]
             )
             ->whereRaw($randomSearch)
@@ -156,12 +174,66 @@ class OrderRepository implements OrderRepositoryContract
             ->with(['account', 'manager'])
             ->orderBy('orders.created_at', 'desc');
 
+        $ordersIgnoreSitePause = [
+            'total_amount' => 0,
+            'quantity' => 0
+        ];
+
+        foreach ($sites as $item) {
+            $arrDaySitePause = $this->sitePauseLogModel->where('site_id', $item->id)->get();
+            if (count($arrDaySitePause) > 0) {
+                foreach ($arrDaySitePause as $log) {
+                    $ordersIgnore = $this->orderModel
+                        ->select('orders.id as order_id', 'users.*', 'orders.*')
+                        ->selectRaw('`orders`.`price` as `order_price`')
+                        ->leftJoin('users', 'orders.shipping_user_id', '=', 'users.id')
+                        ->leftJoin('accounts', 'orders.account_id', '=', 'accounts.id')
+                        ->whereDate('order_date', '>', $log->paused_at)
+                        ->when($log->lived_at, function ($query, $lived_at) {
+                            return $query->whereDate('order_date', '<=', $lived_at);
+                        })
+                        ->where('site_id', $item->id)
+                        ->where('orders.status','!=', 'shipped')
+                        ->where(
+                            [
+                                $account,
+                                $shipper,
+                                $status,
+                                $startDate,
+                                $endDate,
+                                $site
+                            ]
+                        )
+                        ->whereRaw($randomSearch)
+                        ->when($isManagerQuery, function ($query) use ($manager) {
+                            $query->whereHas('manager', function ($managerQuery) use ($manager) {
+                                $managerQuery->where([$manager]);
+                            });
+                        })
+                        ->when($isBranchQuery, function ($query) use ($branch) {
+                            $query->whereHas('manager', function ($managerQuery) use ($branch) {
+                                $managerQuery->where([$branch]);
+                            })->orWhereHas('shipper', function ($shipperQuery) use ($branch) {
+                                $shipperQuery->where([$branch]);
+                            });
+                        })
+                        ->with(['account', 'manager'])
+                        ->orderBy('orders.created_at', 'desc');
+
+                    $ordersIgnoreSitePause['total_amount'] += $ordersIgnore->get()->sum('order_price');
+                    $ordersIgnoreSitePause['quantity'] += $ordersIgnore->count();
+                }
+            }
+        }
+
         return [
             'total_amount_by_query' => $orders->get()->sum('order_price'),
             'total_order_by_query' => $orders->count(),
+            'total_amount_ignore_site' => ($orders->get()->sum('order_price') - $ordersIgnoreSitePause['total_amount']),
+            'total_order_ignore_site' => ($orders->count() - $ordersIgnoreSitePause['quantity']),
             'paginated_data' => $orders->paginate($paginate),
             'total_order_without_status' => $totalOrderWithoutStatus->count(),
-            'total_amount_without_status' => $totalOrderWithoutStatus->get()->sum('order_price'),
+            'total_amount_without_status' => $totalOrderWithoutStatus->get()->sum('order_price')
         ];
     }
 

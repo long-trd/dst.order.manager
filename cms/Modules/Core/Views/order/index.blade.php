@@ -37,6 +37,7 @@
                                 <tr>
                                     <th scope="col" class="sort" data-sort="no">No</th>
                                     <th scope="col" class="sort" data-sort="account_ip">Account IP</th>
+                                    <th scope="col" class="sort" data-sort="site">Site</th>
                                     <th scope="col" class="sort" data-sort="status">Status</th>
                                     <th scope="col" class="sort" data-sort="manager">Manager</th>
                                     <th scope="col" class="sort" data-sort="shipper">Shipper</th>
@@ -69,6 +70,9 @@
                                         </th>
                                         <td class="budget ip_address">
                                             {{ $order->account->ip_address }}
+                                        </td>
+                                        <td class="budget site">
+                                            {{ $order->site ? $order->site->name : '' }}
                                         </td>
                                         <td class="budget status">
                                             <span class="badge badge-dot mr-4">
@@ -142,8 +146,10 @@
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                                    @if(auth()->user()->hasRole('admin') || in_array(auth()->id(), [$order->shipping_user_id, $order->listing_user_id]))
                                                     <a class="dropdown-item list-account-dropdown"
                                                         href="{{ route('admin.order.edit', ['id' => $order->order_id]) }}">Edit</a>
+                                                    @endif
                                                     @if (auth()->user()->hasRole('admin'))
                                                         <a class="dropdown-item list-account-dropdown delete-order"
                                                             href="#" data-id="{{ $order->order_id }}">Delete</a>
@@ -161,6 +167,8 @@
                         <div class="sumup">Total amount of this page: <b>{{ $orders->sum('order_price') }}$</b></div>
                         <div class="sumup">Total amount of all pages: <b>{{ $totalAmountByQuery }}$</b></div>
                         <div class="sumup">Total orders: <b>{{ $totalOrderByQuery }} orders</b></div>
+                        <div class="sumup">Total amount valid: <b>{{ $totalAmountIgnoreSite }}$</b></div>
+                        <div class="sumup">Total orders valid: <b>{{ $totalOrderIgnoreSite }} orders</b></div>
                         <div class="sumup">Percentage of orders: <b>{{ $totalOrderWithoutStatus ? round($totalOrderByQuery / $totalOrderWithoutStatus * 100, 2) : 0 }}%</b></div>
                         <div class="sumup">Percentage of orders amount: <b>{{ $totalAmountWithoutStatus ? round($totalAmountByQuery / $totalAmountWithoutStatus * 100, 2) : 0 }}%</b></div>
                         {!! $orders->appends(request()->query())->links() !!}
@@ -258,6 +266,21 @@
                                                         <input type="text" class="form-control" name="manager"
                                                             placeholder="List name"
                                                             value="{{ isset($request['manager']) ? $request['manager'] : '' }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <select class="form-control order-account" data-toggle="select"
+                                                                title="Simple select" data-live-search="true" name="site">
+                                                            <option value="default">--Site--</option>
+                                                            @foreach ($sites as $site)
+                                                                <option value="{{ $site->id }}"
+                                                                    {{ isset($request['site']) && $request['site'] == $site->id ? 'selected' : '' }}>
+                                                                    {{ $site->name }}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -388,7 +411,7 @@
                                                                 class="ni ni-calendar-grid-58"></i></span>
                                                     </div>
                                                     <input class="form-control datepicker" placeholder="Select date"
-                                                        type="text" name="order_date" value="" required>
+                                                        type="text" name="order_date" value="" readonly>
                                                 </div>
                                             </div>
                                             <div class="form-group">

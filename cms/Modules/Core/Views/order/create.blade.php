@@ -64,6 +64,14 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
+                                    <label class="form-control-label" for="input-name">{{ __('Site') }}</label>
+                                    <select class="form-control order-status w-25" data-toggle="select" data-live-search="true" name="site_id">
+                                        @foreach($sites as $site)
+                                            <option value="{{$site->id}}">{{$site->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label class="form-control-label" for="input-name">{{ __('Info') }}</label>
                                     <input type="text" name="name" class="form-control form-control-alternative w-90" required>
                                 </div>

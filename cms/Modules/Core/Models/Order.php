@@ -17,6 +17,7 @@ class Order extends Model
             'shipping_user_id',
             'helping_user_id',
             'listing_user_id',
+            'site_id',
             'name',
             'ebay_url',
             'product_url',
@@ -55,5 +56,10 @@ class Order extends Model
     public function account()
     {
         return $this->belongsTo(Account::class, 'account_id');
+    }
+
+    public function site()
+    {
+        return $this->belongsTo(Site::class, 'site_id');
     }
 }
