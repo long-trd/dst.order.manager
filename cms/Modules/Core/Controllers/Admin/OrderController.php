@@ -9,6 +9,7 @@ use Cms\Modules\Core\Export\OrderExport;
 use Cms\Modules\Core\Requests\CreateOderRequest;
 use Cms\Modules\Core\Services\Contracts\AccountServiceContract;
 use Cms\Modules\Core\Services\Contracts\OrderServiceContract;
+use Cms\Modules\Core\Services\Contracts\SiteServiceContract;
 use Cms\Modules\Core\Services\Contracts\UserServiceContract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -19,12 +20,20 @@ class OrderController extends Controller
     protected $orderService;
     protected $accountService;
     protected $userService;
+    protected $siteService;
 
-    public function __construct(OrderServiceContract $orderService, AccountServiceContract $accountService, UserServiceContract $userService)
+    public function __construct
+    (
+        OrderServiceContract $orderService,
+        AccountServiceContract $accountService,
+        UserServiceContract $userService,
+        SiteServiceContract $siteService
+    )
     {
         $this->orderService = $orderService;
         $this->accountService = $accountService;
         $this->userService = $userService;
+        $this->siteService = $siteService;
     }
 
     public function index(Request $request)
@@ -37,14 +46,18 @@ class OrderController extends Controller
         Session::put('order-search', $request->all());
 
         $accounts = $this->accountService->getAll();
+        $sites = $this->siteService->getAll();
 
         return view('Core::order.index', [
             'orders' => $orders['paginated_data'],
             'totalAmountByQuery' => $orders['total_amount_by_query'],
             'totalOrderByQuery' => $orders['total_order_by_query'],
+            'totalAmountIgnoreSite' => $orders['total_amount_ignore_site'],
+            'totalOrderIgnoreSite' => $orders['total_order_ignore_site'],
             'totalAmountWithoutStatus' => $orders['total_amount_without_status'],
             'totalOrderWithoutStatus' => $orders['total_order_without_status'],
             'accounts' => $accounts,
+            'sites' => $sites,
             'request' => $request->all()
         ]);
     }
@@ -55,9 +68,11 @@ class OrderController extends Controller
 
         $accounts = $this->accountService->findByManager(auth()->user()->id);
 
+        $sites = $this->siteService->getActiveSite();
+
         if (!$shippers) return redirect()->route('admin.order.index')->withErrors(['shipper' => "Don't have any shipper"]);
 
-        return view('Core::order.create', ['shippers' => $shippers, 'accounts' => $accounts]);
+        return view('Core::order.create', ['shippers' => $shippers, 'accounts' => $accounts, 'sites' => $sites]);
     }
 
     public function store(CreateOderRequest $request)
@@ -75,30 +90,39 @@ class OrderController extends Controller
     {
         $order = $this->orderService->findByID($id);
 
-        return view('Core::order.edit', ['order' => $order]);
+        if (auth()->user()->hasRole('admin') || in_array(auth()->id(), [$order->shipping_user_id, $order->listing_user_id])) {
+            return view('Core::order.edit', ['order' => $order]);
+        }
+
+        return abort(403);
     }
 
     public function update($id, CreateOderRequest $request)
     {
-        $request = $request->except('_token');
+        $order = $this->orderService->findByID($id);
 
-        if ($this->orderService->update($id, $request)) {
-            $search = Session::get('order-search');
-            Session::forget('order-search');
+        if (auth()->user()->hasRole('admin') || in_array(auth()->id(), [$order->shipping_user_id, $order->listing_user_id])) {
+            $request = $request->except('_token');
 
-            if ($search) {
-                return redirect()->route('admin.order.index', [
-                    'random-search' => isset($search['random-search']) ? $search['random-search'] : '',
-                    'status' => isset($search['status']) ? $search['status'] : '',
-                    'account' => isset($search['account']) ? $search['account'] : '',
-                    'shipper' => isset($search['shipper']) ? $search['shipper'] : '',
-                    'manager' => isset($search['manager']) ? $search['manager'] : '',
-                    'start_date' => isset($search['start_date']) ? $search['start_date'] : '',
-                    'end_date' => isset($search['end_date']) ? $search['end_date'] : '',
-                ])->with('success', 'successful');
+            if ($this->orderService->update($id, $request)) {
+                $search = Session::get('order-search');
+                Session::forget('order-search');
+
+                if ($search) {
+                    return redirect()->route('admin.order.index', [
+                        'random-search' => isset($search['random-search']) ? $search['random-search'] : '',
+                        'status' => isset($search['status']) ? $search['status'] : '',
+                        'account' => isset($search['account']) ? $search['account'] : '',
+                        'shipper' => isset($search['shipper']) ? $search['shipper'] : '',
+                        'branch' => isset($search['branch']) ? $search['branch'] : '',
+                        'manager' => isset($search['manager']) ? $search['manager'] : '',
+                        'start_date' => isset($search['start_date']) ? $search['start_date'] : '',
+                        'end_date' => isset($search['end_date']) ? $search['end_date'] : '',
+                    ])->with('success', 'successful');
+                }
+
+                return redirect()->route('admin.order.index')->with('success', 'successful');
             }
-
-            return redirect()->route('admin.order.index')->with('success', 'successful');
         }
 
         abort(404);

@@ -48,5 +48,10 @@ class SiteService implements SiteServiceContract
     {
         return $this->repository->findByQuery($request, $paginate);
     }
+
+    public function getActiveSite()
+    {
+        return $this->repository->getActiveSite();
+    }
 }
 

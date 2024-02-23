@@ -5,6 +5,7 @@ namespace Cms\Modules\Core\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use Cms\Modules\Core\Models\SitePauseLog;
 use Cms\Modules\Core\Requests\CreateSiteRequest;
 use Cms\Modules\Core\Services\Contracts\SiteLogServiceContract;
 use Cms\Modules\Core\Services\Contracts\SiteServiceContract;
@@ -71,27 +72,42 @@ class SiteController extends Controller
     public function edit($id)
     {
         $site = $this->service->find($id);
-        $auth = auth()->user();
+        $users = $this->userService->findAllShipper();
 
-        if ($auth->id == $site->user_id || $auth->hasRole('admin')) {
-            $users = $this->userService->findAllShipper();
-
-            return view('Core::site.edit', ['site' => $site, 'users' => $users]);
-        }
-
-        return abort(403);
+        return view('Core::site.edit', ['site' => $site, 'users' => $users]);
     }
 
     public function update($id, CreateSiteRequest $request)
     {
+        $oldSite = $this->service->find($id);
+
         $data['name'] = $request->name;
         $data['user_id'] = $request->user_id;
         $data['status'] = $request->status;
 
-        $this->service->update($id, $data);
-        $site = $this->service->find($id);
+        $lastSitePauseLog = SitePauseLog::where('site_id', $id)->latest()->first();
 
-        $log = $this->siteLogService->store($site, 'updated');
+        if ($lastSitePauseLog) {
+            if ($oldSite->status != 'pause' && $data['status'] == 'pause' && $lastSitePauseLog->paused_at != Carbon::now()->toDateString()) {
+                SitePauseLog::create(['site_id' => $id, 'paused_at' => Carbon::now()->toDateString()]);
+            }
+        } else {
+            if ($oldSite->status != 'pause' && $data['status'] == 'pause') {
+                SitePauseLog::create(['site_id' => $id, 'paused_at' => Carbon::now()->toDateString()]);
+            }
+        }
+
+        if ($lastSitePauseLog) {
+            if ($oldSite->status == 'pause' && $data['status'] == 'live') {
+                $lastSitePauseLog->update(['lived_at' => Carbon::now()->toDateString()]);
+            }
+        }
+
+        $this->service->update($id, $data);
+
+        $newSite = $this->service->find($id);
+
+        $log = $this->siteLogService->store($newSite, 'updated');
 
         return redirect()->route('admin.site.index');
     }
