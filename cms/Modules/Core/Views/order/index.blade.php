@@ -38,6 +38,7 @@
                                     <th scope="col" class="sort" data-sort="no">No</th>
                                     <th scope="col" class="sort" data-sort="account_ip">Account IP</th>
                                     <th scope="col" class="sort" data-sort="site">Site</th>
+                                    <th scope="col" class="sort" data-sort="site_status">Site status</th>
                                     <th scope="col" class="sort" data-sort="status">Status</th>
                                     <th scope="col" class="sort" data-sort="manager">Manager</th>
                                     <th scope="col" class="sort" data-sort="shipper">Shipper</th>
@@ -73,6 +74,23 @@
                                         </td>
                                         <td class="budget site">
                                             {{ $order->site ? $order->site->name : '' }}
+                                        </td>
+                                        <td class="budget site_status">
+                                            @if($order->site)
+                                                <span class="badge badge-dot mr-4">
+                                                    <i
+                                                        class="
+                                                        @if ($order->site->status == 'live') bg-success
+                                                        @elseif ($order->site->status == 'pause')
+                                                            bg-primary
+                                                        @elseif ($order->site->status == 'die')
+                                                            bg-danger
+                                                        @endif
+                                                    ">
+                                                    </i>
+                                                    <span class="status">{{ $order->site->status }}</span>
+                                                </span>
+                                            @endif
                                         </td>
                                         <td class="budget status">
                                             <span class="badge badge-dot mr-4">
