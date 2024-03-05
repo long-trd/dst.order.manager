@@ -50,7 +50,7 @@
                                     <label class="form-control-label" for="input-name">{{ __('Shipper') }}</label>
                                     @foreach($shippers as $key => $shipper)
                                         <div class="custom-control custom-radio mb-3">
-                                            <input name="shipping_user_id" value="{{$shipper->id}}" class="custom-control-input" id="shipper-{{$key}}" type="radio">
+                                            <input required name="shipping_user_id" value="{{$shipper->id}}" class="custom-control-input" id="shipper-{{$key}}" type="radio">
                                             <label class="custom-control-label" for="shipper-{{$key}}">{{$shipper->name}}</label>
                                         </div>
                                     @endforeach
@@ -67,7 +67,7 @@
                                     <label class="form-control-label" for="input-name">{{ __('Site') }}</label>
                                     <select class="form-control order-status w-25" data-toggle="select" data-live-search="true" name="site_id">
                                         @foreach($sites as $site)
-                                            <option value="{{$site->id}}">{{$site->name}}</option>
+                                            <option value="{{$site->id}}">{{$site->name .' - '. $site->status}}</option>
                                         @endforeach
                                     </select>
                                 </div>
