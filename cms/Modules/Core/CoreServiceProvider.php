@@ -76,7 +76,7 @@ class CoreServiceProvider extends ServiceProvider
             ]);
         }
 
-        view()->composer(['Core::layouts.app', 'Core::order.index'], 'Cms\Modules\Core\ViewComposer');
+        view()->composer(['Core::layouts.app', 'Core::order.index', 'Core::wheel.event'], 'Cms\Modules\Core\ViewComposer');
     }
 
     /**

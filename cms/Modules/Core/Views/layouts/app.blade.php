@@ -91,12 +91,16 @@
 <script src="{{ asset('argon') }}/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('argon') }}/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
-@if ($globalData['wheelEventActive'] && $globalData['countPrize'] == 0 && auth()->check() && !auth()->user()->hasRole('admin'))
-    <script>
-        $(document).ready(function() {
-            $('#lucky_wheel').modal('show');
-        });
-    </script>
+@if($globalData['wheelEventActive'])
+    @if(auth()->check() && !auth()->user()->hasRole('admin'))
+        @if(in_array(auth()->id(), $globalData['listUserPlay']) && $globalData['countPrize'] == 0)
+            <script>
+                $(document).ready(function() {
+                    $('#lucky_wheel').modal('show');
+                });
+            </script>
+        @endif
+    @endif
 @endif
 
 @stack('js')

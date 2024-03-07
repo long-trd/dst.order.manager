@@ -41,8 +41,10 @@ class ViewComposer
         $wheelEventActive = $this->wheelEventService->wheelEventActive();
         if ($wheelEventActive) {
             $countPrize = $this->prizeService->countPrizeByUser(auth()->id(), $wheelEventActive->id);
+            $listUserPlay = [35, 36, 38];
         } else {
             $countPrize = 0;
+            $listUserPlay = [];
         }
         $arrTop3Manager = [];
         $arrTop3Shipper = [];
@@ -62,7 +64,8 @@ class ViewComposer
             'arrTop3Manager' => $arrTop3Manager,
             'arrTop3Shipper' => $arrTop3Shipper,
             'wheelEventActive' => $wheelEventActive,
-            'countPrize' => $countPrize
+            'countPrize' => $countPrize,
+            'listUserPlay' => $listUserPlay
         ];
     }
 
