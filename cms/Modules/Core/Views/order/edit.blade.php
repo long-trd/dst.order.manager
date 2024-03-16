@@ -79,6 +79,14 @@
                                     <input type="url" name="product_url" value="{{$order->product_url}}" class="form-control form-control-alternative w-90" required>
                                 </div>
                                 <div class="form-group">
+                                    <label class="form-control-label" for="input-name">{{ __('Network') }}</label>
+                                    <select class="form-control order-status w-25" data-toggle="select" data-live-search="true" name="network">
+                                        <option value="" {{ $order->network == '' ? 'selected' : '' }}>--Network--</option>
+                                        <option value="tiktok" {{ $order->network == 'tiktok' ? 'selected' : '' }}>Tiktok</option>
+                                        <option value="facebook" {{ $order->network == 'facebook' ? 'selected' : '' }}>Facebook</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label class="form-control-label" for="input-email">{{ __('Status') }}</label>
                                     <div class="custom-control custom-radio mb-3">
                                         <input name="status" class="custom-control-input" value="new" id="customRadio1" type="radio"

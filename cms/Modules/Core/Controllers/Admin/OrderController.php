@@ -122,6 +122,7 @@ class OrderController extends Controller
                         'start_date' => isset($search['start_date']) ? $search['start_date'] : '',
                         'end_date' => isset($search['end_date']) ? $search['end_date'] : '',
                         'site' => isset($search['site']) ? $search['site'] : '',
+                        'network' => isset($search['network']) ? $search['network'] : '',
                     ])->with('success', 'successful');
                 }
 

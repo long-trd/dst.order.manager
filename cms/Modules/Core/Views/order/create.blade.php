@@ -72,6 +72,14 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
+                                    <label class="form-control-label" for="input-name">{{ __('Network') }}</label>
+                                    <select class="form-control order-status w-25" data-toggle="select" data-live-search="true" name="network">
+                                        <option value="">--Network--</option>
+                                        <option value="tiktok">Tiktok</option>
+                                        <option value="facebook">Facebook</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label class="form-control-label" for="input-name">{{ __('Info') }}</label>
                                     <input type="text" name="name" class="form-control form-control-alternative w-90" required>
                                 </div>

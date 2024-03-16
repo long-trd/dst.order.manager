@@ -33,7 +33,8 @@ class Order extends Model
             'updated_at',
             'deleted_at',
             'shipper_name',
-            'manager_name'
+            'manager_name',
+            'network'
         ];
 
     protected $hidden = [];

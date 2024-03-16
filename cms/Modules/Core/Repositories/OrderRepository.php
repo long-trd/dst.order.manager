@@ -51,7 +51,7 @@ class OrderRepository implements OrderRepositoryContract
     public function findByQuery($request, $paginate)
     {
         // TODO: Implement findByQuery() method.
-        $startDate = $endDate = $account = $site = $shipper = $status = ['orders.id', '!=', null];
+        $startDate = $endDate = $account = $site = $network = $shipper = $status = ['orders.id', '!=', null];
         $role = $manager = $shipperRole = ['id', '!=', null];
         $randomSearch = 'orders.id';
         $isManagerQuery = false;
@@ -104,6 +104,10 @@ class OrderRepository implements OrderRepositoryContract
             $site = ['orders.site_id', $request['site']];
         }
 
+        if (isset($request['network']) && $request['network'] != 'default') {
+            $network = ['orders.network', $request['network']];
+        }
+
         if (isset($request['start_date']) && isset($request['end_date'])) {
             $startDate = ['order_date', '>=', Carbon::parse($request['start_date'])->format('Y-m-d')];
             $endDate = ['order_date', '<=', Carbon::parse($request['end_date'])->format('Y-m-d')];
@@ -125,7 +129,8 @@ class OrderRepository implements OrderRepositoryContract
                     $status,
                     $startDate,
                     $endDate,
-                    $site
+                    $site,
+                    $network
                 ]
             )
             ->whereRaw($randomSearch)
@@ -155,7 +160,8 @@ class OrderRepository implements OrderRepositoryContract
                     $shipper,
                     $startDate,
                     $endDate,
-                    $site
+                    $site,
+                    $network
                 ]
             )
             ->whereRaw($randomSearch)
@@ -201,7 +207,8 @@ class OrderRepository implements OrderRepositoryContract
                                 $status,
                                 $startDate,
                                 $endDate,
-                                $site
+                                $site,
+                                $network
                             ]
                         )
                         ->whereRaw($randomSearch)
