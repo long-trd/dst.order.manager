@@ -80,7 +80,7 @@
                                                 <i class="fas fa-ellipsis-v"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('leader-manager') || auth()->user()->hasRole('leader-shipper'))
+                                                @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('leader-manager') || auth()->user()->hasRole('leader-shipper') || auth()->id() == $site->user_id)
                                                     <a class="dropdown-item list-account-dropdown"
                                                        href="{{route('admin.site.edit', ['id' => $site->id])}}">Edit</a>
                                                 @endif

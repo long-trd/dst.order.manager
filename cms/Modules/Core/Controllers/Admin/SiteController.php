@@ -71,45 +71,56 @@ class SiteController extends Controller
 
     public function edit($id)
     {
+        $user = auth()->user();
         $site = $this->service->find($id);
-        $users = $this->userService->findAllShipper();
 
-        return view('Core::site.edit', ['site' => $site, 'users' => $users]);
+        if ($user->hasRole('admin') || $user->hasRole('leader-manager') || $user->hasRole('leader-shipper') || $site->user_id == $user->id) {
+            $users = $this->userService->findAllShipper();
+
+            return view('Core::site.edit', ['site' => $site, 'users' => $users]);
+        }
+
+        return abort(403);
     }
 
     public function update($id, CreateSiteRequest $request)
     {
+        $user = auth()->user();
         $oldSite = $this->service->find($id);
 
-        $data['name'] = $request->name;
-        $data['user_id'] = $request->user_id;
-        $data['status'] = $request->status;
+        if ($user->hasRole('admin') || $user->hasRole('leader-manager') || $user->hasRole('leader-shipper') || $oldSite->user_id == $user->id) {
+            $data['name'] = $request->name;
+            $data['user_id'] = $request->user_id;
+            $data['status'] = $request->status;
 
-        $lastSitePauseLog = SitePauseLog::where('site_id', $id)->latest()->first();
+            $lastSitePauseLog = SitePauseLog::where('site_id', $id)->latest()->first();
 
-        if ($lastSitePauseLog) {
-            if ($oldSite->status != 'pause' && $data['status'] == 'pause' && $lastSitePauseLog->paused_at != Carbon::now()->toDateString()) {
-                SitePauseLog::create(['site_id' => $id, 'paused_at' => Carbon::now()->toDateString()]);
+            if ($lastSitePauseLog) {
+                if ($oldSite->status != 'pause' && $data['status'] == 'pause' && $lastSitePauseLog->paused_at != Carbon::now()->toDateString()) {
+                    SitePauseLog::create(['site_id' => $id, 'paused_at' => Carbon::now()->toDateString()]);
+                }
+            } else {
+                if ($oldSite->status != 'pause' && $data['status'] == 'pause') {
+                    SitePauseLog::create(['site_id' => $id, 'paused_at' => Carbon::now()->toDateString()]);
+                }
             }
-        } else {
-            if ($oldSite->status != 'pause' && $data['status'] == 'pause') {
-                SitePauseLog::create(['site_id' => $id, 'paused_at' => Carbon::now()->toDateString()]);
+
+            if ($lastSitePauseLog) {
+                if ($oldSite->status == 'pause' && $data['status'] == 'live') {
+                    $lastSitePauseLog->update(['lived_at' => Carbon::now()->toDateString()]);
+                }
             }
+
+            $this->service->update($id, $data);
+
+            $newSite = $this->service->find($id);
+
+            $log = $this->siteLogService->store($newSite, 'updated');
+
+            return redirect()->route('admin.site.index');
         }
 
-        if ($lastSitePauseLog) {
-            if ($oldSite->status == 'pause' && $data['status'] == 'live') {
-                $lastSitePauseLog->update(['lived_at' => Carbon::now()->toDateString()]);
-            }
-        }
-
-        $this->service->update($id, $data);
-
-        $newSite = $this->service->find($id);
-
-        $log = $this->siteLogService->store($newSite, 'updated');
-
-        return redirect()->route('admin.site.index');
+        return abort(403);
     }
 
     public function delete($id)

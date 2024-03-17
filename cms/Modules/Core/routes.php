@@ -55,10 +55,10 @@ Route::group([
                 Route::get('/', 'OrderController@index')->name('admin.order.index');
                 Route::get('create', 'OrderController@create')->name('admin.order.create')->middleware(['role:manager']);
                 Route::post('create', 'OrderController@store')->name('admin.order.store');
-                Route::get('edit/{id}', 'OrderController@edit')->name('admin.order.edit');
+                Route::get('edit/{id}', 'OrderController@edit')->name('admin.order.edit')->middleware(['role:admin|leader-manager|leader-shipper']);
                 Route::post('excel', 'OrderController@excel')->name('admin.order.excel')->middleware(['role:admin']);
                 Route::post('/{id}', 'OrderController@detail')->name('admin.order.detail');
-                Route::put('update/{id}', 'OrderController@update')->name('admin.order.update');
+                Route::put('update/{id}', 'OrderController@update')->name('admin.order.update')->middleware(['role:admin|leader-manager|leader-shipper']);
                 Route::delete('delete/{id}', 'OrderController@delete')->name('admin.order.delete')->middleware(['role:admin']);
             });
 
@@ -95,10 +95,10 @@ Route::group([
             });
 
             //Site
-            Route::group(['prefix' => 'site', 'middleware' => ['role:admin|leader-manager|leader-shipper']], function () {
+            Route::group(['prefix' => 'site'], function () {
                 Route::get('/', 'SiteController@index')->name('admin.site.index');
                 Route::get('create', 'SiteController@create')->name('admin.site.create');
-                Route::post('create', 'SiteController@store')->name('admin.site.store');
+                Route::post('store', 'SiteController@store')->name('admin.site.store');
                 Route::get('edit/{id}', 'SiteController@edit')->name('admin.site.edit');
                 Route::post('update/{id}', 'SiteController@update')->name('admin.site.update');
                 Route::delete('delete/{id}', 'SiteController@delete')->middleware(['role:admin'])->name('admin.site.delete');
