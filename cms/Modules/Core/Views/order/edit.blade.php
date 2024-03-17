@@ -55,6 +55,17 @@
 
 
                             <div class="pl-lg-4 pd-left-25">
+                                @if(auth()->user()->hasRole('admin'))
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-name">{{ __('Shipper') }}</label>
+                                        @foreach($shippers as $key => $shipper)
+                                            <div class="custom-control custom-radio mb-3">
+                                                <input {{ $shipper->id == $order->shipping_user_id ? 'checked' : '' }} name="shipping_user_id" value="{{$shipper->id}}" class="custom-control-input" id="shipper-{{$key}}" type="radio">
+                                                <label class="custom-control-label" for="shipper-{{$key}}">{{$shipper->name}}</label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-name">{{ __('Info') }}</label>
                                     <input type="text" name="name" value="{{$order->name}}" class="form-control form-control-alternative w-90" required autofocus>

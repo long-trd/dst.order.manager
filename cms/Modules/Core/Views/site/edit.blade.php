@@ -40,7 +40,7 @@
                                            class="form-control form-control-alternative w-90" value="{{ old('name', $site->name) }}" required>
 
                                 </div>
-                                @if(auth()->user()->hasRole('admin'))
+                                @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('leader-manager') || auth()->user()->hasRole('leader-shipper'))
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-user">{{ __('User') }}</label>
                                     <select class="form-control order-status w-50" id="input-user" data-toggle="select" data-live-search="true" name="user_id">

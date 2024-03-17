@@ -47,6 +47,7 @@ class OrderController extends Controller
 
         $accounts = $this->accountService->getAll();
         $sites = $this->siteService->getAll();
+        $shippers = $this->userService->findAllShipper();
 
         return view('Core::order.index', [
             'orders' => $orders['paginated_data'],
@@ -58,6 +59,7 @@ class OrderController extends Controller
             'totalOrderWithoutStatus' => $orders['total_order_without_status'],
             'accounts' => $accounts,
             'sites' => $sites,
+            'shippers' => $shippers,
             'request' => $request->all()
         ]);
     }
@@ -89,9 +91,10 @@ class OrderController extends Controller
     public function edit($id)
     {
         $order = $this->orderService->findByID($id);
+        $shippers = $this->userService->findAllShipper();
 
         if (auth()->user()->hasRole('admin') || in_array(auth()->id(), [$order->shipping_user_id, $order->listing_user_id])) {
-            return view('Core::order.edit', ['order' => $order]);
+            return view('Core::order.edit', ['order' => $order, 'shippers' => $shippers]);
         }
 
         return abort(403);
