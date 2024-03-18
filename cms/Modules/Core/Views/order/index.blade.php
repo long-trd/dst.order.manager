@@ -164,7 +164,7 @@
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                    @if(auth()->user()->hasRole('admin') || in_array(auth()->id(), [$order->shipping_user_id, $order->listing_user_id]))
+                                                    @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('leader-manager') || auth()->user()->hasRole('leader-shipper'))
                                                     <a class="dropdown-item list-account-dropdown"
                                                         href="{{ route('admin.order.edit', ['id' => $order->order_id]) }}">Edit</a>
                                                     @endif
@@ -290,7 +290,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <select class="form-control order-account" data-toggle="select"
+                                                        <select class="form-control" data-toggle="select"
                                                                 title="Simple select" data-live-search="true" name="site">
                                                             <option value="default">--Site--</option>
                                                             @foreach ($sites as $site)
@@ -298,6 +298,16 @@
                                                                     {{ isset($request['site']) && $request['site'] == $site->id ? 'selected' : '' }}>
                                                                     {{ $site->name }}</option>
                                                             @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <select class="form-control" data-toggle="select"
+                                                                title="Simple select" data-live-search="true" name="network">
+                                                            <option value="default">--Network--</option>
+                                                            <option value="tiktok" {{ isset($request['network']) && $request['network'] == 'tiktok' ? 'selected' : '' }}>Tiktok</option>
+                                                            <option value="facebook" {{ isset($request['network']) && $request['network'] == 'facebook' ? 'selected' : '' }}>Facebook</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -420,6 +430,15 @@
                                                 <label class="form-control-label"
                                                     for="input-email">{{ __('Shipping Information') }}</label>
                                                 <textarea name="shipping_information" class="form-control w-90" rows="3" required></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-control-label"
+                                                       for="input-email">{{ __('Network') }}</label>
+                                                <select class="form-control w-90" name="network">
+                                                    <option value="">__Network__</option>
+                                                    <option value="tiktok">Tiktok</option>
+                                                    <option value="facebook">Facebook</option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label class="form-control-label"
@@ -606,6 +625,7 @@
                             formOrderDetail.find('textarea[name=tracking]').val(data.tracking);
                             formOrderDetail.find('input[name=status][value=' + data.status +
                                 ']').attr('checked', true);
+                            formOrderDetail.find("select[name='network'] option[value='" + data.network + "']").prop("selected", true);
 
                             if (data.helper) {
                                 formOrderDetail.find('input[name=helping]').attr('checked',

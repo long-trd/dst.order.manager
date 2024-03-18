@@ -93,7 +93,7 @@ class OrderController extends Controller
         $order = $this->orderService->findByID($id);
         $shippers = $this->userService->findAllShipper();
 
-        if (auth()->user()->hasRole('admin') || in_array(auth()->id(), [$order->shipping_user_id, $order->listing_user_id])) {
+        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('leader-manager') || auth()->user()->hasRole('leader-shipper')) {
             return view('Core::order.edit', ['order' => $order, 'shippers' => $shippers]);
         }
 
@@ -104,7 +104,7 @@ class OrderController extends Controller
     {
         $order = $this->orderService->findByID($id);
 
-        if (auth()->user()->hasRole('admin') || in_array(auth()->id(), [$order->shipping_user_id, $order->listing_user_id])) {
+        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('leader-manager') || auth()->user()->hasRole('leader-shipper')) {
             $request = $request->except('_token');
 
             if ($this->orderService->update($id, $request)) {
@@ -122,6 +122,7 @@ class OrderController extends Controller
                         'start_date' => isset($search['start_date']) ? $search['start_date'] : '',
                         'end_date' => isset($search['end_date']) ? $search['end_date'] : '',
                         'site' => isset($search['site']) ? $search['site'] : '',
+                        'network' => isset($search['network']) ? $search['network'] : ''
                     ])->with('success', 'successful');
                 }
 
