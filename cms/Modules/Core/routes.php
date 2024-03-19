@@ -55,10 +55,10 @@ Route::group([
                 Route::get('/', 'OrderController@index')->name('admin.order.index');
                 Route::get('create', 'OrderController@create')->name('admin.order.create')->middleware(['role:manager|leader-manager|leader-shipper']);
                 Route::post('create', 'OrderController@store')->name('admin.order.store');
-                Route::get('edit/{id}', 'OrderController@edit')->name('admin.order.edit')->middleware(['role:admin|leader-manager|leader-shipper']);
+                Route::get('edit/{id}', 'OrderController@edit')->name('admin.order.edit')->middleware(['role:admin|leader-manager|leader-shipper|shipper']);
                 Route::post('excel', 'OrderController@excel')->name('admin.order.excel')->middleware(['role:admin']);
                 Route::post('/{id}', 'OrderController@detail')->name('admin.order.detail');
-                Route::put('update/{id}', 'OrderController@update')->name('admin.order.update')->middleware(['role:admin|leader-manager|leader-shipper']);
+                Route::put('update/{id}', 'OrderController@update')->name('admin.order.update')->middleware(['role:admin|leader-manager|leader-shipper|shipper']);
                 Route::delete('delete/{id}', 'OrderController@delete')->name('admin.order.delete')->middleware(['role:admin']);
             });
 
