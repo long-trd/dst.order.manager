@@ -93,7 +93,7 @@ class OrderController extends Controller
         $order = $this->orderService->findByID($id);
         $shippers = $this->userService->findAllShipper();
 
-        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('leader-manager') || auth()->user()->hasRole('leader-shipper')) {
+        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('leader-manager') || auth()->user()->hasRole('leader-shipper') || auth()->id() == $order->shipping_user_id) {
             return view('Core::order.edit', ['order' => $order, 'shippers' => $shippers]);
         }
 
@@ -104,7 +104,7 @@ class OrderController extends Controller
     {
         $order = $this->orderService->findByID($id);
 
-        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('leader-manager') || auth()->user()->hasRole('leader-shipper')) {
+        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('leader-manager') || auth()->user()->hasRole('leader-shipper') || auth()->id() == $order->shipping_user_id) {
             $request = $request->except('_token');
 
             if ($this->orderService->update($id, $request)) {

@@ -56,20 +56,27 @@ class OrderService implements OrderServiceContract
 
     public function update($id, $data)
     {
-        // TODO: Implement update() method.
-        if (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('manager')) $data['shipping_user_id'] = auth()->user()->id;
-
         $order = $this->findByID($id);
-        $data['order_date'] = Carbon::parse($data['order_date'])->format('Y-m-d');
 
-        if ($order->status == 'needhelp') {
-            if ($data['status'] == 'tracking' || $data['status'] == 'shipped' || isset($data['helping'])) {
-                $data['helping_user_id'] = auth()->user()->id;
-                $data['shipping_user_id'] = auth()->user()->id;
+        if (auth()->id() == $order->shipping_user_id) {
+            return $this->orderRepository->update($id, [
+                'status' => $data['status'],
+                'tracking' => $data['tracking']
+            ]);
+        } else {
+            if (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('manager')) $data['shipping_user_id'] = auth()->user()->id;
+
+            $data['order_date'] = Carbon::parse($data['order_date'])->format('Y-m-d');
+
+            if ($order->status == 'needhelp') {
+                if ($data['status'] == 'tracking' || $data['status'] == 'shipped' || isset($data['helping'])) {
+                    $data['helping_user_id'] = auth()->user()->id;
+                    $data['shipping_user_id'] = auth()->user()->id;
+                }
             }
-        }
 
-        return $this->orderRepository->update($id, $data);
+            return $this->orderRepository->update($id, $data);
+        }
     }
 
     public function delete($id)
